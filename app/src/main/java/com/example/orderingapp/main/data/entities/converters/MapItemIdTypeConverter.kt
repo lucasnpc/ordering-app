@@ -1,11 +1,10 @@
 package com.example.orderingapp.main.data.entities.converters
 
 import androidx.room.TypeConverter
-import com.example.orderingapp.main.data.entities.Item
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class ItemTypeConverter {
+class MapItemIdTypeConverter {
     private val gson = Gson()
 
     @TypeConverter

@@ -3,15 +3,16 @@ package com.example.orderingapp.main.data.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.orderingapp.main.data.entities.converters.ItemTypeConverter
+import com.example.orderingapp.main.data.entities.converters.MapItemIdTypeConverter
 import java.util.UUID
 
 @Entity
-@TypeConverters(ItemTypeConverter::class)
+@TypeConverters(MapItemIdTypeConverter::class)
 data class Order(
     @PrimaryKey
     val id: String = UUID.randomUUID().toString(),
     val items: Map<String, Int> = mapOf(),
     val dateHour: String,
-    val orderValue: Double
+    val orderValue: Double,
+    val synced: Boolean = false
 )

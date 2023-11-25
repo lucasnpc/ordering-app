@@ -1,4 +1,4 @@
-package com.example.orderingapp.data
+package com.example.orderingapp.main.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
@@ -39,31 +39,36 @@ internal class OrderingAppDatabaseTest {
 
     @Test
     fun getOrderingAppDao() {
-        val item = Item(
-            description = "Item Test",
-            currentStock = 10,
-            currentValue = 10.0,
-            minimumStock = 1
-        )
-        dao.insertOrder(
-            Order(
-                items = mapOf(
-                    item.id to 10
-                ), dateHour = "12:00:00 21/12/2021", orderValue = 100.0
-            )
-        )
+        dao.insertOrder(order)
         assertThat(dao.getOrders()).isNotEmpty()
+        assertThat(dao.getOrders()[0].items).containsKey(item.id)
     }
 
     @Test
     fun getItems() {
+        dao.insertItem(item)
+        assertThat(dao.getItems()).contains(item)
+    }
+
+    @Test
+    fun updateOrder() {
+        dao.insertOrder(order)
+        assertThat(dao.getOrders()[0].synced).isFalse()
+        dao.updateOrderSync(dao.getOrders()[0].id)
+        assertThat(dao.getOrders()[0].synced).isTrue()
+    }
+
+    companion object {
         val item = Item(
             description = "Item Test",
             currentStock = 10,
             currentValue = 10.0,
             minimumStock = 1
         )
-        dao.insertItem(item)
-        assertThat(dao.getItems()).isNotEmpty()
+        val order = Order(
+            items = mapOf(
+                item.id to 10
+            ), dateHour = "12:00:00 21/12/2021", orderValue = 100.0
+        )
     }
 }
