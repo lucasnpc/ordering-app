@@ -15,28 +15,27 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class GetItemsRepositoryTest {
     private lateinit var getItemsUseCase: GetItemsUseCase
 
     private val firestore: FirebaseFirestore = mockk()
 
-    private val collection: CollectionReference = mockk(relaxed = true)
+    private val collection: CollectionReference = mockk()
 
-    private val documentChange: DocumentChange = mockk(relaxed = true)
+    private val documentChange: DocumentChange = mockk()
 
-    private val document: QueryDocumentSnapshot = mockk(relaxed = true)
+    private val document: QueryDocumentSnapshot = mockk()
 
-    private val snapshot: QuerySnapshot = mockk(relaxed = true)
+    private val snapshot: QuerySnapshot = mockk()
 
     // 1 to add, 2 to modify 3 to remove
     var operation = 1
+    var isRemoving = false
 
     @Before
     fun setup() {
@@ -58,13 +57,10 @@ class GetItemsRepositoryTest {
         every { documentChange.type } answers {
             when (operation) {
                 1 -> {
-                    operation = 2
+                    operation = if (isRemoving) 2 else 3
                     DocumentChange.Type.ADDED
                 }
-                2 -> {
-                    operation = 3
-                    DocumentChange.Type.MODIFIED
-                }
+                2 -> DocumentChange.Type.MODIFIED
                 else -> DocumentChange.Type.REMOVED
             }
         }
@@ -79,7 +75,7 @@ class GetItemsRepositoryTest {
     }
 
     @Test
-    fun addItems() = runBlockingTest {
+    fun addItems() = runTest {
         getItemsUseCase.getItems().take(1).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
             result as ApiResult.Success
@@ -88,7 +84,7 @@ class GetItemsRepositoryTest {
     }
 
     @Test
-    fun modifyItems() = runBlockingTest {
+    fun modifyItems() = runTest {
         getItemsUseCase.getItems().take(1)
         every { document.id } returns itemModify.id
         every { document["description"] } returns itemModify.description
@@ -103,13 +99,13 @@ class GetItemsRepositoryTest {
     }
 
     @Test
-    fun removeItems() = runBlockingTest {
+    fun removeItems() = runTest {
+        isRemoving = true
         getItemsUseCase.getItems().take(1).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
             result as ApiResult.Success
             assertThat(result.data).contains(item)
         }
-        getItemsUseCase.getItems().take(1)
         getItemsUseCase.getItems().take(1).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
             result as ApiResult.Success
@@ -118,7 +114,7 @@ class GetItemsRepositoryTest {
     }
 
     @Test
-    fun testException() = runBlockingTest {
+    fun testException() = runTest {
         val exception = mockk<FirebaseFirestoreException>()
         val msgEx = "messageException"
         every { collection.addSnapshotListener(any()) } answers {
@@ -137,7 +133,7 @@ class GetItemsRepositoryTest {
     }
 
     @Test
-    fun testRuntimeException() = runBlockingTest {
+    fun testRuntimeException() = runTest {
         val msgEx = "messageException"
         val exception = RuntimeException(msgEx)
         every { documentChange.type } throws exception
