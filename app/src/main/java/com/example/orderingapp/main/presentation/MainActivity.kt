@@ -10,16 +10,18 @@ import androidx.compose.material.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.orderingapp.R
 import com.example.orderingapp.main.presentation.components.OrderingAppBottomBar
 import com.example.orderingapp.main.presentation.components.OrderingAppTopBar
+import com.example.orderingapp.main.presentation.menu.MenuScreen
+import com.example.orderingapp.main.presentation.order.OrderScreen
+import com.example.orderingapp.main.presentation.stock.StockScreen
 import com.example.orderingapp.main.theme.OrderingAppTheme
-import com.example.orderingapp.main.presentation.screens.MenuScreen
-import com.example.orderingapp.main.presentation.screens.OrderScreen
 import com.example.orderingapp.main.utils.ScreenList
-import com.example.orderingapp.main.presentation.screens.StockScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -46,8 +48,8 @@ class MainActivity : ComponentActivity() {
                             .background(
                                 Brush.verticalGradient(
                                     colors = listOf(
-                                        Color(0xFFFFFFFF),
-                                        Color(0xFFC4C4C4)
+                                        Color.White,
+                                        colorResource(id = R.color.gray_gradient)
                                     )
                                 )
                             )

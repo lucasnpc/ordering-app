@@ -4,6 +4,8 @@ import com.example.orderingapp.commons.ApiResult
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.data.entities.OrderDTO
 import com.example.orderingapp.main.data.utils.FakeOrderingDao
+import com.example.orderingapp.main.data.utils.TestConstants.order
+import com.example.orderingapp.main.data.utils.TestConstants.orderDTO
 import com.example.orderingapp.main.data.utils.TestConstants.testException
 import com.example.orderingapp.main.data.utils.TestConstants.testMsgException
 import com.example.orderingapp.main.domain.model.Order
@@ -42,17 +44,12 @@ class SyncOrderRepositoryTest {
     @Test
     fun syncOrderLocal() = runTest {
         dao.insertOrder(
-            OrderDTO(
-                id = order.id,
-                items = order.items.associate { it.id to 2 },
-                dateHour = "${order.hour} ${order.date}",
-                orderValue = order.orderValue,
-                synced = false
-            )
+            orderDTO
         )
+        assertThat(dao.getUnsyncedOrders()).isNotEmpty()
         syncOrderUseCase.syncOrderLocal(order).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
-            assertThat(dao.getOrders()[0].synced)
+            assertThat(dao.getUnsyncedOrders()).isEmpty()
         }
     }
 
@@ -80,15 +77,5 @@ class SyncOrderRepositoryTest {
         assertThat(result).isInstanceOf(ApiResult.Error::class.java)
         result as ApiResult.Error
         assertThat(result.exception.message).isEqualTo(testMsgException)
-    }
-
-    private companion object {
-        val order = Order(
-            id = "123",
-            items = listOf(),
-            date = "21/12/2021",
-            hour = "12:00:00",
-            orderValue = 123.0
-        )
     }
 }

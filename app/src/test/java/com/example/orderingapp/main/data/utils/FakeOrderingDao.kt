@@ -24,7 +24,7 @@ class FakeOrderingDao : OrderingAppDao {
     }
 
     override fun getUnsyncedOrders(): List<OrderDTO> {
-        TODO("Not yet implemented")
+        return orderDTOS.filter { !it.synced }
     }
 
     override fun updateOrderSync(orderId: String) {

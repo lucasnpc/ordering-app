@@ -3,6 +3,9 @@ package com.example.orderingapp.main.data.repositories
 import com.example.orderingapp.commons.ApiResult
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.data.entities.OrderDTO
+import com.example.orderingapp.main.data.utils.TestConstants.listItems
+import com.example.orderingapp.main.data.utils.TestConstants.listOrder
+import com.example.orderingapp.main.data.utils.TestConstants.order
 import com.example.orderingapp.main.data.utils.TestConstants.testException
 import com.example.orderingapp.main.data.utils.TestConstants.testMsgException
 import com.example.orderingapp.main.domain.model.Item
@@ -34,25 +37,9 @@ class GetOrdersRepositoryTest {
     }
 
     @Test
-    fun getUnsyncedOrders() = runTest {
-        every { dao.getOrders() } returns listOrderUnsynced
-        getOrdersUseCase.getOrders(listItems).collect { result ->
-            assertSuccess(result)
-        }
-    }
-
-    @Test
     fun getOrdersException() = runTest {
         every { dao.getOrders() } throws testException
         getOrdersUseCase.getOrders(listItems).collect{ result ->
-            assertError(result)
-        }
-    }
-
-    @Test
-    fun getUnsyncedOrdersException() = runTest {
-        every { dao.getUnsyncedOrders() } throws testException
-        getOrdersUseCase.getUnsyncedOrders(listItems).collect{ result ->
             assertError(result)
         }
     }
@@ -67,43 +54,5 @@ class GetOrdersRepositoryTest {
         assertThat(result).isInstanceOf(ApiResult.Error::class.java)
         result as ApiResult.Error
         assertThat(result.exception.message).contains(testMsgException)
-    }
-
-    private companion object {
-        val listItems = listOf(
-            Item(
-                id = "1",
-                description = "item 1"
-            ), Item(id = "2", description = "item 2")
-        )
-        val listOrder = listOf(
-            OrderDTO(
-                id = "123",
-                items = mapOf("1" to 2), dateHour = "12:00:00 21/12/2021",
-                orderValue = 10.0,
-                synced = true
-            )
-        )
-        val listOrderUnsynced = listOf(
-            OrderDTO(
-                id = "123",
-                items = mapOf("1" to 2), dateHour = "12:00:00 21/12/2021",
-                orderValue = 10.0,
-                synced = false
-            )
-        )
-        val order = Order(
-            id = "123",
-            items = listOf(
-                Item(
-                    id = "1",
-                    description = "item 1",
-                    quantity = 2
-                )
-            ),
-            date = "21/12/2021",
-            hour = "12:00:00",
-            orderValue = 10.0
-        )
     }
 }

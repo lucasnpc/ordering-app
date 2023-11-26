@@ -1,4 +1,4 @@
-package com.example.orderingapp.main.presentation.screens
+package com.example.orderingapp.main.presentation.stock
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

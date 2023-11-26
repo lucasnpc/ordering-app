@@ -4,6 +4,8 @@ import com.example.orderingapp.commons.ApiResult
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.data.entities.ItemDTO
 import com.example.orderingapp.main.data.utils.FakeOrderingDao
+import com.example.orderingapp.main.data.utils.TestConstants.item
+import com.example.orderingapp.main.data.utils.TestConstants.itemDTO
 import com.example.orderingapp.main.data.utils.TestConstants.testException
 import com.example.orderingapp.main.data.utils.TestConstants.testMsgException
 import com.example.orderingapp.main.domain.model.Item
@@ -44,23 +46,5 @@ class InsertItemsRepositoryTest {
             it as ApiResult.Error
             assertThat(it.exception.message).isEqualTo(testMsgException)
         }
-    }
-
-    companion object {
-        val item = Item(
-            id = "123",
-            description = "testeItem",
-            currentValue = 10.0,
-            minimumStock = 5,
-            currentStock = 10,
-            quantity = 2
-        )
-        val itemDTO = ItemDTO(
-            id = "123",
-            description = "testeItem",
-            currentValue = 10.0,
-            minimumStock = 5,
-            currentStock = 10
-        )
     }
 }

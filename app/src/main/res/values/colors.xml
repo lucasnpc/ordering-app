@@ -4,4 +4,5 @@
     <color name="primary_dark">#B64B4B</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray_gradient">#FFC4C4C4</color>
 </resources>

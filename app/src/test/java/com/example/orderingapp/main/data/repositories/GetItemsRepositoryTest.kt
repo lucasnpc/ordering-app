@@ -3,6 +3,9 @@ package com.example.orderingapp.main.data.repositories
 import com.example.orderingapp.commons.ApiResult
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.data.entities.ItemDTO
+import com.example.orderingapp.main.data.utils.TestConstants.item
+import com.example.orderingapp.main.data.utils.TestConstants.itemDTO
+import com.example.orderingapp.main.data.utils.TestConstants.itemModify
 import com.example.orderingapp.main.data.utils.TestConstants.testException
 import com.example.orderingapp.main.data.utils.TestConstants.testMsgException
 import com.example.orderingapp.main.domain.model.Item
@@ -167,31 +170,5 @@ class GetItemsRepositoryTest {
         assertThat(result).isInstanceOf(ApiResult.Error::class.java)
         result as ApiResult.Error
         assertThat(result.exception.message).isEqualTo(testMsgException)
-    }
-
-    companion object {
-        val item = Item(
-            id = "123",
-            description = "testeItem",
-            currentValue = 10.0,
-            minimumStock = 5,
-            currentStock = 10,
-            quantity = 0
-        )
-        val itemModify = Item(
-            id = item.id,
-            description = "${item.description} modificado",
-            currentValue = item.currentValue,
-            minimumStock = item.minimumStock,
-            currentStock = item.currentStock,
-            quantity = 0
-        )
-        val itemDTO = ItemDTO(
-            id = "123",
-            description = "testeItem",
-            currentValue = 10.0,
-            minimumStock = 5,
-            currentStock = 10,
-        )
     }
 }

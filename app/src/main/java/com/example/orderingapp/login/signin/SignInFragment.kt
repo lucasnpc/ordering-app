@@ -44,7 +44,12 @@ class SignInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.emailButton.setOnClickListener {
-            signInLauncher.launch(AuthUI.getInstance().createSignInIntentBuilder().build())
+            signInLauncher.launch(
+                AuthUI.getInstance().createSignInIntentBuilder().run {
+                    setTheme(R.style.Theme_OrderingApp)
+                    build()
+                }
+            )
         }
     }
 }

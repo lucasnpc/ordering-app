@@ -4,4 +4,6 @@
     <string name="sign_in_fragment_label">Sign In Fragment</string>
     <string name="sign_in_email">Entrar com Email</string>
     <string name="something_went_wrong">Alguma coisa deu errado, tente novamente mais tarde.</string>
+    <string name="sync">Synchronize</string>
+    <string name="logout">Logout</string>
 </resources>
