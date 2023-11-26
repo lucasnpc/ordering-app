@@ -4,8 +4,8 @@ import com.example.orderingapp.commons.ApiResult
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.data.entities.ItemDTO
 import com.example.orderingapp.main.data.utils.FakeOrderingDao
-import com.example.orderingapp.main.data.utils.TestConstants.exception
-import com.example.orderingapp.main.data.utils.TestConstants.msgEx
+import com.example.orderingapp.main.data.utils.TestConstants.testException
+import com.example.orderingapp.main.data.utils.TestConstants.testMsgException
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.usecase.InsertItemsUseCase
 import com.google.common.truth.Truth.assertThat
@@ -38,11 +38,11 @@ class InsertItemsRepositoryTest {
     fun insertItemException() = runTest {
         dao = mockk()
         insertItemsUseCase = InsertItemsRepository(dao)
-        every { dao.insertItem(itemDTO) } throws exception
+        every { dao.insertItem(itemDTO) } throws testException
         insertItemsUseCase.insertItem(listOf(item)).take(1).collect {
             assertThat(it).isInstanceOf(ApiResult.Error::class.java)
             it as ApiResult.Error
-            assertThat(it.exception.message).isEqualTo(msgEx)
+            assertThat(it.exception.message).isEqualTo(testMsgException)
         }
     }
 

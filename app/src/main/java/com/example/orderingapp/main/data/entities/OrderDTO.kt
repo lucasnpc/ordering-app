@@ -14,5 +14,5 @@ data class OrderDTO(
     val items: Map<String, Int> = mapOf(),
     val dateHour: String,
     val orderValue: Double,
-    val synced: Boolean = false
+    var synced: Boolean = false
 )

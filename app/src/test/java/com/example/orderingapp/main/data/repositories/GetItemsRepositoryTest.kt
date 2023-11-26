@@ -3,8 +3,8 @@ package com.example.orderingapp.main.data.repositories
 import com.example.orderingapp.commons.ApiResult
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.data.entities.ItemDTO
-import com.example.orderingapp.main.data.utils.TestConstants.exception
-import com.example.orderingapp.main.data.utils.TestConstants.msgEx
+import com.example.orderingapp.main.data.utils.TestConstants.testException
+import com.example.orderingapp.main.data.utils.TestConstants.testMsgException
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import com.google.common.truth.Truth.assertThat
@@ -90,7 +90,7 @@ class GetItemsRepositoryTest {
 
     @Test
     fun testExceptionGetItemsLocal() = runTest {
-        every { dao.getItems() } throws exception
+        every { dao.getItems() } throws testException
         getItemsUseCase.getItemsFromLocal().collect { result ->
             assertError(result)
         }
@@ -141,7 +141,7 @@ class GetItemsRepositoryTest {
                 every { remove() } just Runs
             }
         }
-        every { firestoreException.message } returns msgEx
+        every { firestoreException.message } returns testMsgException
         getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
             assertError(result)
         }
@@ -149,7 +149,7 @@ class GetItemsRepositoryTest {
 
     @Test
     fun testRuntimeException() = runTest {
-        every { documentChange.type } throws exception
+        every { documentChange.type } throws testException
         getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
             assertError(result)
         }
@@ -166,7 +166,7 @@ class GetItemsRepositoryTest {
     ) {
         assertThat(result).isInstanceOf(ApiResult.Error::class.java)
         result as ApiResult.Error
-        assertThat(result.exception.message).isEqualTo(msgEx)
+        assertThat(result.exception.message).isEqualTo(testMsgException)
     }
 
     companion object {

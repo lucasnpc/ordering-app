@@ -6,8 +6,11 @@ import com.example.orderingapp.main.data.entities.OrderDTO
 
 class FakeOrderingDao : OrderingAppDao {
     private val itemDTOS = arrayListOf<ItemDTO>()
+    private val orderDTOS = arrayListOf<OrderDTO>()
     override fun insertOrder(vararg orderDTO: OrderDTO) {
-        TODO("Not yet implemented")
+        orderDTO.forEach {
+            orderDTOS.add(it)
+        }
     }
 
     override fun insertItem(vararg itemDTO: ItemDTO) {
@@ -17,7 +20,7 @@ class FakeOrderingDao : OrderingAppDao {
     }
 
     override fun getOrders(): List<OrderDTO> {
-        TODO("Not yet implemented")
+        return orderDTOS
     }
 
     override fun getUnsyncedOrders(): List<OrderDTO> {
@@ -25,7 +28,7 @@ class FakeOrderingDao : OrderingAppDao {
     }
 
     override fun updateOrderSync(orderId: String) {
-        TODO("Not yet implemented")
+        orderDTOS.find { it.id == orderId }?.synced = true
     }
 
     override fun getItems(): List<ItemDTO> {

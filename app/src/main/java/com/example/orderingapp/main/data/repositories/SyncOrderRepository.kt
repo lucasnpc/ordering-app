@@ -3,26 +3,27 @@ package com.example.orderingapp.main.data.repositories
 import com.example.orderingapp.commons.ApiResult
 import com.example.orderingapp.commons.safeRequestSuspend
 import com.example.orderingapp.main.data.dao.OrderingAppDao
-import com.example.orderingapp.main.data.entities.OrderDTO
+import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.SyncOrderUseCase
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class SyncOrderRepository(
-    private val dao: OrderingAppDao,
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val dao: OrderingAppDao
 ) : SyncOrderUseCase {
-    override fun syncOrder(orderDTO: OrderDTO): Flow<Boolean> = flow {
+    override fun syncOrderRemote(order: Order): Flow<ApiResult<Boolean>> = flow {
         val result = safeRequestSuspend {
-            firestore.collection("orders").add(orderDTO).isSuccessful
+            firestore.collection("orders").add(order).isSuccessful
         }
-        when (result) {
-            is ApiResult.Success -> {
-                dao.updateOrderSync(orderDTO.id)
-                emit(result.data)
-            }
-            is ApiResult.Error -> throw result.exception
+        emit(result)
+    }
+
+    override fun syncOrderLocal(order: Order): Flow<ApiResult<Unit>> = flow {
+        val result = safeRequestSuspend {
+            dao.updateOrderSync(order.id)
         }
+        emit(result)
     }
 }
