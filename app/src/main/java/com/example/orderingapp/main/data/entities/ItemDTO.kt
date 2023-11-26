@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.util.UUID
 
 @Entity
-data class Item(
+data class ItemDTO(
     @PrimaryKey
     val id: String = UUID.randomUUID().toString(),
     val description: String,

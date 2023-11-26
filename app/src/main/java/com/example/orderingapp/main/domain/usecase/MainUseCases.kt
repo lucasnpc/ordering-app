@@ -1,5 +1,6 @@
 package com.example.orderingapp.main.domain.usecase
 
 data class MainUseCases(
-    val getItemsUseCase: GetItemsUseCase
+    val getItemsUseCase: GetItemsUseCase,
+    val insertItemsUseCase: InsertItemsUseCase
 )

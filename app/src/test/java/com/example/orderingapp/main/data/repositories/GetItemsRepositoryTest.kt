@@ -1,7 +1,10 @@
 package com.example.orderingapp.main.data.repositories
 
 import com.example.orderingapp.commons.ApiResult
-import com.example.orderingapp.main.data.entities.Item
+import com.example.orderingapp.main.data.dao.OrderingAppDao
+import com.example.orderingapp.main.data.utils.TestConstants.exception
+import com.example.orderingapp.main.data.utils.TestConstants.msgEx
+import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.firestore.CollectionReference
@@ -33,13 +36,15 @@ class GetItemsRepositoryTest {
 
     private val snapshot: QuerySnapshot = mockk()
 
+    private val dao: OrderingAppDao = mockk()
+
     // 1 to add, 2 to modify 3 to remove
     var operation = 1
     var isRemoving = false
 
     @Before
     fun setup() {
-        getItemsUseCase = GetItemsRepository(firestore)
+        getItemsUseCase = GetItemsRepository(firestore, dao)
 
         every { firestore.collection("items") } returns collection
 
@@ -75,23 +80,37 @@ class GetItemsRepositoryTest {
     }
 
     @Test
+    fun getItemsLocal() = runTest {
+        every { dao.getItems() } returns listOf(item.toItemDTO())
+        getItemsUseCase.getItemsFromLocal().collect { result ->
+            assertSuccess(result)
+        }
+    }
+
+    @Test
+    fun testExceptionGetItemsLocal() = runTest {
+        every { dao.getItems() } throws exception
+        getItemsUseCase.getItemsFromLocal().collect { result ->
+            assertError(result)
+        }
+    }
+
+    @Test
     fun addItems() = runTest {
-        getItemsUseCase.getItems().take(1).collect { result ->
-            assertThat(result).isInstanceOf(ApiResult.Success::class.java)
-            result as ApiResult.Success
-            assertThat(result.data).contains(item)
+        getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
+            assertSuccess(result)
         }
     }
 
     @Test
     fun modifyItems() = runTest {
-        getItemsUseCase.getItems().take(1)
+        getItemsUseCase.getItemsFromRemote().take(1)
         every { document.id } returns itemModify.id
         every { document["description"] } returns itemModify.description
         every { document["currentValue"] } returns itemModify.currentValue
         every { document["minimumStock"] } returns itemModify.minimumStock
         every { document["currentStock"] } returns itemModify.currentStock
-        getItemsUseCase.getItems().take(1).collect { result ->
+        getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
             result as ApiResult.Success
             assertThat(result.data).contains(itemModify)
@@ -101,12 +120,10 @@ class GetItemsRepositoryTest {
     @Test
     fun removeItems() = runTest {
         isRemoving = true
-        getItemsUseCase.getItems().take(1).collect { result ->
-            assertThat(result).isInstanceOf(ApiResult.Success::class.java)
-            result as ApiResult.Success
-            assertThat(result.data).contains(item)
+        getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
+            assertSuccess(result)
         }
-        getItemsUseCase.getItems().take(1).collect { result ->
+        getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
             result as ApiResult.Success
             assertThat(result.data).doesNotContain(itemModify)
@@ -115,33 +132,40 @@ class GetItemsRepositoryTest {
 
     @Test
     fun testException() = runTest {
-        val exception = mockk<FirebaseFirestoreException>()
-        val msgEx = "messageException"
+        val firestoreException = mockk<FirebaseFirestoreException>()
         every { collection.addSnapshotListener(any()) } answers {
             val listener = firstArg<EventListener<QuerySnapshot>>()
-            listener.onEvent(null, exception)
+            listener.onEvent(null, firestoreException)
             mockk {
                 every { remove() } just Runs
             }
         }
-        every { exception.message } returns msgEx
-        getItemsUseCase.getItems().take(1).collect { result ->
-            assertThat(result).isInstanceOf(ApiResult.Error::class.java)
-            result as ApiResult.Error
-            assertThat(result.exception.message).isEqualTo(msgEx)
+        every { firestoreException.message } returns msgEx
+        getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
+            assertError(result)
         }
     }
 
     @Test
     fun testRuntimeException() = runTest {
-        val msgEx = "messageException"
-        val exception = RuntimeException(msgEx)
         every { documentChange.type } throws exception
-        getItemsUseCase.getItems().take(1).collect { result ->
-            assertThat(result).isInstanceOf(ApiResult.Error::class.java)
-            result as ApiResult.Error
-            assertThat(result.exception.message).isEqualTo(msgEx)
+        getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
+            assertError(result)
         }
+    }
+
+    private fun assertSuccess(result: ApiResult<List<Item>>) {
+        assertThat(result).isInstanceOf(ApiResult.Success::class.java)
+        result as ApiResult.Success
+        assertThat(result.data).contains(item)
+    }
+
+    private fun assertError(
+        result: ApiResult<List<Item>>,
+    ) {
+        assertThat(result).isInstanceOf(ApiResult.Error::class.java)
+        result as ApiResult.Error
+        assertThat(result.exception.message).isEqualTo(msgEx)
     }
 
     companion object {
@@ -150,14 +174,16 @@ class GetItemsRepositoryTest {
             description = "testeItem",
             currentValue = 10.0,
             minimumStock = 5,
-            currentStock = 10
+            currentStock = 10,
+            quantity = 0
         )
         val itemModify = Item(
             id = item.id,
             description = "${item.description} modificado",
             currentValue = item.currentValue,
             minimumStock = item.minimumStock,
-            currentStock = item.currentStock
+            currentStock = item.currentStock,
+            quantity = 0
         )
     }
 }

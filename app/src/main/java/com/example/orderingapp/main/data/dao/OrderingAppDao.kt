@@ -4,24 +4,23 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
-import com.example.orderingapp.main.data.entities.Item
-import com.example.orderingapp.main.data.entities.Order
+import com.example.orderingapp.main.data.entities.ItemDTO
+import com.example.orderingapp.main.data.entities.OrderDTO
 
 @Dao
 interface OrderingAppDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrder(vararg order: Order)
+    fun insertOrder(vararg orderDTO: OrderDTO)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertItem(vararg item: Item)
+    fun insertItem(vararg itemDTO: ItemDTO)
 
-    @Query("SELECT * FROM `Order`")
-    fun getOrders(): List<Order>
-    @Query("UPDATE `Order` SET synced = 1 WHERE id = :orderId")
+    @Query("SELECT * FROM OrderDTO")
+    fun getOrders(): List<OrderDTO>
+    @Query("UPDATE OrderDTO SET synced = 1 WHERE id = :orderId")
     fun updateOrderSync(orderId: String)
 
-    @Query("SELECT * FROM Item")
-    fun getItems(): List<Item>
+    @Query("SELECT * FROM ItemDTO")
+    fun getItems(): List<ItemDTO>
 }

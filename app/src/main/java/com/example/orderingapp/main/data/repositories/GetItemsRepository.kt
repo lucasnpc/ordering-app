@@ -1,7 +1,11 @@
 package com.example.orderingapp.main.data.repositories
 
 import com.example.orderingapp.commons.ApiResult
-import com.example.orderingapp.main.data.entities.Item
+import com.example.orderingapp.commons.safeRequest
+import com.example.orderingapp.commons.safeRequestSuspend
+import com.example.orderingapp.main.data.dao.OrderingAppDao
+import com.example.orderingapp.main.data.entities.ItemDTO
+import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
@@ -9,53 +13,76 @@ import com.google.firebase.firestore.QueryDocumentSnapshot
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 
-class GetItemsRepository(private val firestore: FirebaseFirestore) : GetItemsUseCase {
-    private val items = mutableListOf<Item>()
+class GetItemsRepository(
+    private val firestore: FirebaseFirestore,
+    private val dao: OrderingAppDao
+) : GetItemsUseCase {
+    private val itemDTO = mutableListOf<ItemDTO>()
 
-    override fun getItems(): Flow<ApiResult<List<Item>>> = callbackFlow {
+    override fun getItemsFromRemote(): Flow<ApiResult<List<Item>>> = callbackFlow {
         val listener =
             firestore.collection("items").addSnapshotListener { snapshot, exception ->
                 if (exception != null) {
                     trySend(ApiResult.Error(exception))
                     return@addSnapshotListener
                 }
-                try {
+                val result = safeRequest {
                     snapshot?.documentChanges?.map { doc ->
                         when (doc.type) {
                             DocumentChange.Type.ADDED -> doc.document.let {
-                                items.add(
-                                    mapItem(it)
+                                itemDTO.add(
+                                    it.documentToItemDTO()
                                 )
                             }
                             DocumentChange.Type.MODIFIED -> doc.document.let {
-                                items.run {
+                                itemDTO.run {
                                     val find = find { item -> it.id == item.id }
                                     set(
-                                        indexOf(find), mapItem(it)
+                                        indexOf(find), it.documentToItemDTO()
                                     )
                                 }
                             }
                             DocumentChange.Type.REMOVED -> doc.document.let {
-                                items.remove(mapItem(it))
+                                itemDTO.remove(it.documentToItemDTO())
                             }
                         }
                     }
-                    trySend(ApiResult.Success(items))
-                } catch (ex: Exception) {
-                    trySend(ApiResult.Error(ex))
+                    itemDTO.fromDTOToListItem()
                 }
+                trySend(result)
             }
         awaitClose {
             listener.remove()
         }
     }
 
-    private fun mapItem(it: QueryDocumentSnapshot) = Item(
-        id = it.id,
-        description = it["description"] as String,
-        currentValue = it["currentValue"] as Double,
-        minimumStock = it["minimumStock"] as Int,
-        currentStock = it["currentStock"] as Int
+    override fun getItemsFromLocal(): Flow<ApiResult<List<Item>>> = flow {
+        val result = safeRequestSuspend {
+            dao.getItems().fromDTOToListItem()
+        }
+        emit(result)
+    }
+
+    private fun QueryDocumentSnapshot.documentToItemDTO() = ItemDTO(
+        id = id,
+        description = this["description"] as String,
+        currentValue = this["currentValue"] as Double,
+        minimumStock = this["minimumStock"] as Int,
+        currentStock = this["currentStock"] as Int
     )
+
+    private fun List<ItemDTO>.fromDTOToListItem(): List<Item> {
+        return this.map { itemDTO ->
+            Item(
+                id = itemDTO.id,
+                description = itemDTO.description,
+                currentValue = itemDTO.currentValue,
+                minimumStock = itemDTO.minimumStock,
+                currentStock = itemDTO.currentStock,
+                quantity = 0
+            )
+        }
+    }
 }

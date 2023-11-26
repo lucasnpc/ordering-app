@@ -8,7 +8,7 @@ import java.util.UUID
 
 @Entity
 @TypeConverters(MapItemIdTypeConverter::class)
-data class Order(
+data class OrderDTO(
     @PrimaryKey
     val id: String = UUID.randomUUID().toString(),
     val items: Map<String, Int> = mapOf(),
