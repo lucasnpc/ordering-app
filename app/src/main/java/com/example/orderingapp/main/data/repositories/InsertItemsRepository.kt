@@ -18,15 +18,13 @@ class InsertItemsRepository(private val dao: OrderingAppDao) : InsertItemsUseCas
         }
         emit(result)
     }
-
-}
-
-fun Item.toItemDTO(): ItemDTO {
-    return ItemDTO(
-        id = id,
-        description = description,
-        currentValue = currentValue,
-        minimumStock = minimumStock,
-        currentStock = currentStock
-    )
+    private fun Item.toItemDTO(): ItemDTO {
+        return ItemDTO(
+            id = id,
+            description = description,
+            currentValue = currentValue,
+            minimumStock = minimumStock,
+            currentStock = currentStock
+        )
+    }
 }

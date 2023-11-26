@@ -18,6 +18,10 @@ interface OrderingAppDao {
 
     @Query("SELECT * FROM OrderDTO")
     fun getOrders(): List<OrderDTO>
+
+    @Query("SELECT * FROM OrderDTO WHERE synced == 0")
+    fun getUnsyncedOrders(): List<OrderDTO>
+
     @Query("UPDATE OrderDTO SET synced = 1 WHERE id = :orderId")
     fun updateOrderSync(orderId: String)
 

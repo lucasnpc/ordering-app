@@ -9,13 +9,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class GetOrdersRepository(private val dao: OrderingAppDao) : GetOrdersUseCase {
-    override fun getOrders(): Flow<List<OrderDTO>> = flow {
+    override fun getOrders(): Flow<ApiResult<List<OrderDTO>>> = flow {
         val result = safeRequestSuspend {
             dao.getOrders()
         }
-        when (result) {
-            is ApiResult.Success -> emit(result.data)
-            is ApiResult.Error -> throw result.exception
+        emit(result)
+    }
+
+    override fun getUnsyncedOrders(): Flow<ApiResult<List<OrderDTO>>> = flow {
+        val result = safeRequestSuspend {
+            dao.getUnsyncedOrders()
         }
+        emit(result)
     }
 }

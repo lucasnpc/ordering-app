@@ -2,6 +2,7 @@ package com.example.orderingapp.main.data.repositories
 
 import com.example.orderingapp.commons.ApiResult
 import com.example.orderingapp.main.data.dao.OrderingAppDao
+import com.example.orderingapp.main.data.entities.ItemDTO
 import com.example.orderingapp.main.data.utils.FakeOrderingDao
 import com.example.orderingapp.main.data.utils.TestConstants.exception
 import com.example.orderingapp.main.data.utils.TestConstants.msgEx
@@ -29,7 +30,7 @@ class InsertItemsRepositoryTest {
     fun insertItem() = runTest {
         insertItemsUseCase.insertItem(listOf(item)).take(1).collect {
             assertThat(it).isInstanceOf(ApiResult.Success::class.java)
-            assertThat(dao.getItems()).contains(item.toItemDTO())
+            assertThat(dao.getItems()).contains(itemDTO)
         }
     }
 
@@ -37,7 +38,7 @@ class InsertItemsRepositoryTest {
     fun insertItemException() = runTest {
         dao = mockk()
         insertItemsUseCase = InsertItemsRepository(dao)
-        every { dao.insertItem(item.toItemDTO()) } throws exception
+        every { dao.insertItem(itemDTO) } throws exception
         insertItemsUseCase.insertItem(listOf(item)).take(1).collect {
             assertThat(it).isInstanceOf(ApiResult.Error::class.java)
             it as ApiResult.Error
@@ -53,6 +54,13 @@ class InsertItemsRepositoryTest {
             minimumStock = 5,
             currentStock = 10,
             quantity = 2
+        )
+        val itemDTO = ItemDTO(
+            id = "123",
+            description = "testeItem",
+            currentValue = 10.0,
+            minimumStock = 5,
+            currentStock = 10
         )
     }
 }

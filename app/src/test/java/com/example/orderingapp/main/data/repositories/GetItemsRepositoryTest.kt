@@ -2,6 +2,7 @@ package com.example.orderingapp.main.data.repositories
 
 import com.example.orderingapp.commons.ApiResult
 import com.example.orderingapp.main.data.dao.OrderingAppDao
+import com.example.orderingapp.main.data.entities.ItemDTO
 import com.example.orderingapp.main.data.utils.TestConstants.exception
 import com.example.orderingapp.main.data.utils.TestConstants.msgEx
 import com.example.orderingapp.main.domain.model.Item
@@ -39,8 +40,8 @@ class GetItemsRepositoryTest {
     private val dao: OrderingAppDao = mockk()
 
     // 1 to add, 2 to modify 3 to remove
-    var operation = 1
-    var isRemoving = false
+    private var operation = 1
+    private var isRemoving = false
 
     @Before
     fun setup() {
@@ -81,7 +82,7 @@ class GetItemsRepositoryTest {
 
     @Test
     fun getItemsLocal() = runTest {
-        every { dao.getItems() } returns listOf(item.toItemDTO())
+        every { dao.getItems() } returns listOf(itemDTO)
         getItemsUseCase.getItemsFromLocal().collect { result ->
             assertSuccess(result)
         }
@@ -184,6 +185,13 @@ class GetItemsRepositoryTest {
             minimumStock = item.minimumStock,
             currentStock = item.currentStock,
             quantity = 0
+        )
+        val itemDTO = ItemDTO(
+            id = "123",
+            description = "testeItem",
+            currentValue = 10.0,
+            minimumStock = 5,
+            currentStock = 10,
         )
     }
 }
