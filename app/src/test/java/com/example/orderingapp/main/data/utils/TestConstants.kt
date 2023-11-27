@@ -1,5 +1,6 @@
 package com.example.orderingapp.main.data.utils
 
+import androidx.compose.runtime.mutableStateOf
 import com.example.orderingapp.main.data.entities.ItemDTO
 import com.example.orderingapp.main.data.entities.OrderDTO
 import com.example.orderingapp.main.domain.model.Item
@@ -29,7 +30,7 @@ object TestConstants {
             Item(
                 id = "1",
                 description = "item 1",
-                quantity = 2
+                quantity = mutableStateOf(2)
             )
         ),
         date = "21/12/2021",
@@ -49,7 +50,7 @@ object TestConstants {
         currentValue = 10.0,
         minimumStock = 5,
         currentStock = 10,
-        quantity = 0
+        quantity = mutableStateOf(0)
     )
     val itemModify = Item(
         id = item.id,
@@ -57,7 +58,7 @@ object TestConstants {
         currentValue = item.currentValue,
         minimumStock = item.minimumStock,
         currentStock = item.currentStock,
-        quantity = 0
+        quantity = mutableStateOf(0)
     )
     val itemDTO = ItemDTO(
         id = "123",

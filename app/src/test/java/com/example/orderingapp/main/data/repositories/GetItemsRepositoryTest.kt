@@ -117,7 +117,13 @@ class GetItemsRepositoryTest {
         getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
             result as ApiResult.Success
-            assertThat(result.data).contains(itemModify)
+            assertThat(result.data).doesNotContain(itemModify)
+            assertThat(result.data[0].id).isEqualTo(itemModify.id)
+            assertThat(result.data[0].description).isEqualTo(itemModify.description)
+            assertThat(result.data[0].currentValue).isEqualTo(itemModify.currentValue)
+            assertThat(result.data[0].minimumStock).isEqualTo(itemModify.minimumStock)
+            assertThat(result.data[0].currentStock).isEqualTo(itemModify.currentStock)
+            assertThat(result.data[0].quantity.value).isEqualTo(itemModify.quantity.value)
         }
     }
 
@@ -130,7 +136,6 @@ class GetItemsRepositoryTest {
         getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
             result as ApiResult.Success
-            assertThat(result.data).doesNotContain(itemModify)
         }
     }
 
@@ -161,7 +166,12 @@ class GetItemsRepositoryTest {
     private fun assertSuccess(result: ApiResult<List<Item>>) {
         assertThat(result).isInstanceOf(ApiResult.Success::class.java)
         result as ApiResult.Success
-        assertThat(result.data).contains(item)
+        assertThat(result.data[0].id).isEqualTo(item.id)
+        assertThat(result.data[0].description).isEqualTo(item.description)
+        assertThat(result.data[0].currentValue).isEqualTo(item.currentValue)
+        assertThat(result.data[0].minimumStock).isEqualTo(item.minimumStock)
+        assertThat(result.data[0].currentStock).isEqualTo(item.currentStock)
+        assertThat(result.data[0].quantity.value).isEqualTo(item.quantity.value)
     }
 
     private fun assertError(

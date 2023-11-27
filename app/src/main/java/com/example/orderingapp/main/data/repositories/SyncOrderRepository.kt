@@ -6,8 +6,10 @@ import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.SyncOrderUseCase
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class SyncOrderRepository(
     private val firestore: FirebaseFirestore,
@@ -25,5 +27,5 @@ class SyncOrderRepository(
             dao.updateOrderSync(order.id)
         }
         emit(result)
-    }
+    }.flowOn(Dispatchers.IO)
 }

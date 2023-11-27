@@ -60,7 +60,17 @@ class GetOrdersRepositoryTest {
     private fun assertSuccess(result: ApiResult<List<Order>>) {
         assertThat(result).isInstanceOf(ApiResult.Success::class.java)
         result as ApiResult.Success
-        assertThat(result.data).contains(order)
+        assertThat(result.data[0].id).isEqualTo(order.id)
+        assertThat(result.data[0].items[0].id).isEqualTo(order.items[0].id)
+        assertThat(result.data[0].items[0].description).isEqualTo(order.items[0].description)
+        assertThat(result.data[0].items[0].currentValue).isEqualTo(order.items[0].currentValue)
+        assertThat(result.data[0].items[0].minimumStock).isEqualTo(order.items[0].minimumStock)
+        assertThat(result.data[0].items[0].currentStock).isEqualTo(order.items[0].currentStock)
+        assertThat(result.data[0].items[0].quantity.value).isEqualTo(order.items[0].quantity.value)
+        assertThat(result.data[0].date).isEqualTo(order.date)
+        assertThat(result.data[0].hour).isEqualTo(order.hour)
+        assertThat(result.data[0].orderValue).isEqualTo(order.orderValue)
+        assertThat(result.data[0].synced).isEqualTo(order.synced)
     }
 
     private fun assertError(result: ApiResult<List<Order>>) {

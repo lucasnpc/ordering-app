@@ -10,10 +10,12 @@ import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class GetItemsRepository(
     private val firestore: FirebaseFirestore,
@@ -63,7 +65,7 @@ class GetItemsRepository(
             dao.getItems().fromDTOToListItem()
         }
         emit(result)
-    }
+    }.flowOn(Dispatchers.IO)
 
     private fun QueryDocumentSnapshot.documentToItemDTO() = ItemDTO(
         id = id,
@@ -81,7 +83,6 @@ class GetItemsRepository(
                 currentValue = itemDTO.currentValue,
                 minimumStock = itemDTO.minimumStock,
                 currentStock = itemDTO.currentStock,
-                quantity = 0
             )
         }
     }

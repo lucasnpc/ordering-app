@@ -10,6 +10,6 @@ import androidx.compose.ui.Modifier
 @Composable
 fun StockScreen() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Fuck StockScreen")
+        Text(text = "Estoque ainda em desenvolvimento")
     }
 }

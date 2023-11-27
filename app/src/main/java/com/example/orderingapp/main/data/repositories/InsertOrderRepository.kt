@@ -8,8 +8,10 @@ import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.InsertOrderUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class InsertOrderRepository(
     private val orderingAppDao: OrderingAppDao
@@ -22,5 +24,5 @@ class InsertOrderRepository(
                 orderingAppDao.getUnsyncedOrders().fromOrderDTOToOrder(_items)
             }
             emit(result)
-        }
+        }.flowOn(Dispatchers.IO)
 }

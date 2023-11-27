@@ -9,6 +9,7 @@ import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -21,29 +22,41 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
 
     init {
         viewModelScope.launch {
-            mainUseCases.getItemsUseCase.getItemsFromRemote().collect { result ->
-                when (result) {
-                    is ApiResult.Success -> {
-                        _items.clear()
-                        _items.run {
-                            result.data.forEach { item ->
-                                find { it.id == item.id }?.let {
-                                    set(indexOf(it), item)
-                                } ?: _items.add(item)
-                            }
-                        }
-                    }
-                    is ApiResult.Error -> Unit
+            observeMenuItems()
+            getUnsyncedOrders()
+        }
+    }
+
+    private suspend fun observeMenuItems() {
+        mainUseCases.getItemsUseCase.getItemsFromRemote().first { result ->
+            when (result) {
+                is ApiResult.Success -> {
+                    _items.clear()
+                    _items.addAll(result.data)
+                    true
                 }
+                is ApiResult.Error -> false
             }
-            mainUseCases.getOrdersUseCase.getUnsyncedOrders(_items).collect { result ->
+        }
+    }
+
+    private fun getUnsyncedOrders() {
+        viewModelScope.launch {
+            mainUseCases.getOrdersUseCase.getUnsyncedOrders(_items).first { result ->
                 when (result) {
                     is ApiResult.Success -> {
+                        _unsyncedOrders.clear()
                         _unsyncedOrders.addAll(result.data)
+                        true
                     }
-                    is ApiResult.Error -> Unit
+                    is ApiResult.Error -> false
                 }
             }
         }
+    }
+
+    fun setUnsyncedOrders(orders: List<Order>) {
+        _unsyncedOrders.clear()
+        _unsyncedOrders.addAll(orders)
     }
 }
