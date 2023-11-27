@@ -35,7 +35,11 @@ class MainActivity : ComponentActivity() {
             OrderingAppTheme {
                 Scaffold(
                     topBar = {
-                        OrderingAppTopBar(navController)
+                        OrderingAppTopBar(
+                            navController,
+                            mainViewModel.unsyncedOrders,
+                            mainViewModel
+                        )
                     },
                     bottomBar = {
                         OrderingAppBottomBar(navController)
@@ -62,7 +66,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         composable(route = ScreenList.OrderScreen.route) {
-                            OrderScreen()
+                            OrderScreen(mainViewModel.items)
                         }
                         composable(route = ScreenList.StockScreen.route) {
                             StockScreen()

@@ -59,4 +59,8 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
         _unsyncedOrders.clear()
         _unsyncedOrders.addAll(orders)
     }
+
+    fun startSyncing(unsyncedOrders: List<Order>) {
+        TODO("Not yet implemented")
+    }
 }
