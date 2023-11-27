@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetOrdersUseCase {
     fun getOrders(_items: List<Item>): Flow<ApiResult<List<Order>>>
+    fun getUnsyncedOrders(_items: List<Item>): Flow<ApiResult<List<Order>>>
 }

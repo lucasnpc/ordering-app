@@ -68,9 +68,9 @@ class GetItemsRepository(
     private fun QueryDocumentSnapshot.documentToItemDTO() = ItemDTO(
         id = id,
         description = this["description"] as String,
-        currentValue = this["currentValue"] as Double,
-        minimumStock = this["minimumStock"] as Int,
-        currentStock = this["currentStock"] as Int
+        currentValue = this["currentValue"].toString().toDouble(),
+        minimumStock = this["minimumStock"].toString().toInt(),
+        currentStock = this["currentStock"].toString().toInt()
     )
 
     private fun List<ItemDTO>.fromDTOToListItem(): List<Item> {

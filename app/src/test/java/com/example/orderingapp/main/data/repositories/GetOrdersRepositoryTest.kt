@@ -2,13 +2,11 @@ package com.example.orderingapp.main.data.repositories
 
 import com.example.orderingapp.commons.ApiResult
 import com.example.orderingapp.main.data.dao.OrderingAppDao
-import com.example.orderingapp.main.data.entities.OrderDTO
 import com.example.orderingapp.main.data.utils.TestConstants.listItems
 import com.example.orderingapp.main.data.utils.TestConstants.listOrder
 import com.example.orderingapp.main.data.utils.TestConstants.order
 import com.example.orderingapp.main.data.utils.TestConstants.testException
 import com.example.orderingapp.main.data.utils.TestConstants.testMsgException
-import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.GetOrdersUseCase
 import com.google.common.truth.Truth.assertThat
@@ -35,11 +33,26 @@ class GetOrdersRepositoryTest {
             assertSuccess(result)
         }
     }
+    @Test
+    fun getUnsyncedOrders() = runTest {
+        every { dao.getUnsyncedOrders() } returns listOrder
+        getOrdersUseCase.getUnsyncedOrders(listItems).collect { result ->
+            assertSuccess(result)
+        }
+    }
 
     @Test
     fun getOrdersException() = runTest {
         every { dao.getOrders() } throws testException
         getOrdersUseCase.getOrders(listItems).collect{ result ->
+            assertError(result)
+        }
+    }
+
+    @Test
+    fun getUnsyncedOrdersException() = runTest {
+        every { dao.getUnsyncedOrders() } throws testException
+        getOrdersUseCase.getUnsyncedOrders(listItems).collect{ result ->
             assertError(result)
         }
     }

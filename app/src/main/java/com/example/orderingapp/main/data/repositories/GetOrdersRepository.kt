@@ -17,4 +17,10 @@ class GetOrdersRepository(private val dao: OrderingAppDao) : GetOrdersUseCase {
         }
         emit(result)
     }
+    override fun getUnsyncedOrders(_items: List<Item>): Flow<ApiResult<List<Order>>> = flow {
+        val result = safeRequestSuspend {
+            dao.getUnsyncedOrders().fromOrderDTOToOrder(_items)
+        }
+        emit(result)
+    }
 }
