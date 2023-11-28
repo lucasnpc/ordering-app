@@ -1,5 +1,6 @@
 package com.example.orderingapp.main.presentation.components
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Badge
@@ -9,6 +10,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.runtime.Composable
@@ -16,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -28,8 +31,13 @@ import com.example.orderingapp.main.presentation.MainViewModel
 import com.example.orderingapp.main.utils.ScreenList
 
 @Composable
-fun OrderingAppTopBar(navController: NavHostController, unsyncedOrders: List<Order>, mainViewModel: MainViewModel) {
+fun OrderingAppTopBar(
+    navController: NavHostController,
+    unsyncedOrders: List<Order>,
+    mainViewModel: MainViewModel
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val context = LocalContext.current as? Activity
     TopAppBar(title = {
         Text(text = getCurrentPage(navBackStackEntry), fontSize = 20.sp)
     }, actions = {
@@ -65,16 +73,26 @@ fun OrderingAppTopBar(navController: NavHostController, unsyncedOrders: List<Ord
                 tint = MaterialTheme.colors.onPrimary,
             )
         }
+    }, navigationIcon = {
+        IconButton(onClick = {
+            if (!navController.popBackStack()) {
+                context?.finish()
+            }
+        }) {
+            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
+        }
     })
 }
 
 @Composable
 private fun getCurrentPage(navBackStackEntry: NavBackStackEntry?): String {
-    return when (navBackStackEntry?.destination?.route) {
-        ScreenList.MenuScreen.route -> stringResource(id = R.string.menu_name)
-        ScreenList.MenuScreen.route -> stringResource(id = R.string.order_name)
-        ScreenList.MenuScreen.route -> stringResource(id = R.string.stock_name)
-        else -> stringResource(id = R.string.app_name)
-    }
-
+    return navBackStackEntry?.destination?.route?.run {
+        when {
+            this == ScreenList.MenuScreen.route -> stringResource(id = R.string.menu_name)
+            this == ScreenList.OrderScreen.route -> stringResource(id = R.string.order_name)
+            this == ScreenList.StockScreen.route -> stringResource(id = R.string.stock_name)
+            this.contains(ScreenList.VoucherScreen.route) -> stringResource(id = R.string.voucher_name)
+            else -> stringResource(id = R.string.app_name)
+        }
+    }.orEmpty()
 }

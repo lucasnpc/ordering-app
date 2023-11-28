@@ -40,13 +40,13 @@ fun SeeVoucherBt(seeVoucherClick: () -> Unit) {
                     imageVector = Icons.Outlined.Description,
                     contentDescription = "See Voucher Button",
                     tint = MaterialTheme.colors.primary, modifier = Modifier
-                        .height(32.dp)
-                        .width(32.dp)
+                        .height(24.dp)
+                        .width(24.dp)
                 )
                 Text(
                     text = stringResource(R.string.see_voucher),
                     color = MaterialTheme.colors.secondary,
-                    fontSize = 16.sp
+                    fontSize = 14.sp
                 )
             }
         }

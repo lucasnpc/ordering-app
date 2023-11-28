@@ -36,7 +36,7 @@ fun VoucherScreen(orderJson: String) {
             drawerContent = {
                 PaymentVoucher(
                     order
-                ) { scope.launch { drawerState.close() } }
+                )
             }) {
             Box(
                 modifier = Modifier

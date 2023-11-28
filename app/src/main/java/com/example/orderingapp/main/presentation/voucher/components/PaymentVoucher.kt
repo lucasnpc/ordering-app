@@ -5,15 +5,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.orderingapp.main.domain.model.Order
-import kotlinx.coroutines.Job
 
 @Composable
-fun PaymentVoucher(order: Order, closeClick: () -> Job) {
+fun PaymentVoucher(order: Order) {
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        RedVoucherToolbar { closeClick() }
+        RedVoucherToolbar()
         PaymentVoucherInfo(order)
     }
 }

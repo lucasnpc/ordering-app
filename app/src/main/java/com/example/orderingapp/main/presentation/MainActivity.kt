@@ -108,7 +108,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onResume() {        super.onResume()
+    override fun onResume() {
+        super.onResume()
         when {
             !checkPermissionsEnabled() -> {
                 requestPermissions(

@@ -9,6 +9,7 @@
     <string name="menu_name">Menu</string>
     <string name="order_name">Pedidos</string>
     <string name="stock_name">Estoque</string>
+    <string name="voucher_name">Comprovante</string>
     <string name="payment_voucher">Comprovante de pagamento</string>
     <string name="voucher_saved">Comprovante salvo com sucesso</string>
     <string name="documents_path">/Documents/%s.pdf</string>

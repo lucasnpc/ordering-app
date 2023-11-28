@@ -20,7 +20,7 @@ fun RealizedPaymentInfo(order: Order) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp),
+            .height(260.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = "${order.date}, ${order.hour}", fontSize = 20.sp)
