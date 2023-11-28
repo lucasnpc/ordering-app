@@ -20,20 +20,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.orderingapp.R
 import com.example.orderingapp.commons.extensions.toDateFormat
 import com.example.orderingapp.commons.extensions.toHourFormat
-import com.example.orderingapp.main.domain.model.Item
+import com.example.orderingapp.commons.mappings.composeToListItem
+import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.presentation.components.MoneyField
 import com.example.orderingapp.main.presentation.menu.MenuViewModel
 
 @Composable
 fun PaymentOptions(
-    addedItems: List<Item>,
+    addedItems: List<ItemCompose>,
     menuViewModel: MenuViewModel,
     unsyncedOrdersCallback: (List<Order>) -> Unit
 ) {
@@ -44,7 +47,7 @@ fun PaymentOptions(
     var changeValue by remember {
         mutableStateOf(0.0)
     }
-    val total = addedItems.sumOf { it.currentValue * it.quantity.value }
+    val total = addedItems.sumOf { it.item.currentValue * it.quantity.value }
 
     Column {
         radioOptions.forEach {
@@ -88,10 +91,10 @@ fun PaymentOptions(
             onClick = {
                 menuViewModel.insertOrder(
                     Order(
-                        items = addedItems,
+                        items = addedItems.composeToListItem(),
                         hour = System.currentTimeMillis().toHourFormat(),
                         date = System.currentTimeMillis().toDateFormat(),
-                        orderValue = addedItems.sumOf { it.currentValue * it.quantity.value },
+                        orderValue = addedItems.sumOf { it.item.currentValue * it.quantity.value },
                         paymentWay = selectedOption
                     ), unsyncedOrdersCallback
                 )
@@ -99,7 +102,7 @@ fun PaymentOptions(
             enabled = changeValue >= total || selectedOption != "Dinheiro",
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Text(text = "Efetuar pagamento")
+            Text(text = stringResource(R.string.effect_payment))
         }
     }
 

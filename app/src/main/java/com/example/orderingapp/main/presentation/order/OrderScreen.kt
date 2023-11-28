@@ -26,11 +26,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.orderingapp.main.domain.model.Item
+import com.example.orderingapp.main.domain.model.ItemCompose
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun OrderScreen(list: List<Item>, orderViewModel: OrderViewModel = hiltViewModel()) {
+fun OrderScreen(list: List<ItemCompose>, orderViewModel: OrderViewModel = hiltViewModel()) {
     orderViewModel.getOrders(list)
     Box(modifier = Modifier.padding(PaddingValues(8.dp))) {
         LazyColumn(

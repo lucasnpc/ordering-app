@@ -15,4 +15,9 @@
     <string name="documents_path">/Documents/%s.pdf</string>
     <string name="payment_finished">Pagamento Realizado</string>
     <string name="see_voucher">VER COMPROVANTE</string>
+    <string name="asking_permission">Por favor, precisamos de permissão para emitir seus compovantes</string>
+    <string name="needed_permission">Permissão necessária</string>
+    <string name="ok">ok</string>
+    <string name="cancel">cancelar</string>
+    <string name="effect_payment">Efetuar pagamento</string>
 </resources>

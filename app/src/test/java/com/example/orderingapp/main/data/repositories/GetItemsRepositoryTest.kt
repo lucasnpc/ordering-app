@@ -1,6 +1,6 @@
 package com.example.orderingapp.main.data.repositories
 
-import com.example.orderingapp.commons.ApiResult
+import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.commons.TestConstants.item
 import com.example.orderingapp.main.commons.TestConstants.itemDTO
 import com.example.orderingapp.main.commons.TestConstants.itemModify

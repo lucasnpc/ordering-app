@@ -1,11 +1,13 @@
 package com.example.orderingapp.main.data.repositories
 
-import com.example.orderingapp.commons.ApiResult
+import com.example.orderingapp.commons.mappings.composeToListItem
+import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.commons.mappings.fromOrderDTOToOrder
 import com.example.orderingapp.commons.mappings.toOrderDTO
-import com.example.orderingapp.commons.safeRequestSuspend
+import com.example.orderingapp.commons.request.safeRequestSuspend
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.domain.model.Item
+import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.InsertOrderUseCase
 import kotlinx.coroutines.Dispatchers
@@ -17,11 +19,11 @@ class InsertOrderRepository(
     private val orderingAppDao: OrderingAppDao
 ) : InsertOrderUseCase {
 
-    override fun insertOrderLocal(order: Order, _items: List<Item>): Flow<ApiResult<List<Order>>> =
+    override fun insertOrderLocal(order: Order, _items: List<ItemCompose>): Flow<ApiResult<List<Order>>> =
         flow {
             val result = safeRequestSuspend {
                 orderingAppDao.insertOrder(order.toOrderDTO())
-                orderingAppDao.getUnsyncedOrders().fromOrderDTOToOrder(_items)
+                orderingAppDao.getUnsyncedOrders().fromOrderDTOToOrder(_items.composeToListItem())
             }
             emit(result)
         }.flowOn(Dispatchers.IO)

@@ -3,8 +3,8 @@ package com.example.orderingapp.main.presentation.menu
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.orderingapp.commons.ApiResult
-import com.example.orderingapp.main.domain.model.Item
+import com.example.orderingapp.commons.request.ApiResult
+import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MenuViewModel @Inject constructor(private val mainUseCases: MainUseCases) : ViewModel() {
-    private val _items = mutableStateListOf<Item>()
-    val items: List<Item> = _items
+    private val _items = mutableStateListOf<ItemCompose>()
+    val items: List<ItemCompose> = _items
 
     init {
         viewModelScope.launch {
@@ -48,10 +48,9 @@ class MenuViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
     }
 
     private fun cleanItems() {
-        _items.filter { it.finalQuantity > 0 }.forEach { addedItem ->
-            addedItem.quantity.value = 0
-            addedItem.finalQuantity = addedItem.quantity.value
-
+        _items.filter { it.item.finalQuantity > 0 }.forEach { itemCompose ->
+            itemCompose.quantity.value = 0
+            itemCompose.item.finalQuantity = itemCompose.quantity.value
         }
     }
 }

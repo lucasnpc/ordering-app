@@ -1,4 +1,4 @@
-package com.example.orderingapp.commons
+package com.example.orderingapp.commons.request
 
 suspend fun <T : Any> safeRequestSuspend(
     apiCall: suspend () -> T

@@ -1,6 +1,6 @@
 package com.example.orderingapp.main.data.repositories
 
-import com.example.orderingapp.commons.ApiResult
+import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.commons.TestConstants.listItems
 import com.example.orderingapp.main.commons.TestConstants.listOrder
@@ -70,7 +70,6 @@ class GetOrdersRepositoryTest {
         assertThat(result.data[0].date).isEqualTo(order.date)
         assertThat(result.data[0].hour).isEqualTo(order.hour)
         assertThat(result.data[0].orderValue).isEqualTo(order.orderValue)
-        assertThat(result.data[0].synced).isEqualTo(order.synced)
     }
 
     private fun assertError(result: ApiResult<List<Order>>) {

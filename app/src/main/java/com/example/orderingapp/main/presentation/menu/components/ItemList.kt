@@ -23,16 +23,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.orderingapp.commons.extensions.currencyFormat
-import com.example.orderingapp.main.domain.model.Item
+import com.example.orderingapp.main.domain.model.ItemCompose
 
 @Composable
-fun ItemsList(list: List<Item>) {
+fun ItemsList(list: List<ItemCompose>) {
     Box(modifier = Modifier.padding(PaddingValues(8.dp))) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(list) { item ->
+            items(list) { itemCompose ->
                 Card(elevation = 8.dp) {
                     Row(
                         modifier = Modifier
@@ -42,21 +42,21 @@ fun ItemsList(list: List<Item>) {
                     ) {
                         Column {
                             Text(
-                                text = item.description,
+                                text = itemCompose.item.description,
                                 fontSize = 18.sp,
                                 modifier = Modifier.width(190.dp),
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis
                             )
-                            Text(text = item.currentValue.currencyFormat(), fontSize = 18.sp)
+                            Text(text = itemCompose.item.currentValue.currencyFormat(), fontSize = 18.sp)
                         }
                         Column {
                             Row {
                                 OutlinedButton(
                                     onClick = {
-                                        if (item.quantity.value > 0) {
-                                            item.quantity.value--
-                                            item.finalQuantity = item.quantity.value
+                                        if (itemCompose.quantity.value > 0) {
+                                            itemCompose.quantity.value--
+                                            itemCompose.item.finalQuantity = itemCompose.quantity.value
                                         }
                                     },
                                     modifier = Modifier.width(40.dp),
@@ -75,12 +75,12 @@ fun ItemsList(list: List<Item>) {
                                         contentColor = Color.White
                                     )
                                 ) {
-                                    Text(text = item.quantity.value.toString())
+                                    Text(text = itemCompose.quantity.value.toString())
                                 }
                                 OutlinedButton(
                                     onClick = {
-                                        item.quantity.value++
-                                        item.finalQuantity = item.quantity.value
+                                        itemCompose.quantity.value++
+                                        itemCompose.item.finalQuantity = itemCompose.quantity.value
                                     },
                                     modifier = Modifier.width(40.dp),
                                     colors = ButtonDefaults.buttonColors(

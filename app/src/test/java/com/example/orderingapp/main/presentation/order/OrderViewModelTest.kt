@@ -1,13 +1,12 @@
 package com.example.orderingapp.main.presentation.order
 
-import com.example.orderingapp.commons.ApiResult
+import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.commons.MainCoroutineRule
 import com.example.orderingapp.main.commons.TestConstants.listItems
 import com.example.orderingapp.main.commons.TestConstants.order
 import com.example.orderingapp.main.commons.TestConstants.testException
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import com.google.common.truth.Truth.assertThat
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flow

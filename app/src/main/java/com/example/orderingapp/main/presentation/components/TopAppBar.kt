@@ -1,6 +1,10 @@
 package com.example.orderingapp.main.presentation.components
 
 import android.app.Activity
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Badge
@@ -17,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -38,6 +43,12 @@ fun OrderingAppTopBar(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val context = LocalContext.current as? Activity
+    val rotation by animateFloatAsState(
+        targetValue = if (mainViewModel.isSyncing.value) 360f else 0f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 3000, easing = LinearEasing),
+        )
+    )
     TopAppBar(title = {
         Text(text = getCurrentPage(navBackStackEntry), fontSize = 20.sp)
     }, actions = {
@@ -55,12 +66,13 @@ fun OrderingAppTopBar(
                     )
                 }
             IconButton(
-                onClick = { mainViewModel.startSyncing(unsyncedOrders) }
+                onClick = { mainViewModel.startSyncing() }
             ) {
                 Icon(
                     imageVector = Icons.Filled.Sync,
                     contentDescription = stringResource(R.string.sync),
                     tint = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier.rotate(if (mainViewModel.isSyncing.value) rotation else 0f)
                 )
             }
         }

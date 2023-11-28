@@ -1,7 +1,7 @@
 package com.example.orderingapp.main.data.repositories
 
-import com.example.orderingapp.commons.ApiResult
-import com.example.orderingapp.commons.safeRequestSuspend
+import com.example.orderingapp.commons.request.ApiResult
+import com.example.orderingapp.commons.request.safeRequestSuspend
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.data.entities.ItemDTO
 import com.example.orderingapp.main.domain.model.Item

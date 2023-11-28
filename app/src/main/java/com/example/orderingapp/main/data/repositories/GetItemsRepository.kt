@@ -1,11 +1,12 @@
 package com.example.orderingapp.main.data.repositories
 
-import com.example.orderingapp.commons.ApiResult
-import com.example.orderingapp.commons.safeRequest
-import com.example.orderingapp.commons.safeRequestSuspend
+import com.example.orderingapp.commons.request.ApiResult
+import com.example.orderingapp.commons.request.safeRequest
+import com.example.orderingapp.commons.request.safeRequestSuspend
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.data.entities.ItemDTO
 import com.example.orderingapp.main.domain.model.Item
+import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
@@ -23,7 +24,7 @@ class GetItemsRepository(
 ) : GetItemsUseCase {
     private val itemDTO = mutableListOf<ItemDTO>()
 
-    override fun getItemsFromRemote(): Flow<ApiResult<List<Item>>> = callbackFlow {
+    override fun getItemsFromRemote(): Flow<ApiResult<List<ItemCompose>>> = callbackFlow {
         val listener =
             firestore.collection("items").addSnapshotListener { snapshot, exception ->
                 if (exception != null) {
@@ -51,7 +52,7 @@ class GetItemsRepository(
                             }
                         }
                     }
-                    itemDTO.fromDTOToListItem()
+                    itemDTO.fromDTOToListItemCompose()
                 }
                 trySend(result)
             }
@@ -60,9 +61,9 @@ class GetItemsRepository(
         }
     }
 
-    override fun getItemsFromLocal(): Flow<ApiResult<List<Item>>> = flow {
+    override fun getItemsFromLocal(): Flow<ApiResult<List<ItemCompose>>> = flow {
         val result = safeRequestSuspend {
-            dao.getItems().fromDTOToListItem()
+            dao.getItems().fromDTOToListItemCompose()
         }
         emit(result)
     }.flowOn(Dispatchers.IO)
@@ -75,14 +76,16 @@ class GetItemsRepository(
         currentStock = this["currentStock"].toString().toInt()
     )
 
-    private fun List<ItemDTO>.fromDTOToListItem(): List<Item> {
+    private fun List<ItemDTO>.fromDTOToListItemCompose(): List<ItemCompose> {
         return this.map { itemDTO ->
-            Item(
-                id = itemDTO.id,
-                description = itemDTO.description,
-                currentValue = itemDTO.currentValue,
-                minimumStock = itemDTO.minimumStock,
-                currentStock = itemDTO.currentStock,
+            ItemCompose(
+                Item(
+                    id = itemDTO.id,
+                    description = itemDTO.description,
+                    currentValue = itemDTO.currentValue,
+                    minimumStock = itemDTO.minimumStock,
+                    currentStock = itemDTO.currentStock,
+                )
             )
         }
     }

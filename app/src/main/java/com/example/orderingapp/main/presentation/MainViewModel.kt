@@ -1,34 +1,26 @@
 package com.example.orderingapp.main.presentation
 
-import android.content.Context
-import android.graphics.pdf.PdfDocument
-import android.os.Environment
-import android.widget.Toast
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.orderingapp.R
-import com.example.orderingapp.commons.ApiResult
-import com.example.orderingapp.main.domain.model.Item
+import com.example.orderingapp.commons.request.ApiResult
+import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) : ViewModel() {
+    val isSyncing = mutableStateOf(false)
     private val _unsyncedOrders = mutableStateListOf<Order>()
     val unsyncedOrders: List<Order> = _unsyncedOrders
 
-    private val _items = mutableStateListOf<Item>()
-    val items: List<Item> = _items
+    private val _items = mutableStateListOf<ItemCompose>()
+    val items: List<ItemCompose> = _items
 
     init {
         viewModelScope.launch {
@@ -70,35 +62,34 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
         _unsyncedOrders.addAll(orders)
     }
 
-    fun startSyncing(unsyncedOrders: List<Order>) {
-        TODO("Not yet implemented")
-    }
-
-    fun writeDoc(doc: PdfDocument, context: Context, order: Order) {
+    fun startSyncing() {
         viewModelScope.launch {
-            try {
-                withContext(Dispatchers.IO) {
-                    doc.writeTo(
-                        FileOutputStream(
-                            File(
-                                Environment.getExternalStorageDirectory().path,
-                                context.getString(
-                                    R.string.documents_path,
-                                    order.id
-                                )
-                            )
-                        )
-                    )
+            isSyncing.value = true
+            mainUseCases.syncOrderUseCase.syncOrderRemote(_unsyncedOrders).collect { result ->
+                when (result) {
+                    is ApiResult.Success -> {
+                        updateOrdersLocal()
+                    }
+                    is ApiResult.Error -> {
+                        isSyncing.value = false
+                    }
                 }
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.voucher_saved),
-                    Toast.LENGTH_SHORT
-                ).show()
-            } catch (e: IOException) {
-                e.printStackTrace()
             }
-            doc.close()
         }
     }
+
+    private suspend fun updateOrdersLocal() {
+        mainUseCases.syncOrderUseCase.syncOrderLocal(_unsyncedOrders).collect { result ->
+            when (result) {
+                is ApiResult.Success -> {
+                    _unsyncedOrders.clear()
+                    isSyncing.value = false
+                }
+                is ApiResult.Error -> {
+                    isSyncing.value = false
+                }
+            }
+        }
+    }
+
 }

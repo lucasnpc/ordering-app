@@ -1,8 +1,8 @@
 package com.example.orderingapp.commons.mappings
 
-import androidx.compose.runtime.mutableStateOf
 import com.example.orderingapp.main.data.entities.OrderDTO
 import com.example.orderingapp.main.domain.model.Item
+import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 
 fun List<OrderDTO>.fromOrderDTOToOrder(_items: List<Item>): List<Order> {
@@ -14,7 +14,6 @@ fun List<OrderDTO>.fromOrderDTOToOrder(_items: List<Item>): List<Order> {
             hour = orderDTO.dateHour.split(" ")[1],
             orderValue = orderDTO.orderValue,
             paymentWay = orderDTO.paymentWay,
-            synced = orderDTO.synced
         )
     }
 }
@@ -29,7 +28,6 @@ fun Map<String, Int>.toListItem(_items: List<Item>): List<Item> {
                 minimumStock = find.minimumStock,
                 currentStock = find.currentStock,
                 finalQuantity = find.finalQuantity,
-                quantity = mutableStateOf(it.value)
             )
         } ?: Item()
     }
@@ -40,10 +38,13 @@ fun Map<String, Int>.toListItem(_items: List<Item>): List<Item> {
 fun Order.toOrderDTO(): OrderDTO {
     return OrderDTO(
         id = id,
-        items = items.associate { it.id to it.quantity.value },
+        items = items.associate { it.id to it.finalQuantity },
         dateHour = "$date $hour",
         orderValue = orderValue,
         paymentWay = paymentWay,
-        synced = synced
     )
+}
+
+fun List<ItemCompose>.composeToListItem(): List<Item> {
+    return this.map { it.item }
 }

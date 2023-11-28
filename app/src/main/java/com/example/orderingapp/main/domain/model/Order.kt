@@ -9,5 +9,4 @@ data class Order(
     val hour: String,
     val orderValue: Double,
     val paymentWay: String,
-    val synced: Boolean = false
 )

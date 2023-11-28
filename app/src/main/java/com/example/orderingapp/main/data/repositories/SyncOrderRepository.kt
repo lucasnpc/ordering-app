@@ -1,7 +1,7 @@
 package com.example.orderingapp.main.data.repositories
 
-import com.example.orderingapp.commons.ApiResult
-import com.example.orderingapp.commons.safeRequestSuspend
+import com.example.orderingapp.commons.request.ApiResult
+import com.example.orderingapp.commons.request.safeRequestSuspend
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.SyncOrderUseCase
@@ -15,16 +15,20 @@ class SyncOrderRepository(
     private val firestore: FirebaseFirestore,
     private val dao: OrderingAppDao
 ) : SyncOrderUseCase {
-    override fun syncOrderRemote(order: Order): Flow<ApiResult<Boolean>> = flow {
+    override fun syncOrderRemote(orders: List<Order>): Flow<ApiResult<Unit>> = flow {
         val result = safeRequestSuspend {
-            firestore.collection("orders").add(order).isSuccessful
+            orders.forEach { order ->
+                firestore.collection("orders").document(order.id).set(order)
+            }
         }
         emit(result)
     }
 
-    override fun syncOrderLocal(order: Order): Flow<ApiResult<Unit>> = flow {
+    override fun syncOrderLocal(orders: List<Order>): Flow<ApiResult<Unit>> = flow {
         val result = safeRequestSuspend {
-            dao.updateOrderSync(order.id)
+            orders.forEach {order ->
+                dao.updateOrderSync(order.id)
+            }
         }
         emit(result)
     }.flowOn(Dispatchers.IO)

@@ -1,6 +1,6 @@
 package com.example.orderingapp.main.presentation.menu
 
-import com.example.orderingapp.commons.ApiResult
+import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.commons.extensions.toDateFormat
 import com.example.orderingapp.commons.extensions.toHourFormat
 import com.example.orderingapp.commons.mappings.fromOrderDTOToOrder
