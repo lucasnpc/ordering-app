@@ -34,7 +34,7 @@ fun Map<String, Int>.toListItem(_items: List<Item>): List<Item> {
         } ?: Item()
     }
 
-    return list.filter { it.quantity.value > 0 }
+    return list.filter { it.finalQuantity > 0 }
 }
 
 fun Order.toOrderDTO(): OrderDTO {

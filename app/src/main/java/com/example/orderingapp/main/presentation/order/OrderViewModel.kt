@@ -24,9 +24,8 @@ class OrderViewModel @Inject constructor(private val mainUseCases: MainUseCases)
                         _orders.clear()
                         _orders.addAll(result.data)
                     }
-                    is ApiResult.Error -> Unit
+                    is ApiResult.Error -> _orders.clear()
                 }
-
             }
         }
     }

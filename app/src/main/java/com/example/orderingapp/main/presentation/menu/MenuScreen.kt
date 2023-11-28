@@ -33,16 +33,15 @@ fun MenuScreen(
     BottomDrawer(
         drawerState = drawerState,
         drawerContent = {
-            PaymentOptions(total = menuViewModel.items.filter { it.quantity.value > 0 }
-                .sumOf { it.currentValue * it.quantity.value },
+            PaymentOptions(
+                addedItems = menuViewModel.items.filter { it.quantity.value > 0 },
                 menuViewModel = menuViewModel,
                 unsyncedOrdersCallback = {
                     scope.launch {
                         drawerState.close()
                     }
                     unsyncedOrdersCallback(it)
-                }
-            )
+                })
         }) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             ItemsList(list = menuViewModel.items)

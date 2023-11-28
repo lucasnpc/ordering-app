@@ -1,4 +1,4 @@
-package com.example.orderingapp.main.data.utils
+package com.example.orderingapp.main.commons
 
 import androidx.compose.runtime.mutableStateOf
 import com.example.orderingapp.main.data.entities.ItemDTO
@@ -13,14 +13,20 @@ object TestConstants {
     val listItems = listOf(
         Item(
             id = "1",
-            description = "item 1"
-        ), Item(id = "2", description = "item 2")
+            description = "item 1",
+            finalQuantity = 2
+        ), Item(
+            id = "2",
+            description = "item 2",
+            finalQuantity = 2
+        )
     )
     val listOrder = listOf(
         OrderDTO(
             id = "123",
-            items = mapOf("1" to 2), dateHour = "12:00:00 21/12/2021",
+            items = mapOf("1" to 2), dateHour = "21/12/2021 12:00:00",
             orderValue = 10.0,
+            paymentWay = "Pix",
             synced = false
         )
     )
@@ -35,22 +41,20 @@ object TestConstants {
         ),
         date = "21/12/2021",
         hour = "12:00:00",
+        paymentWay = "Pix",
         orderValue = 10.0,
     )
     val orderDTO = OrderDTO(
         id = "123",
         items = mapOf("1" to 2),
-        dateHour = "12:00:00 21/12/2021",
+        dateHour = "21/12/2021 12:00:00",
         orderValue = 10.0,
+        paymentWay = "Pix",
         synced = false
     )
     val item = Item(
-        id = "123",
-        description = "testeItem",
-        currentValue = 10.0,
-        minimumStock = 5,
-        currentStock = 10,
-        quantity = mutableStateOf(0)
+        id = "1",
+        description = "item 1",
     )
     val itemModify = Item(
         id = item.id,
@@ -61,10 +65,10 @@ object TestConstants {
         quantity = mutableStateOf(0)
     )
     val itemDTO = ItemDTO(
-        id = "123",
-        description = "testeItem",
-        currentValue = 10.0,
-        minimumStock = 5,
-        currentStock = 10,
+        id = "1",
+        description = "item 1",
+        currentValue = 0.0,
+        minimumStock = 0,
+        currentStock = 0,
     )
 }

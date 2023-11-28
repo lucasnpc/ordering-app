@@ -4,8 +4,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.orderingapp.commons.ApiResult
-import com.example.orderingapp.commons.extensions.toDateFormat
-import com.example.orderingapp.commons.extensions.toHourFormat
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.MainUseCases
@@ -26,36 +24,34 @@ class MenuViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
                         _items.clear()
                         _items.addAll(result.data)
                     }
-                    is ApiResult.Error -> Unit
+                    is ApiResult.Error -> _items.clear()
                 }
             }
         }
     }
 
-    fun insertOrder(paymentWay: String, unsyncedOrdersCallback: (List<Order>) -> Unit) {
+    fun insertOrder(order: Order, unsyncedOrdersCallback: (List<Order>) -> Unit) {
         viewModelScope.launch {
-            val addedItems = _items.filter { it.quantity.value > 0 }
-            mainUseCases.insertOrderUseCase.insertOrderLocal(
-                Order(
-                    items = addedItems,
-                    hour = System.currentTimeMillis().toHourFormat(),
-                    date = System.currentTimeMillis().toDateFormat(),
-                    orderValue = addedItems.sumOf { it.currentValue * it.quantity.value },
-                    paymentWay = paymentWay
-                ),
-                _items
-            ).collect { result ->
+            mainUseCases.insertOrderUseCase.insertOrderLocal(order, _items).collect { result ->
                 when (result) {
                     is ApiResult.Success -> {
-                        _items.filter { it.quantity.value > 0 }.forEach { addedItem ->
-                            addedItem.quantity.value = 0
-                            addedItem.finalQuantity = addedItem.quantity.value
-                        }
+                        cleanItems()
                         unsyncedOrdersCallback(result.data)
                     }
-                    is ApiResult.Error -> Unit
+                    is ApiResult.Error -> {
+                        cleanItems()
+                        unsyncedOrdersCallback(listOf())
+                    }
                 }
             }
+        }
+    }
+
+    private fun cleanItems() {
+        _items.filter { it.finalQuantity > 0 }.forEach { addedItem ->
+            addedItem.quantity.value = 0
+            addedItem.finalQuantity = addedItem.quantity.value
+
         }
     }
 }

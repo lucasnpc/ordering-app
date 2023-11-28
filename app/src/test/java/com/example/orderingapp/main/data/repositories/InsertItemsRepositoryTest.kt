@@ -2,13 +2,11 @@ package com.example.orderingapp.main.data.repositories
 
 import com.example.orderingapp.commons.ApiResult
 import com.example.orderingapp.main.data.dao.OrderingAppDao
-import com.example.orderingapp.main.data.entities.ItemDTO
 import com.example.orderingapp.main.data.utils.FakeOrderingDao
-import com.example.orderingapp.main.data.utils.TestConstants.item
-import com.example.orderingapp.main.data.utils.TestConstants.itemDTO
-import com.example.orderingapp.main.data.utils.TestConstants.testException
-import com.example.orderingapp.main.data.utils.TestConstants.testMsgException
-import com.example.orderingapp.main.domain.model.Item
+import com.example.orderingapp.main.commons.TestConstants.item
+import com.example.orderingapp.main.commons.TestConstants.itemDTO
+import com.example.orderingapp.main.commons.TestConstants.testException
+import com.example.orderingapp.main.commons.TestConstants.testMsgException
 import com.example.orderingapp.main.domain.usecase.InsertItemsUseCase
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every

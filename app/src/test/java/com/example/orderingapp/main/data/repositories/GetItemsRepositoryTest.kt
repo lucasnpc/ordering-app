@@ -1,13 +1,14 @@
 package com.example.orderingapp.main.data.repositories
 
 import com.example.orderingapp.commons.ApiResult
+import com.example.orderingapp.main.commons.TestConstants.item
+import com.example.orderingapp.main.commons.TestConstants.itemDTO
+import com.example.orderingapp.main.commons.TestConstants.itemModify
+import com.example.orderingapp.main.commons.TestConstants.listItems
+import com.example.orderingapp.main.commons.TestConstants.testException
+import com.example.orderingapp.main.commons.TestConstants.testMsgException
+import com.example.orderingapp.main.commons.assertListItemEqualsTo
 import com.example.orderingapp.main.data.dao.OrderingAppDao
-import com.example.orderingapp.main.data.entities.ItemDTO
-import com.example.orderingapp.main.data.utils.TestConstants.item
-import com.example.orderingapp.main.data.utils.TestConstants.itemDTO
-import com.example.orderingapp.main.data.utils.TestConstants.itemModify
-import com.example.orderingapp.main.data.utils.TestConstants.testException
-import com.example.orderingapp.main.data.utils.TestConstants.testMsgException
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import com.google.common.truth.Truth.assertThat
@@ -166,12 +167,7 @@ class GetItemsRepositoryTest {
     private fun assertSuccess(result: ApiResult<List<Item>>) {
         assertThat(result).isInstanceOf(ApiResult.Success::class.java)
         result as ApiResult.Success
-        assertThat(result.data[0].id).isEqualTo(item.id)
-        assertThat(result.data[0].description).isEqualTo(item.description)
-        assertThat(result.data[0].currentValue).isEqualTo(item.currentValue)
-        assertThat(result.data[0].minimumStock).isEqualTo(item.minimumStock)
-        assertThat(result.data[0].currentStock).isEqualTo(item.currentStock)
-        assertThat(result.data[0].quantity.value).isEqualTo(item.quantity.value)
+        result.data.assertListItemEqualsTo(listItems)
     }
 
     private fun assertError(

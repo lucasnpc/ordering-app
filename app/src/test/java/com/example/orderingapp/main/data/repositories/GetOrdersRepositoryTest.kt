@@ -2,11 +2,11 @@ package com.example.orderingapp.main.data.repositories
 
 import com.example.orderingapp.commons.ApiResult
 import com.example.orderingapp.main.data.dao.OrderingAppDao
-import com.example.orderingapp.main.data.utils.TestConstants.listItems
-import com.example.orderingapp.main.data.utils.TestConstants.listOrder
-import com.example.orderingapp.main.data.utils.TestConstants.order
-import com.example.orderingapp.main.data.utils.TestConstants.testException
-import com.example.orderingapp.main.data.utils.TestConstants.testMsgException
+import com.example.orderingapp.main.commons.TestConstants.listItems
+import com.example.orderingapp.main.commons.TestConstants.listOrder
+import com.example.orderingapp.main.commons.TestConstants.order
+import com.example.orderingapp.main.commons.TestConstants.testException
+import com.example.orderingapp.main.commons.TestConstants.testMsgException
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.GetOrdersUseCase
 import com.google.common.truth.Truth.assertThat
