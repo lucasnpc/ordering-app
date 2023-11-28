@@ -67,7 +67,7 @@ internal class OrderingAppDatabaseTest {
         val orderDTO = OrderDTO(
             items = mapOf(
                 itemDTO.id to 10
-            ), dateHour = "21/12/2021 12:00:00",
+            ), date = "21/12/2021 12:00:00",
             paymentWay = "pix",
             orderValue = 100.0
         )

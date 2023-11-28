@@ -12,7 +12,8 @@ data class OrderDTO(
     @PrimaryKey
     val id: String = UUID.randomUUID().toString(),
     val items: Map<String, Int> = mapOf(),
-    val dateHour: String,
+    val date: String,
+    val hour: String,
     val orderValue: Double,
     val paymentWay: String,
     var synced: Boolean = false

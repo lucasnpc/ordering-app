@@ -24,7 +24,7 @@ object TestConstants {
     val listOrder = listOf(
         OrderDTO(
             id = "123",
-            items = mapOf("1" to 2), dateHour = "21/12/2021 12:00:00",
+            items = mapOf("1" to 2), date = "21/12/2021 12:00:00",
             orderValue = 10.0,
             paymentWay = "Pix",
             synced = false
@@ -47,7 +47,7 @@ object TestConstants {
     val orderDTO = OrderDTO(
         id = "123",
         items = mapOf("1" to 2),
-        dateHour = "21/12/2021 12:00:00",
+        date = "21/12/2021 12:00:00",
         orderValue = 10.0,
         paymentWay = "Pix",
         synced = false

@@ -1,4 +1,4 @@
-package com.example.orderingapp.commons.mappings
+package com.example.orderingapp.main.data.repositories.mappings
 
 import com.example.orderingapp.main.data.entities.OrderDTO
 import com.example.orderingapp.main.domain.model.Item
@@ -10,8 +10,8 @@ fun List<OrderDTO>.fromOrderDTOToOrder(_items: List<Item>): List<Order> {
         Order(
             id = orderDTO.id,
             items = orderDTO.items.toListItem(_items),
-            date = orderDTO.dateHour.split(" ")[0],
-            hour = orderDTO.dateHour.split(" ")[1],
+            date = orderDTO.date,
+            hour = orderDTO.hour,
             orderValue = orderDTO.orderValue,
             paymentWay = orderDTO.paymentWay,
         )
@@ -22,12 +22,12 @@ fun Map<String, Int>.toListItem(_items: List<Item>): List<Item> {
     val list = this.map {
         _items.find { item -> item.id == it.key }?.let { find ->
             Item(
-                id = find.id,
+                id = it.key,
                 description = find.description,
                 currentValue = find.currentValue,
                 minimumStock = find.minimumStock,
                 currentStock = find.currentStock,
-                finalQuantity = find.finalQuantity,
+                finalQuantity = it.value,
             )
         } ?: Item()
     }
@@ -39,7 +39,8 @@ fun Order.toOrderDTO(): OrderDTO {
     return OrderDTO(
         id = id,
         items = items.associate { it.id to it.finalQuantity },
-        dateHour = "$date $hour",
+        date = date,
+        hour = hour,
         orderValue = orderValue,
         paymentWay = paymentWay,
     )

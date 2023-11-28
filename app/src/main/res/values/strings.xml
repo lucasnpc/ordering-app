@@ -19,5 +19,7 @@
     <string name="needed_permission">Permissão necessária</string>
     <string name="ok">ok</string>
     <string name="cancel">cancelar</string>
-    <string name="effect_payment">Efetuar pagamento</string>
+    <string name="make_payment">Efetuar pagamento</string>
+    <string name="money_label">Dinheiro</string>
+    <string name="place_order">Realizar pedido</string>
 </resources>

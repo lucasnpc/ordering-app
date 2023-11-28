@@ -14,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.orderingapp.R
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.presentation.menu.components.ItemsList
 import com.example.orderingapp.main.presentation.menu.components.PaymentOptions
@@ -57,7 +59,7 @@ fun MenuScreen(
                     .align(Alignment.BottomCenter),
                 enabled = menuViewModel.items.any { it.quantity.value > 0 }
             ) {
-                Text(text = "Realizar pedido")
+                Text(text = stringResource(R.string.place_order))
             }
         }
     }

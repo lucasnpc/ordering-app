@@ -3,8 +3,8 @@ package com.example.orderingapp.main.presentation.menu
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.commons.extensions.toDateFormat
 import com.example.orderingapp.commons.extensions.toHourFormat
-import com.example.orderingapp.commons.mappings.fromOrderDTOToOrder
-import com.example.orderingapp.commons.mappings.toOrderDTO
+import com.example.orderingapp.main.data.repositories.mappings.fromOrderDTOToOrder
+import com.example.orderingapp.main.data.repositories.mappings.toOrderDTO
 import com.example.orderingapp.main.commons.MainCoroutineRule
 import com.example.orderingapp.main.commons.TestConstants.listItems
 import com.example.orderingapp.main.commons.TestConstants.testException

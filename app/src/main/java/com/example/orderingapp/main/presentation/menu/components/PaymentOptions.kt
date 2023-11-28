@@ -26,9 +26,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.orderingapp.R
+import com.example.orderingapp.commons.extensions.roundDouble
 import com.example.orderingapp.commons.extensions.toDateFormat
 import com.example.orderingapp.commons.extensions.toHourFormat
-import com.example.orderingapp.commons.mappings.composeToListItem
+import com.example.orderingapp.main.data.repositories.mappings.composeToListItem
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.presentation.components.MoneyField
@@ -82,7 +83,7 @@ fun PaymentOptions(
                 )
             }
         }
-        if (selectedOption == "Dinheiro")
+        if (selectedOption == stringResource(R.string.money_label))
             MoneyField(total = total) { change ->
                 changeValue = change
             }
@@ -94,15 +95,15 @@ fun PaymentOptions(
                         items = addedItems.composeToListItem(),
                         hour = System.currentTimeMillis().toHourFormat(),
                         date = System.currentTimeMillis().toDateFormat(),
-                        orderValue = addedItems.sumOf { it.item.currentValue * it.quantity.value },
+                        orderValue = addedItems.sumOf { it.item.currentValue * it.quantity.value }.roundDouble(),
                         paymentWay = selectedOption
                     ), unsyncedOrdersCallback
                 )
             },
-            enabled = changeValue >= total || selectedOption != "Dinheiro",
+            enabled = changeValue >= total || selectedOption != stringResource(R.string.money_label),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Text(text = stringResource(R.string.effect_payment))
+            Text(text = stringResource(R.string.make_payment))
         }
     }
 

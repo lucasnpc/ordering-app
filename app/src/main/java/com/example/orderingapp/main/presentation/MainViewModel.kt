@@ -42,16 +42,17 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
         }
     }
 
-    private fun getUnsyncedOrders() {
-        viewModelScope.launch {
-            mainUseCases.getOrdersUseCase.getUnsyncedOrders(_items).first { result ->
-                when (result) {
-                    is ApiResult.Success -> {
-                        _unsyncedOrders.clear()
-                        _unsyncedOrders.addAll(result.data)
-                        true
-                    }
-                    is ApiResult.Error -> false
+    private suspend fun getUnsyncedOrders() {
+        mainUseCases.getOrdersUseCase.getUnsyncedOrders(_items).first { result ->
+            when (result) {
+                is ApiResult.Success -> {
+                    _unsyncedOrders.clear()
+                    _unsyncedOrders.addAll(result.data)
+                    true
+                }
+                is ApiResult.Error -> {
+                    _unsyncedOrders.clear()
+                    false
                 }
             }
         }
