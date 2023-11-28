@@ -1,71 +1,66 @@
 package com.example.orderingapp.main.presentation.menu
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.material.BottomDrawer
+import androidx.compose.material.BottomDrawerValue
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
+import androidx.compose.material.rememberBottomDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.presentation.menu.components.ItemsList
+import com.example.orderingapp.main.presentation.menu.components.PaymentOptions
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MenuScreen(
     menuViewModel: MenuViewModel = hiltViewModel(),
     unsyncedOrdersCallback: (List<Order>) -> Unit
 ) {
-    var enableButton by remember { mutableStateOf(false) }
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(menuViewModel.items) { item ->
-                Text(text = item.description)
-                Text(
-                    text = item.quantity.value.toString(),
-                    modifier = Modifier.align(Alignment.Center)
-                )
-                Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                    OutlinedButton(onClick = {
-                        item.quantity.value++
-                    }) {
-                        Text(text = "+")
+    val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
+    BottomDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            PaymentOptions(total = menuViewModel.items.filter { it.quantity.value > 0 }
+                .sumOf { it.currentValue * it.quantity.value },
+                menuViewModel = menuViewModel,
+                unsyncedOrdersCallback = {
+                    scope.launch {
+                        drawerState.close()
                     }
-                    OutlinedButton(onClick = {
-                        if (item.quantity.value > 0) {
-                            item.quantity.value--
-                        }
-                    }) {
-                        Text(text = "-")
-                    }
+                    unsyncedOrdersCallback(it)
                 }
-                enableButton = menuViewModel.items.any { it.quantity.value > 0 }
+            )
+        }) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            ItemsList(list = menuViewModel.items)
+            OutlinedButton(
+                onClick = {
+                    scope.launch {
+                        drawerState.open()
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 36.dp)
+                    .align(Alignment.BottomCenter),
+                enabled = menuViewModel.items.any { it.quantity.value > 0 }
+            ) {
+                Text(text = "Realizar pedido")
             }
         }
-        OutlinedButton(
-            onClick = {
-                menuViewModel.insertOrder(unsyncedOrdersCallback)
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 36.dp)
-                .align(Alignment.BottomCenter),
-            enabled = enableButton
-        ) {
-            Text(text = "Realizar pedido")
-        }
     }
+
 }

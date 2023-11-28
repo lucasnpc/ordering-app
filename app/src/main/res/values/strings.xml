@@ -9,4 +9,9 @@
     <string name="menu_name">Menu</string>
     <string name="order_name">Pedidos</string>
     <string name="stock_name">Estoque</string>
+    <string name="payment_voucher">Comprovante de pagamento</string>
+    <string name="voucher_saved">Comprovante salvo com sucesso</string>
+    <string name="documents_path">/Documents/%s.pdf</string>
+    <string name="payment_finished">Pagamento Realizado</string>
+    <string name="see_voucher">VER COMPROVANTE</string>
 </resources>

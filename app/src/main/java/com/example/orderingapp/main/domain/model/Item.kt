@@ -10,5 +10,7 @@ data class Item(
     val currentValue: Double = 0.0,
     val minimumStock: Int = 0,
     val currentStock: Int = 0,
+    var finalQuantity: Int = 0,
+    @Transient
     var quantity: MutableState<Int> = mutableStateOf(0)
 )

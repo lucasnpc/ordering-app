@@ -1,7 +1,6 @@
 package com.example.orderingapp.main.presentation.menu
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.orderingapp.commons.ApiResult
@@ -33,7 +32,7 @@ class MenuViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
         }
     }
 
-    fun insertOrder(unsyncedOrdersCallback: (List<Order>) -> Unit) {
+    fun insertOrder(paymentWay: String, unsyncedOrdersCallback: (List<Order>) -> Unit) {
         viewModelScope.launch {
             val addedItems = _items.filter { it.quantity.value > 0 }
             mainUseCases.insertOrderUseCase.insertOrderLocal(
@@ -41,16 +40,16 @@ class MenuViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
                     items = addedItems,
                     hour = System.currentTimeMillis().toHourFormat(),
                     date = System.currentTimeMillis().toDateFormat(),
-                    orderValue = addedItems.sumOf { it.currentValue * it.quantity.value }
+                    orderValue = addedItems.sumOf { it.currentValue * it.quantity.value },
+                    paymentWay = paymentWay
                 ),
                 _items
             ).collect { result ->
                 when (result) {
                     is ApiResult.Success -> {
-                        _items.filter { it.quantity.value > 0 }.map { addedItem ->
-                            _items.run {
-                                get(indexOf(addedItem)).quantity.value = 0
-                            }
+                        _items.filter { it.quantity.value > 0 }.forEach { addedItem ->
+                            addedItem.quantity.value = 0
+                            addedItem.finalQuantity = addedItem.quantity.value
                         }
                         unsyncedOrdersCallback(result.data)
                     }

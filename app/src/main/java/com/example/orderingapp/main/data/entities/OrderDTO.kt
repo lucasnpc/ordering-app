@@ -14,5 +14,6 @@ data class OrderDTO(
     val items: Map<String, Int> = mapOf(),
     val dateHour: String,
     val orderValue: Double,
+    val paymentWay: String,
     var synced: Boolean = false
 )

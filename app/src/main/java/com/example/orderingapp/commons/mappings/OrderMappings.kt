@@ -10,9 +10,10 @@ fun List<OrderDTO>.fromOrderDTOToOrder(_items: List<Item>): List<Order> {
         Order(
             id = orderDTO.id,
             items = orderDTO.items.toListItem(_items),
-            date = orderDTO.dateHour.split(" ")[1],
-            hour = orderDTO.dateHour.split(" ")[0],
+            date = orderDTO.dateHour.split(" ")[0],
+            hour = orderDTO.dateHour.split(" ")[1],
             orderValue = orderDTO.orderValue,
+            paymentWay = orderDTO.paymentWay,
             synced = orderDTO.synced
         )
     }
@@ -27,6 +28,7 @@ fun Map<String, Int>.toListItem(_items: List<Item>): List<Item> {
                 currentValue = find.currentValue,
                 minimumStock = find.minimumStock,
                 currentStock = find.currentStock,
+                finalQuantity = find.finalQuantity,
                 quantity = mutableStateOf(it.value)
             )
         } ?: Item()
@@ -39,8 +41,9 @@ fun Order.toOrderDTO(): OrderDTO {
     return OrderDTO(
         id = id,
         items = items.associate { it.id to it.quantity.value },
-        dateHour = "$hour $date",
+        dateHour = "$date $hour",
         orderValue = orderValue,
+        paymentWay = paymentWay,
         synced = synced
     )
 }

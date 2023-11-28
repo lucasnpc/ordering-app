@@ -8,5 +8,6 @@ data class Order(
     val date: String,
     val hour: String,
     val orderValue: Double,
+    val paymentWay: String,
     val synced: Boolean = false
 )
