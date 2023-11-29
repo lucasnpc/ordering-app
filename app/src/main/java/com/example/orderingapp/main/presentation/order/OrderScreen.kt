@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.orderingapp.commons.extensions.currencyFormat
 import com.example.orderingapp.main.domain.model.ItemCompose
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -59,13 +60,28 @@ fun OrderScreen(list: List<ItemCompose>, orderViewModel: OrderViewModel = hiltVi
                         )
                     ) {
                         Text(
-                            text = "Pedido concluído às ${order.hour}",
+                            text = "Pedido concluído em ${order.date} às ${order.hour}",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold,
                             textAlign = TextAlign.Center
                         )
                         Spacer(modifier = Modifier.height(5.dp))
-                        Text(text = "Ver detalhes do pedido", fontSize = 17.sp)
+                        Text(
+                            text = "Items:",
+                            fontSize = 17.sp
+                        )
+                        Spacer(modifier = Modifier.height(5.dp))
+                        order.items.forEach {
+                            Text(
+                                text = it.description,
+                                fontSize = 17.sp
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Text(
+                            text = "Total: ${order.orderValue.currencyFormat()}",
+                            fontSize = 17.sp
+                        )
                     }
                 }
             }

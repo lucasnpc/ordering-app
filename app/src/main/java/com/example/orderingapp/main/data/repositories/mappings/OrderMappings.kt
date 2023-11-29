@@ -18,7 +18,7 @@ fun List<OrderDTO>.fromOrderDTOToOrder(_items: List<Item>): List<Order> {
     }
 }
 
-fun Map<String, Int>.toListItem(_items: List<Item>): List<Item> {
+private fun Map<String, Int>.toListItem(_items: List<Item>): List<Item> {
     val list = this.map {
         _items.find { item -> item.id == it.key }?.let { find ->
             Item(
@@ -44,8 +44,4 @@ fun Order.toOrderDTO(): OrderDTO {
         orderValue = orderValue,
         paymentWay = paymentWay,
     )
-}
-
-fun List<ItemCompose>.composeToListItem(): List<Item> {
-    return this.map { it.item }
 }

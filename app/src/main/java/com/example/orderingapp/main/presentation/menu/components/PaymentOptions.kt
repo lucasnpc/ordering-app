@@ -29,7 +29,7 @@ import com.example.orderingapp.R
 import com.example.orderingapp.commons.extensions.roundDouble
 import com.example.orderingapp.commons.extensions.toDateFormat
 import com.example.orderingapp.commons.extensions.toHourFormat
-import com.example.orderingapp.main.data.repositories.mappings.composeToListItem
+import com.example.orderingapp.commons.mappings.composeToListItem
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.presentation.components.MoneyField
