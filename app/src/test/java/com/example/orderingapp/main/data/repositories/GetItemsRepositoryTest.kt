@@ -1,5 +1,6 @@
 package com.example.orderingapp.main.data.repositories
 
+import com.example.orderingapp.commons.mappings.composeToListItem
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.commons.TestConstants.item
 import com.example.orderingapp.main.commons.TestConstants.itemDTO
@@ -10,6 +11,7 @@ import com.example.orderingapp.main.commons.TestConstants.testMsgException
 import com.example.orderingapp.main.commons.assertListItemEqualsTo
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.domain.model.Item
+import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import com.google.common.truth.Truth.assertThat
 import com.google.firebase.firestore.CollectionReference
@@ -119,12 +121,12 @@ class GetItemsRepositoryTest {
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
             result as ApiResult.Success
             assertThat(result.data).doesNotContain(itemModify)
-            assertThat(result.data[0].id).isEqualTo(itemModify.id)
-            assertThat(result.data[0].description).isEqualTo(itemModify.description)
-            assertThat(result.data[0].currentValue).isEqualTo(itemModify.currentValue)
-            assertThat(result.data[0].minimumStock).isEqualTo(itemModify.minimumStock)
-            assertThat(result.data[0].currentStock).isEqualTo(itemModify.currentStock)
-            assertThat(result.data[0].quantity.value).isEqualTo(itemModify.quantity.value)
+            assertThat(result.data[0].item.id).isEqualTo(itemModify.id)
+            assertThat(result.data[0].item.description).isEqualTo(itemModify.description)
+            assertThat(result.data[0].item.currentValue).isEqualTo(itemModify.currentValue)
+            assertThat(result.data[0].item.minimumStock).isEqualTo(itemModify.minimumStock)
+            assertThat(result.data[0].item.currentStock).isEqualTo(itemModify.currentStock)
+            assertThat(result.data[0].item.finalQuantity).isEqualTo(itemModify.finalQuantity)
         }
     }
 
@@ -164,14 +166,14 @@ class GetItemsRepositoryTest {
         }
     }
 
-    private fun assertSuccess(result: ApiResult<List<Item>>) {
+    private fun assertSuccess(result: ApiResult<List<ItemCompose>>) {
         assertThat(result).isInstanceOf(ApiResult.Success::class.java)
         result as ApiResult.Success
-        result.data.assertListItemEqualsTo(listItems)
+        result.data.composeToListItem().assertListItemEqualsTo(listItems)
     }
 
     private fun assertError(
-        result: ApiResult<List<Item>>,
+        result: ApiResult<List<ItemCompose>>,
     ) {
         assertThat(result).isInstanceOf(ApiResult.Error::class.java)
         result as ApiResult.Error

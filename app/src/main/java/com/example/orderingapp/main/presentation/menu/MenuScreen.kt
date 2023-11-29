@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.orderingapp.R
+import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.presentation.menu.components.ItemsList
 import com.example.orderingapp.main.presentation.menu.components.PaymentOptions
@@ -26,6 +27,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MenuScreen(
+    items: List<ItemCompose>,
     menuViewModel: MenuViewModel = hiltViewModel(),
     unsyncedOrdersCallback: (List<Order>) -> Unit
 ) {
@@ -36,7 +38,8 @@ fun MenuScreen(
         drawerState = drawerState,
         drawerContent = {
             PaymentOptions(
-                addedItems = menuViewModel.items.filter { it.quantity.value > 0 },
+                items = items,
+                addedItems = items.filter { it.quantity.value > 0 },
                 menuViewModel = menuViewModel,
                 unsyncedOrdersCallback = {
                     scope.launch {
@@ -46,7 +49,7 @@ fun MenuScreen(
                 })
         }) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            ItemsList(list = menuViewModel.items)
+            ItemsList(list = items)
             OutlinedButton(
                 onClick = {
                     scope.launch {
@@ -57,7 +60,7 @@ fun MenuScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 36.dp)
                     .align(Alignment.BottomCenter),
-                enabled = menuViewModel.items.any { it.quantity.value > 0 }
+                enabled = items.any { it.quantity.value > 0 }
             ) {
                 Text(text = stringResource(R.string.place_order))
             }

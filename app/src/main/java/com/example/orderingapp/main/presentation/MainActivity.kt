@@ -75,7 +75,7 @@ class MainActivity : ComponentActivity() {
                             )
                     ) {
                         composable(route = ScreenList.MenuScreen.route) {
-                            MenuScreen { list ->
+                            MenuScreen(mainViewModel.items) { list ->
                                 mainViewModel.setUnsyncedOrders(list)
                                 val order = list.last()
                                 if (checkPermissionsEnabled())

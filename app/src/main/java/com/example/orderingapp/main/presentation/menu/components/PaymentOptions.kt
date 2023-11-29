@@ -39,7 +39,8 @@ import com.example.orderingapp.main.presentation.menu.MenuViewModel
 fun PaymentOptions(
     addedItems: List<ItemCompose>,
     menuViewModel: MenuViewModel,
-    unsyncedOrdersCallback: (List<Order>) -> Unit
+    unsyncedOrdersCallback: (List<Order>) -> Unit,
+    items: List<ItemCompose>
 ) {
     val radioOptions = listOf("Crédito", "Débito", "Dinheiro", "Pix")
     val (selectedOption, onOptionSelect) = remember {
@@ -91,13 +92,16 @@ fun PaymentOptions(
         Button(
             onClick = {
                 menuViewModel.insertOrder(
-                    Order(
+                    order = Order(
                         items = addedItems.composeToListItem(),
                         hour = System.currentTimeMillis().toHourFormat(),
                         date = System.currentTimeMillis().toDateFormat(),
-                        orderValue = addedItems.sumOf { it.item.currentValue * it.quantity.value }.roundDouble(),
+                        orderValue = addedItems.sumOf { it.item.currentValue * it.quantity.value }
+                            .roundDouble(),
                         paymentWay = selectedOption
-                    ), unsyncedOrdersCallback
+                    ),
+                    _items = items,
+                    unsyncedOrdersCallback = unsyncedOrdersCallback
                 )
             },
             enabled = changeValue >= total || selectedOption != stringResource(R.string.money_label),

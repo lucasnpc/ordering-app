@@ -24,7 +24,9 @@ object TestConstants {
     val listOrder = listOf(
         OrderDTO(
             id = "123",
-            items = mapOf("1" to 2), date = "21/12/2021 12:00:00",
+            items = mapOf("1" to 2),
+            date = "21 Dec 2021",
+            hour = "12:00:00",
             orderValue = 10.0,
             paymentWay = "Pix",
             synced = false
@@ -36,10 +38,10 @@ object TestConstants {
             Item(
                 id = "1",
                 description = "item 1",
-                quantity = mutableStateOf(2)
+                finalQuantity = 2
             )
         ),
-        date = "21/12/2021",
+        date = "21 Dec 2021",
         hour = "12:00:00",
         paymentWay = "Pix",
         orderValue = 10.0,
@@ -47,7 +49,8 @@ object TestConstants {
     val orderDTO = OrderDTO(
         id = "123",
         items = mapOf("1" to 2),
-        date = "21/12/2021 12:00:00",
+        date = "21 Dec 2021",
+        hour = "12:00:00",
         orderValue = 10.0,
         paymentWay = "Pix",
         synced = false
@@ -62,7 +65,7 @@ object TestConstants {
         currentValue = item.currentValue,
         minimumStock = item.minimumStock,
         currentStock = item.currentStock,
-        quantity = mutableStateOf(0)
+        finalQuantity = 0
     )
     val itemDTO = ItemDTO(
         id = "1",

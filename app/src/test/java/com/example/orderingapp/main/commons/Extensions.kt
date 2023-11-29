@@ -10,6 +10,5 @@ fun List<Item>.assertListItemEqualsTo(other: List<Item>) {
         Truth.assertThat(this[i].currentValue).isEqualTo(other[i].currentValue)
         Truth.assertThat(this[i].minimumStock).isEqualTo(other[i].minimumStock)
         Truth.assertThat(this[i].currentStock).isEqualTo(other[i].currentStock)
-        Truth.assertThat(this[i].quantity.value).isEqualTo(other[i].quantity.value)
     }
 }

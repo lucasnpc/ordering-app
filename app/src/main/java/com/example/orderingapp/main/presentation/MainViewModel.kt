@@ -10,6 +10,7 @@ import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -30,14 +31,13 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
     }
 
     private suspend fun observeMenuItems() {
-        mainUseCases.getItemsUseCase.getItemsFromRemote().first { result ->
+        mainUseCases.getItemsUseCase.getItemsFromRemote().collect { result ->
             when (result) {
                 is ApiResult.Success -> {
                     _items.clear()
                     _items.addAll(result.data)
-                    true
                 }
-                is ApiResult.Error -> false
+                is ApiResult.Error -> _items.clear()
             }
         }
     }

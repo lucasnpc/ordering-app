@@ -1,6 +1,5 @@
 package com.example.orderingapp.main.presentation.menu
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.orderingapp.commons.request.ApiResult
@@ -13,33 +12,20 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MenuViewModel @Inject constructor(private val mainUseCases: MainUseCases) : ViewModel() {
-    private val _items = mutableStateListOf<ItemCompose>()
-    val items: List<ItemCompose> = _items
-
-    init {
-        viewModelScope.launch {
-            mainUseCases.getItemsUseCase.getItemsFromRemote().collect { result ->
-                when (result) {
-                    is ApiResult.Success -> {
-                        _items.clear()
-                        _items.addAll(result.data)
-                    }
-                    is ApiResult.Error -> _items.clear()
-                }
-            }
-        }
-    }
-
-    fun insertOrder(order: Order, unsyncedOrdersCallback: (List<Order>) -> Unit) {
+    fun insertOrder(
+        order: Order,
+        _items: List<ItemCompose>,
+        unsyncedOrdersCallback: (List<Order>) -> Unit
+    ) {
         viewModelScope.launch {
             mainUseCases.insertOrderUseCase.insertOrderLocal(order, _items).collect { result ->
                 when (result) {
                     is ApiResult.Success -> {
-                        cleanItems()
+                        cleanItems(_items)
                         unsyncedOrdersCallback(result.data)
                     }
                     is ApiResult.Error -> {
-                        cleanItems()
+                        cleanItems(_items)
                         unsyncedOrdersCallback(listOf())
                     }
                 }
@@ -47,7 +33,7 @@ class MenuViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
         }
     }
 
-    private fun cleanItems() {
+    private fun cleanItems(_items: List<ItemCompose>,) {
         _items.filter { it.item.finalQuantity > 0 }.forEach { itemCompose ->
             itemCompose.quantity.value = 0
             itemCompose.item.finalQuantity = itemCompose.quantity.value
