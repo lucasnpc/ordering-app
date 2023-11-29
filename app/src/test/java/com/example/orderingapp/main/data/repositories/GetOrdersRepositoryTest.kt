@@ -1,12 +1,10 @@
 package com.example.orderingapp.main.data.repositories
 
 import com.example.orderingapp.commons.request.ApiResult
-import com.example.orderingapp.main.data.dao.OrderingAppDao
-import com.example.orderingapp.main.commons.TestConstants.listItems
-import com.example.orderingapp.main.commons.TestConstants.listOrder
-import com.example.orderingapp.main.commons.TestConstants.order
 import com.example.orderingapp.main.commons.TestConstants.testException
 import com.example.orderingapp.main.commons.TestConstants.testMsgException
+import com.example.orderingapp.main.commons.TestData
+import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.GetOrdersUseCase
 import com.google.common.truth.Truth.assertThat
@@ -20,6 +18,9 @@ class GetOrdersRepositoryTest {
 
     private lateinit var getOrdersUseCase: GetOrdersUseCase
     private val dao: OrderingAppDao = mockk()
+    private val list = TestData().itemsCompose
+    private val listOrdersDTO = TestData().ordersDTO
+    private val listOrders = TestData().orders
 
     @Before
     fun setUp() {
@@ -28,15 +29,16 @@ class GetOrdersRepositoryTest {
 
     @Test
     fun getOrders() = runTest {
-        every { dao.getOrders() } returns listOrder
-        getOrdersUseCase.getOrders(listItems).collect { result ->
+        every { dao.getOrders() } returns listOrdersDTO
+        getOrdersUseCase.getOrders(list).collect { result ->
             assertSuccess(result)
         }
     }
+
     @Test
     fun getUnsyncedOrders() = runTest {
-        every { dao.getUnsyncedOrders() } returns listOrder
-        getOrdersUseCase.getUnsyncedOrders(listItems).collect { result ->
+        every { dao.getUnsyncedOrders() } returns listOrdersDTO
+        getOrdersUseCase.getUnsyncedOrders(list).collect { result ->
             assertSuccess(result)
         }
     }
@@ -44,7 +46,7 @@ class GetOrdersRepositoryTest {
     @Test
     fun getOrdersException() = runTest {
         every { dao.getOrders() } throws testException
-        getOrdersUseCase.getOrders(listItems).collect{ result ->
+        getOrdersUseCase.getOrders(list).collect { result ->
             assertError(result)
         }
     }
@@ -52,7 +54,7 @@ class GetOrdersRepositoryTest {
     @Test
     fun getUnsyncedOrdersException() = runTest {
         every { dao.getUnsyncedOrders() } throws testException
-        getOrdersUseCase.getUnsyncedOrders(listItems).collect{ result ->
+        getOrdersUseCase.getUnsyncedOrders(list).collect { result ->
             assertError(result)
         }
     }
@@ -60,16 +62,7 @@ class GetOrdersRepositoryTest {
     private fun assertSuccess(result: ApiResult<List<Order>>) {
         assertThat(result).isInstanceOf(ApiResult.Success::class.java)
         result as ApiResult.Success
-        assertThat(result.data[0].id).isEqualTo(order.id)
-        assertThat(result.data[0].items[0].id).isEqualTo(order.items[0].id)
-        assertThat(result.data[0].items[0].description).isEqualTo(order.items[0].description)
-        assertThat(result.data[0].items[0].currentValue).isEqualTo(order.items[0].currentValue)
-        assertThat(result.data[0].items[0].minimumStock).isEqualTo(order.items[0].minimumStock)
-        assertThat(result.data[0].items[0].currentStock).isEqualTo(order.items[0].currentStock)
-        assertThat(result.data[0].items[0].quantity.value).isEqualTo(order.items[0].quantity.value)
-        assertThat(result.data[0].date).isEqualTo(order.date)
-        assertThat(result.data[0].hour).isEqualTo(order.hour)
-        assertThat(result.data[0].orderValue).isEqualTo(order.orderValue)
+        assertThat(result.data).isEqualTo(listOrders)
     }
 
     private fun assertError(result: ApiResult<List<Order>>) {

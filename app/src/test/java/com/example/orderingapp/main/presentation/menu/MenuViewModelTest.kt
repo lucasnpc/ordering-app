@@ -1,14 +1,14 @@
 package com.example.orderingapp.main.presentation.menu
 
-import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.commons.extensions.toDateFormat
 import com.example.orderingapp.commons.extensions.toHourFormat
+import com.example.orderingapp.commons.mappings.composeToListItem
+import com.example.orderingapp.commons.request.ApiResult
+import com.example.orderingapp.main.commons.MainCoroutineRule
+import com.example.orderingapp.main.commons.TestData
 import com.example.orderingapp.main.data.repositories.mappings.fromOrderDTOToOrder
 import com.example.orderingapp.main.data.repositories.mappings.toOrderDTO
-import com.example.orderingapp.main.commons.MainCoroutineRule
-import com.example.orderingapp.main.commons.TestConstants.listItems
-import com.example.orderingapp.main.commons.TestConstants.testException
-import com.example.orderingapp.main.commons.assertListItemEqualsTo
+import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import com.google.common.truth.Truth.assertThat
@@ -30,72 +30,75 @@ class MenuViewModelTest {
 
     @Before
     fun setUp() {
-        every { mainUseCases.getItemsUseCase.getItemsFromRemote() } returns flow {
-            emit(ApiResult.Success(listItems))
-        }
-
         menuViewModel = MenuViewModel(mainUseCases)
-    }
-
-    @Test
-    fun getItems() = runTest {
-        assertThat(menuViewModel.items).contains(listItems[0])
-    }
-
-    @Test
-    fun getItemsError() = runTest {
-        every { mainUseCases.getItemsUseCase.getItemsFromRemote() } returns flow {
-            emit(ApiResult.Error(testException))
-        }
-
-        menuViewModel = MenuViewModel(mainUseCases)
-
-        assertThat(menuViewModel.items).isEmpty()
     }
 
     @Test
     fun insertOrder() = runTest {
+        val list = TestData().itemsCompose
         val paymentWay = "Pix"
-        val addedItems = listItems.filter { it.finalQuantity > 0 }
-        val _order = Order(
-            items = addedItems,
+        val addedItems = list.filter { it.quantity.value > 0 }
+        val createdOrder = Order(
+            items = addedItems.composeToListItem(),
             hour = System.currentTimeMillis().toHourFormat(),
             date = System.currentTimeMillis().toDateFormat(),
-            orderValue = addedItems.sumOf { it.currentValue * it.quantity.value },
+            orderValue = addedItems.sumOf { it.item.currentValue * it.item.finalQuantity },
             paymentWay = paymentWay
         )
-        every { mainUseCases.insertOrderUseCase.insertOrderLocal(_order, any()) } returns flow {
+        val expectedOrder = Order(
+            id = createdOrder.id,
+            items = listOf(
+                Item(
+                    id = "1",
+                    description = "item 1",
+                    currentValue = 1.0,
+                    finalQuantity = 2
+                ), Item(
+                    id = "2",
+                    description = "item 2",
+                    currentValue = 1.0,
+                    finalQuantity = 2
+                )
+            ),
+            hour = createdOrder.hour,
+            date = createdOrder.date,
+            orderValue = createdOrder.orderValue,
+            paymentWay = createdOrder.paymentWay
+        )
+        every {
+            mainUseCases.insertOrderUseCase.insertOrderLocal(
+                createdOrder,
+                list
+            )
+        } returns flow {
             emit(
                 ApiResult.Success(
-                    listOf(_order.toOrderDTO()).fromOrderDTOToOrder(addedItems)
+                    listOf(createdOrder.toOrderDTO()).fromOrderDTOToOrder(addedItems.composeToListItem())
                 )
             )
         }
 
-        assertThat(addedItems[0].finalQuantity).isEqualTo(2)
-        assertThat(addedItems[1].finalQuantity).isEqualTo(2)
+        assertThat(list[0].item.finalQuantity).isEqualTo(2)
+        assertThat(list[1].item.finalQuantity).isEqualTo(2)
 
-        menuViewModel.insertOrder(_order) {
-            it.find { unsyncedOrder -> unsyncedOrder.id == _order.id }?.let { find ->
-                find.items.assertListItemEqualsTo(listItems)
-                assertThat(find.id).isEqualTo(_order.id)
-            }
+        menuViewModel.insertOrder(createdOrder, list) {
+            assertThat(it).contains(expectedOrder)
         }
 
-        assertThat(menuViewModel.items).contains(addedItems[0])
-        assertThat(addedItems[0].finalQuantity).isEqualTo(0)
-        assertThat(addedItems[1].finalQuantity).isEqualTo(0)
+        assertThat(list[0].item.finalQuantity).isEqualTo(0)
+        assertThat(list[1].item.finalQuantity).isEqualTo(0)
     }
 
     @Test
     fun insertOrderError() = runTest {
+        val list = TestData().itemsCompose
         val paymentWay = "Pix"
-        val addedItems = listItems.filter { it.finalQuantity > 0 }
+        val addedItems = list.filter { it.item.finalQuantity > 0 }
         val _order = Order(
-            items = addedItems,
+            items = addedItems.composeToListItem(),
             hour = System.currentTimeMillis().toHourFormat(),
             date = System.currentTimeMillis().toDateFormat(),
-            orderValue = addedItems.sumOf { it.currentValue * it.quantity.value },
+            orderValue = addedItems.sumOf { it.item.currentValue * it.item.finalQuantity },
             paymentWay = paymentWay
         )
         every { mainUseCases.insertOrderUseCase.insertOrderLocal(_order, any()) } returns flow {
@@ -104,8 +107,15 @@ class MenuViewModelTest {
             )
         }
 
-        menuViewModel.insertOrder(_order) {
+
+        assertThat(list[0].item.finalQuantity).isEqualTo(2)
+        assertThat(list[1].item.finalQuantity).isEqualTo(2)
+
+        menuViewModel.insertOrder(_order, list) {
             assertThat(it).isEmpty()
         }
+
+        assertThat(list[0].item.finalQuantity).isEqualTo(0)
+        assertThat(list[1].item.finalQuantity).isEqualTo(0)
     }
 }

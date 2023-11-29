@@ -1,14 +1,9 @@
 package com.example.orderingapp.main.data.repositories
 
-import com.example.orderingapp.commons.mappings.composeToListItem
 import com.example.orderingapp.commons.request.ApiResult
-import com.example.orderingapp.main.commons.TestConstants.item
-import com.example.orderingapp.main.commons.TestConstants.itemDTO
-import com.example.orderingapp.main.commons.TestConstants.itemModify
-import com.example.orderingapp.main.commons.TestConstants.listItems
 import com.example.orderingapp.main.commons.TestConstants.testException
 import com.example.orderingapp.main.commons.TestConstants.testMsgException
-import com.example.orderingapp.main.commons.assertListItemEqualsTo
+import com.example.orderingapp.main.commons.TestData
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
@@ -49,6 +44,20 @@ class GetItemsRepositoryTest {
     private var operation = 1
     private var isRemoving = false
 
+    private val list = TestData().itemsCompose
+    private val listDTO = TestData().itemsDTO
+    private val item = TestData().itemsCompose.first().item
+    private val itemModified = ItemCompose(
+        Item(
+            id = item.id,
+            description = "${item.description} modificado",
+            currentValue = item.currentValue,
+            minimumStock = item.minimumStock,
+            currentStock = item.currentStock,
+            finalQuantity = 0
+        )
+    )
+
     @Before
     fun setup() {
         getItemsUseCase = GetItemsRepository(firestore, dao)
@@ -69,7 +78,7 @@ class GetItemsRepositoryTest {
         every { documentChange.type } answers {
             when (operation) {
                 1 -> {
-                    operation = if (isRemoving) 2 else 3
+                    operation = if (!isRemoving) 2 else 3
                     DocumentChange.Type.ADDED
                 }
                 2 -> DocumentChange.Type.MODIFIED
@@ -88,7 +97,7 @@ class GetItemsRepositoryTest {
 
     @Test
     fun getItemsLocal() = runTest {
-        every { dao.getItems() } returns listOf(itemDTO)
+        every { dao.getItems() } returns listDTO
         getItemsUseCase.getItemsFromLocal().collect { result ->
             assertSuccess(result)
         }
@@ -111,22 +120,15 @@ class GetItemsRepositoryTest {
 
     @Test
     fun modifyItems() = runTest {
-        getItemsUseCase.getItemsFromRemote().take(1)
-        every { document.id } returns itemModify.id
-        every { document["description"] } returns itemModify.description
-        every { document["currentValue"] } returns itemModify.currentValue
-        every { document["minimumStock"] } returns itemModify.minimumStock
-        every { document["currentStock"] } returns itemModify.currentStock
+        getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
+            assertSuccess(result)
+        }
+        every { document["description"] } returns itemModified.item.description
         getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
             result as ApiResult.Success
-            assertThat(result.data).doesNotContain(itemModify)
-            assertThat(result.data[0].item.id).isEqualTo(itemModify.id)
-            assertThat(result.data[0].item.description).isEqualTo(itemModify.description)
-            assertThat(result.data[0].item.currentValue).isEqualTo(itemModify.currentValue)
-            assertThat(result.data[0].item.minimumStock).isEqualTo(itemModify.minimumStock)
-            assertThat(result.data[0].item.currentStock).isEqualTo(itemModify.currentStock)
-            assertThat(result.data[0].item.finalQuantity).isEqualTo(itemModify.finalQuantity)
+            assertThat(result.data.first().item).isEqualTo(itemModified.item)
+            assertThat(result.data.first().quantity.value).isEqualTo(itemModified.quantity.value)
         }
     }
 
@@ -139,6 +141,7 @@ class GetItemsRepositoryTest {
         getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
             result as ApiResult.Success
+            assertThat(result.data).isEmpty()
         }
     }
 
@@ -169,7 +172,16 @@ class GetItemsRepositoryTest {
     private fun assertSuccess(result: ApiResult<List<ItemCompose>>) {
         assertThat(result).isInstanceOf(ApiResult.Success::class.java)
         result as ApiResult.Success
-        result.data.composeToListItem().assertListItemEqualsTo(listItems)
+        for (i in result.data.indices) {
+            result.data[i].item.run {
+                assertThat(id).isEqualTo(list[i].item.id)
+                assertThat(description).isEqualTo(list[i].item.description)
+                assertThat(currentValue).isEqualTo(list[i].item.currentValue)
+                assertThat(currentStock).isEqualTo(list[i].item.currentStock)
+                assertThat(minimumStock).isEqualTo(list[i].item.minimumStock)
+                assertThat(finalQuantity).isEqualTo(0)
+            }
+        }
     }
 
     private fun assertError(

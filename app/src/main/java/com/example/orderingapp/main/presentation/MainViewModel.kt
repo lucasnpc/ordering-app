@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -43,7 +44,7 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
     }
 
     private suspend fun getUnsyncedOrders() {
-        mainUseCases.getOrdersUseCase.getUnsyncedOrders(_items).first { result ->
+        mainUseCases.getOrdersUseCase.getUnsyncedOrders(_items).firstOrNull { result ->
             when (result) {
                 is ApiResult.Success -> {
                     _unsyncedOrders.clear()
@@ -92,5 +93,4 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
             }
         }
     }
-
 }
