@@ -21,7 +21,7 @@ fun RedRealizedPayment() {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .height(200.dp)
+            .height(150.dp)
             .fillMaxWidth()
             .background(MaterialTheme.colors.primary)
     ) {

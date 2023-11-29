@@ -44,7 +44,7 @@ fun ItemsList(list: List<ItemCompose>) {
                             Text(
                                 text = itemCompose.item.description,
                                 fontSize = 18.sp,
-                                modifier = Modifier.width(190.dp),
+                                modifier = Modifier.width(180.dp),
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis
                             )
@@ -69,7 +69,7 @@ fun ItemsList(list: List<ItemCompose>) {
                                 }
                                 OutlinedButton(
                                     onClick = {},
-                                    modifier = Modifier.width(60.dp),
+                                    modifier = Modifier.width(50.dp),
                                     colors = ButtonDefaults.buttonColors(
                                         backgroundColor = MaterialTheme.colors.onBackground,
                                         contentColor = Color.White

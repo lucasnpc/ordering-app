@@ -2,6 +2,7 @@ package com.example.orderingapp.main.presentation
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -42,6 +43,19 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels()
+    private val multiplePermissionNameList = if (Build.VERSION.SDK_INT >= 33) {
+        arrayListOf(
+            Manifest.permission.READ_MEDIA_AUDIO,
+            Manifest.permission.READ_MEDIA_VIDEO,
+            Manifest.permission.READ_MEDIA_IMAGES
+        )
+    } else {
+        arrayListOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -111,10 +125,7 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         when {
-            ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) -> {
+            checkPermissionsRationale() -> {
                 AlertDialog.Builder(this)
                     .setTitle(getString(R.string.needed_permission))
                     .setMessage(getString(R.string.asking_permission))
@@ -132,10 +143,7 @@ class MainActivity : ComponentActivity() {
 
     private fun requestStoragePermission() {
         requestPermissions(
-            arrayOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ), REQUEST_CODE
+            multiplePermissionNameList.toTypedArray(), REQUEST_CODE
         )
     }
 
@@ -148,10 +156,15 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun checkPermissionsEnabled(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
+        return multiplePermissionNameList.any {
+            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun checkPermissionsRationale(): Boolean {
+        return multiplePermissionNameList.any {
+            ActivityCompat.shouldShowRequestPermissionRationale(this, it)
+        }
     }
 
     private companion object {

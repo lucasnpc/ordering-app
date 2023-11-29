@@ -1,5 +1,7 @@
 package com.example.orderingapp.commons.extensions
 
-fun Double.roundDouble(): Double{
-    return String.format("%.2f", this).toDouble()
+import java.util.Locale
+
+fun Double.roundDouble(): Double {
+    return String.format(Locale.US, "%.2f", this).toDouble()
 }

@@ -91,18 +91,20 @@ fun PaymentOptions(
         Spacer(modifier = Modifier.height(5.dp))
         Button(
             onClick = {
-                menuViewModel.insertOrder(
-                    order = Order(
-                        items = addedItems.composeToListItem(),
-                        hour = System.currentTimeMillis().toHourFormat(),
-                        date = System.currentTimeMillis().toDateFormat(),
-                        orderValue = addedItems.sumOf { it.item.currentValue * it.quantity.value }
-                            .roundDouble(),
-                        paymentWay = selectedOption
-                    ),
-                    _items = items,
-                    unsyncedOrdersCallback = unsyncedOrdersCallback
-                )
+                if (addedItems.isNotEmpty()) {
+                    menuViewModel.insertOrder(
+                        order = Order(
+                            items = addedItems.composeToListItem(),
+                            hour = System.currentTimeMillis().toHourFormat(),
+                            date = System.currentTimeMillis().toDateFormat(),
+                            orderValue = addedItems.sumOf { it.item.currentValue * it.quantity.value }
+                                .roundDouble(),
+                            paymentWay = selectedOption
+                        ),
+                        _items = items,
+                        unsyncedOrdersCallback = unsyncedOrdersCallback
+                    )
+                }
             },
             enabled = changeValue >= total || selectedOption != stringResource(R.string.money_label),
             modifier = Modifier.align(Alignment.CenterHorizontally)

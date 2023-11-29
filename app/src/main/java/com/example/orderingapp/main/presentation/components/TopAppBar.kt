@@ -33,6 +33,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.orderingapp.R
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.presentation.MainViewModel
+import com.example.orderingapp.main.theme.redPrimary
 import com.example.orderingapp.main.utils.ScreenList
 
 @Composable
@@ -93,7 +94,8 @@ fun OrderingAppTopBar(
         }) {
             Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
         }
-    })
+    },
+    backgroundColor = redPrimary)
 }
 
 @Composable
