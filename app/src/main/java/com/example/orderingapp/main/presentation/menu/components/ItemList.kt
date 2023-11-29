@@ -75,7 +75,7 @@ fun ItemsList(list: List<ItemCompose>) {
                                         contentColor = Color.White
                                     )
                                 ) {
-                                    Text(text = itemCompose.quantity.value.toString())
+                                    Text(text = itemCompose.quantity.value.toString(), fontSize = 13.sp)
                                 }
                                 OutlinedButton(
                                     onClick = {

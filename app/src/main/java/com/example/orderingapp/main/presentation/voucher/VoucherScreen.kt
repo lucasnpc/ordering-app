@@ -1,6 +1,7 @@
 package com.example.orderingapp.main.presentation.voucher
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -48,7 +49,7 @@ fun VoucherScreen(orderJson: String) {
                         .fillMaxSize()
                         .background(Color.White)
                 ) {
-                    Column {
+                    Column(verticalArrangement = Arrangement.SpaceBetween) {
                         RedRealizedPayment()
                         Spacer(modifier = Modifier.height(32.dp))
                         RealizedPaymentInfo(order)
