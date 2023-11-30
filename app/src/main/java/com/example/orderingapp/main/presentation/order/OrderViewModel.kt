@@ -22,7 +22,7 @@ class OrderViewModel @Inject constructor(private val mainUseCases: MainUseCases)
                 when (result) {
                     is ApiResult.Success -> {
                         _orders.clear()
-                        _orders.addAll(result.data)
+                        _orders.addAll(result.data.reversed())
                     }
                     is ApiResult.Error -> _orders.clear()
                 }
