@@ -41,7 +41,10 @@ fun PaymentOptions(
 
     Column {
         radioOptions.forEach {
-            RadioButtonPaymentOpt(it, selectedOption, onOptionSelect)
+            RadioButtonPaymentOpt(it, selectedOption) { opt ->
+                changeValue = 0.0
+                onOptionSelect(opt)
+            }
         }
         if (selectedOption == stringResource(R.string.money_label))
             MoneyField(total = total) { change ->
@@ -50,22 +53,20 @@ fun PaymentOptions(
         Spacer(modifier = Modifier.height(5.dp))
         Button(
             onClick = {
-                if (addedItems.isNotEmpty()) {
-                    menuViewModel.insertOrder(
-                        order = Order(
-                            items = addedItems.composeToListItem(),
-                            hour = System.currentTimeMillis().toHourFormat(),
-                            date = System.currentTimeMillis().toDateFormat(),
-                            orderValue = addedItems.sumOf { it.item.currentValue * it.quantity.value }
-                                .roundDouble(),
-                            paymentWay = selectedOption
-                        ),
-                        _items = items,
-                        unsyncedOrdersCallback = unsyncedOrdersCallback
-                    )
-                }
+                menuViewModel.insertOrder(
+                    order = Order(
+                        items = addedItems.composeToListItem(),
+                        hour = System.currentTimeMillis().toHourFormat(),
+                        date = System.currentTimeMillis().toDateFormat(),
+                        orderValue = addedItems.sumOf { it.item.currentValue * it.quantity.value }
+                            .roundDouble(),
+                        paymentWay = selectedOption
+                    ),
+                    _items = items,
+                    unsyncedOrdersCallback = unsyncedOrdersCallback
+                )
             },
-            enabled = changeValue >= total || selectedOption != stringResource(R.string.money_label),
+            enabled = (changeValue >= total || selectedOption != stringResource(R.string.money_label)) && addedItems.isNotEmpty(),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(text = stringResource(R.string.make_payment))

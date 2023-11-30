@@ -37,13 +37,9 @@ fun MoneyField(total: Double, disableButton: (Double) -> Unit) {
         TextField(
             value = cashChange,
             onValueChange = {
-                cashChange = it
+                cashChange = it.filter { c -> c.isDigit() }
                 if (cashChange.isNotEmpty())
-                    try {
-                        disableButton(cashChange.replace(",", ".").toDouble())
-                    } catch (ex: Exception) {
-                        cashChange = "0"
-                    }
+                    disableButton(cashChange.replace(",", ".").toDouble())
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Decimal,
