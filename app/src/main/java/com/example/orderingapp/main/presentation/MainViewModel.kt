@@ -10,8 +10,6 @@ import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
@@ -23,6 +21,8 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
 
     private val _items = mutableStateListOf<ItemCompose>()
     val items: List<ItemCompose> = _items
+
+    private var hasCalledGetUnsyncedOrders = false
 
     init {
         viewModelScope.launch {
@@ -37,6 +37,10 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
                 is ApiResult.Success -> {
                     _items.clear()
                     _items.addAll(result.data)
+                    if (!hasCalledGetUnsyncedOrders) {
+                        getUnsyncedOrders()
+                        hasCalledGetUnsyncedOrders = !hasCalledGetUnsyncedOrders
+                    }
                 }
                 is ApiResult.Error -> _items.clear()
             }

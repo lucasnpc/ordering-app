@@ -3,6 +3,7 @@ package com.example.orderingapp.main.data.repositories
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.commons.request.safeRequestSuspend
 import com.example.orderingapp.main.data.dao.OrderingAppDao
+import com.example.orderingapp.main.data.repositories.utils.Collections
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.SyncOrderUseCase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -18,7 +19,7 @@ class SyncOrderRepository(
     override fun syncOrderRemote(orders: List<Order>): Flow<ApiResult<Unit>> = flow {
         val result = safeRequestSuspend {
             orders.forEach { order ->
-                firestore.collection("orders").document(order.id).set(order)
+                firestore.collection(Collections.orders).document(order.id).set(order)
             }
         }
         emit(result)

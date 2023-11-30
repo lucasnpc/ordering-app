@@ -10,7 +10,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.orderingapp.main.utils.BottomNavItem
+import com.example.orderingapp.main.presentation.utils.BottomNavItem
 
 @Composable
 fun OrderingAppBottomBar(navController: NavHostController) {

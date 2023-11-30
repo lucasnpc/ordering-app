@@ -22,4 +22,12 @@
     <string name="make_payment">Efetuar pagamento</string>
     <string name="money_label">Dinheiro</string>
     <string name="place_order">Realizar pedido</string>
+    <string name="file_not_found">Arquivo não encontrado</string>
+    <string name="order_label">PEDIDO:</string>
+    <string name="quantity_label">Qtd. %s</string>
+    <string name="value_label">VALOR</string>
+    <string name="payment_label">PAGAMENTO</string>
+    <string name="document_item_info">Item: %s Qtd. %s Vlr Unitário: %s</string>
+    <string name="document_total_info">TOTAL: %s</string>
+    <string name="document_payment_info">PAGAMENTO: %s</string>
 </resources>

@@ -19,24 +19,26 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.orderingapp.commons.extensions.convertToOrder
+import com.example.orderingapp.commons.extensions.jsonToOrder
 import com.example.orderingapp.main.presentation.voucher.components.PaymentVoucher
-import com.example.orderingapp.main.presentation.voucher.components.RealizedPaymentInfo
-import com.example.orderingapp.main.presentation.voucher.components.RedRealizedPayment
+import com.example.orderingapp.main.presentation.voucher.components.PaymentInfo
+import com.example.orderingapp.main.presentation.voucher.components.BarRealizedPayment
 import com.example.orderingapp.main.presentation.voucher.components.SeeVoucherBt
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun VoucherScreen(orderJson: String) {
-    orderJson.convertToOrder()?.let { order ->
+    orderJson.jsonToOrder()?.let { order ->
         val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
         val scope = rememberCoroutineScope()
         BottomDrawer(
             drawerState = drawerState,
             drawerContent = {
                 PaymentVoucher(
-                    order
+                    order,
+                    drawerState,
+                    scope
                 )
             }) {
             Box(
@@ -50,9 +52,9 @@ fun VoucherScreen(orderJson: String) {
                         .background(Color.White)
                 ) {
                     Column(verticalArrangement = Arrangement.SpaceBetween) {
-                        RedRealizedPayment()
+                        BarRealizedPayment()
                         Spacer(modifier = Modifier.height(32.dp))
-                        RealizedPaymentInfo(order)
+                        PaymentInfo(order)
                         Spacer(modifier = Modifier.height(32.dp))
                         Divider(modifier = Modifier.height(2.dp))
                         SeeVoucherBt {

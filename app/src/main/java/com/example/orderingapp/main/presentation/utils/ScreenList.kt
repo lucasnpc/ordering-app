@@ -1,4 +1,4 @@
-package com.example.orderingapp.main.utils
+package com.example.orderingapp.main.presentation.utils
 
 sealed class ScreenList(val route: String) {
     object MenuScreen : ScreenList("MenuScreen")

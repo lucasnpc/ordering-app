@@ -34,7 +34,7 @@ import com.example.orderingapp.R
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.presentation.MainViewModel
 import com.example.orderingapp.main.theme.redPrimary
-import com.example.orderingapp.main.utils.ScreenList
+import com.example.orderingapp.main.presentation.utils.ScreenList
 
 @Composable
 fun OrderingAppTopBar(

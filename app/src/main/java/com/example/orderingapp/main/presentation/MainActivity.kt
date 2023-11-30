@@ -25,8 +25,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.orderingapp.R
-import com.example.orderingapp.commons.pdf.createPDFDocument
-import com.example.orderingapp.commons.pdf.writeDocument
+import com.example.orderingapp.commons.extensions.createPDFDocument
+import com.example.orderingapp.commons.extensions.writeDocument
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.presentation.components.OrderingAppBottomBar
 import com.example.orderingapp.main.presentation.components.OrderingAppTopBar
@@ -35,7 +35,7 @@ import com.example.orderingapp.main.presentation.order.OrderScreen
 import com.example.orderingapp.main.presentation.stock.StockScreen
 import com.example.orderingapp.main.presentation.voucher.VoucherScreen
 import com.example.orderingapp.main.theme.OrderingAppTheme
-import com.example.orderingapp.main.utils.ScreenList
+import com.example.orderingapp.main.presentation.utils.ScreenList
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

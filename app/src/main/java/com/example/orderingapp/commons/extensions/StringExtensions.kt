@@ -4,7 +4,7 @@ import com.example.orderingapp.main.domain.model.Order
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-fun String.convertToOrder(): Order? {
+fun String.jsonToOrder(): Order? {
     return try {
         val orderType =
             object : TypeToken<Order>() {}.type

@@ -1,4 +1,4 @@
-package com.example.orderingapp.main.presentation.components
+package com.example.orderingapp.main.presentation.menu.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -39,7 +39,11 @@ fun MoneyField(total: Double, disableButton: (Double) -> Unit) {
             onValueChange = {
                 cashChange = it
                 if (cashChange.isNotEmpty())
-                    disableButton(cashChange.replace(",", ".").toDouble())
+                    try {
+                        disableButton(cashChange.replace(",", ".").toDouble())
+                    } catch (ex: Exception) {
+                        cashChange = "0"
+                    }
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Decimal,

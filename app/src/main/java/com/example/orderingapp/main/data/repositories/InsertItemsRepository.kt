@@ -3,7 +3,7 @@ package com.example.orderingapp.main.data.repositories
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.commons.request.safeRequestSuspend
 import com.example.orderingapp.main.data.dao.OrderingAppDao
-import com.example.orderingapp.main.data.entities.ItemDTO
+import com.example.orderingapp.main.data.repositories.mappings.toItemDTO
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.usecase.InsertItemsUseCase
 import kotlinx.coroutines.Dispatchers
@@ -20,13 +20,4 @@ class InsertItemsRepository(private val dao: OrderingAppDao) : InsertItemsUseCas
         }
         emit(result)
     }.flowOn(Dispatchers.IO)
-    private fun Item.toItemDTO(): ItemDTO {
-        return ItemDTO(
-            id = id,
-            description = description,
-            currentValue = currentValue,
-            minimumStock = minimumStock,
-            currentStock = currentStock
-        )
-    }
 }

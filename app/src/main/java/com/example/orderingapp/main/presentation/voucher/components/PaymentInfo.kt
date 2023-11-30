@@ -15,7 +15,7 @@ import com.example.orderingapp.commons.extensions.currencyFormat
 import com.example.orderingapp.main.domain.model.Order
 
 @Composable
-fun RealizedPaymentInfo(order: Order) {
+fun PaymentInfo(order: Order) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier

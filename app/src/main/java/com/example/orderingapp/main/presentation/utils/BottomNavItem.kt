@@ -1,4 +1,4 @@
-package com.example.orderingapp.main.utils
+package com.example.orderingapp.main.presentation.utils
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MenuBook

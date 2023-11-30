@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.example.orderingapp.R
 
 @Composable
-fun RedRealizedPayment() {
+fun BarRealizedPayment() {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier

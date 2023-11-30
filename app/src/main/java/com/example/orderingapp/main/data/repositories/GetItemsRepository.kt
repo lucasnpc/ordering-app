@@ -5,12 +5,13 @@ import com.example.orderingapp.commons.request.safeRequest
 import com.example.orderingapp.commons.request.safeRequestSuspend
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.data.entities.ItemDTO
-import com.example.orderingapp.main.domain.model.Item
+import com.example.orderingapp.main.data.repositories.mappings.documentToItemDTO
+import com.example.orderingapp.main.data.repositories.mappings.fromDTOToListItemCompose
+import com.example.orderingapp.main.data.repositories.utils.Collections
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QueryDocumentSnapshot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -26,7 +27,7 @@ class GetItemsRepository(
 
     override fun getItemsFromRemote(): Flow<ApiResult<List<ItemCompose>>> = callbackFlow {
         val listener =
-            firestore.collection("items").addSnapshotListener { snapshot, exception ->
+            firestore.collection(Collections.items).addSnapshotListener { snapshot, exception ->
                 if (exception != null) {
                     trySend(ApiResult.Error(exception))
                     return@addSnapshotListener
@@ -67,26 +68,4 @@ class GetItemsRepository(
         }
         emit(result)
     }.flowOn(Dispatchers.IO)
-
-    private fun QueryDocumentSnapshot.documentToItemDTO() = ItemDTO(
-        id = id,
-        description = this["description"] as String,
-        currentValue = this["currentValue"].toString().toDouble(),
-        minimumStock = this["minimumStock"].toString().toInt(),
-        currentStock = this["currentStock"].toString().toInt()
-    )
-
-    private fun List<ItemDTO>.fromDTOToListItemCompose(): List<ItemCompose> {
-        return this.map { itemDTO ->
-            ItemCompose(
-                Item(
-                    id = itemDTO.id,
-                    description = itemDTO.description,
-                    currentValue = itemDTO.currentValue,
-                    minimumStock = itemDTO.minimumStock,
-                    currentStock = itemDTO.currentStock,
-                )
-            )
-        }
-    }
 }

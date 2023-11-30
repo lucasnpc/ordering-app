@@ -20,7 +20,7 @@ import com.example.orderingapp.commons.extensions.currencyFormat
 import com.example.orderingapp.main.domain.model.Order
 
 @Composable
-fun PaymentVoucherInfo(order: Order) {
+fun VoucherInfo(order: Order) {
     LazyColumn(modifier = Modifier.padding(16.dp)) {
         item {
             Text(
@@ -35,7 +35,7 @@ fun PaymentVoucherInfo(order: Order) {
         }
         item {
             Spacer(modifier = Modifier.height(32.dp))
-            Text(text = "PEDIDO:", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(text = stringResource(R.string.order_label), fontWeight = FontWeight.Bold, fontSize = 18.sp)
         }
         items(order.items) { item ->
             Row(
@@ -43,7 +43,7 @@ fun PaymentVoucherInfo(order: Order) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = item.description, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text(text = "Qtd. ${item.finalQuantity}", fontSize = 18.sp)
+                Text(text =  stringResource(id = R.string.quantity_label, item.finalQuantity), fontSize = 18.sp)
             }
         }
         item {
@@ -52,7 +52,7 @@ fun PaymentVoucherInfo(order: Order) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "VALOR", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(text = stringResource(R.string.value_label), fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 Text(text = order.items.sumOf { it.finalQuantity * it.currentValue }
                     .currencyFormat(), fontSize = 18.sp)
             }
@@ -63,7 +63,7 @@ fun PaymentVoucherInfo(order: Order) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "PAGAMENTO", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(text = stringResource(R.string.payment_label), fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 Text(text = order.paymentWay, fontSize = 18.sp)
             }
         }
