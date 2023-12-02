@@ -1,6 +1,6 @@
 package com.example.orderingapp.main.data.repositories.utils
 
-object Collections {
+object FirestoreCollections {
     const val orders = "orders"
     const val items = "items"
 }

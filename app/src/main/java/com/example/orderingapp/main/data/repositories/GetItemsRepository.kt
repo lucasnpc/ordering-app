@@ -7,7 +7,7 @@ import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.data.entities.ItemDTO
 import com.example.orderingapp.main.data.repositories.mappings.documentToItemDTO
 import com.example.orderingapp.main.data.repositories.mappings.fromDTOToListItemCompose
-import com.example.orderingapp.main.data.repositories.utils.Collections
+import com.example.orderingapp.main.data.repositories.utils.FirestoreCollections
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import com.google.firebase.firestore.DocumentChange
@@ -27,7 +27,7 @@ class GetItemsRepository(
 
     override fun getItemsFromRemote(): Flow<ApiResult<List<ItemCompose>>> = callbackFlow {
         val listener =
-            firestore.collection(Collections.items).addSnapshotListener { snapshot, exception ->
+            firestore.collection(FirestoreCollections.items).addSnapshotListener { snapshot, exception ->
                 if (exception != null) {
                     trySend(ApiResult.Error(exception))
                     return@addSnapshotListener

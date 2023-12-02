@@ -5,6 +5,7 @@ import com.example.orderingapp.main.commons.TestConstants.testException
 import com.example.orderingapp.main.commons.TestConstants.testMsgException
 import com.example.orderingapp.main.commons.TestData
 import com.example.orderingapp.main.data.dao.OrderingAppDao
+import com.example.orderingapp.main.data.repositories.utils.FirestoreCollections
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
@@ -62,7 +63,7 @@ class GetItemsRepositoryTest {
     fun setup() {
         getItemsUseCase = GetItemsRepository(firestore, dao)
 
-        every { firestore.collection("items") } returns collection
+        every { firestore.collection(FirestoreCollections.items) } returns collection
 
         every { collection.addSnapshotListener(any()) } answers {
             val listener = firstArg<EventListener<QuerySnapshot>>()

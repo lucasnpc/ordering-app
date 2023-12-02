@@ -18,26 +18,33 @@ import java.io.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-fun Activity.createPDFDocument(order: Order): PdfDocument {
-    val pageHeight = 1120
-    val pagewidth = 792
-    val pageCenter = (pagewidth / 2).toFloat()
+
+private const val pageHeight = 1120
+private const val pageWidth = 792
+
+fun Activity.createPDFDocument(
+    order: Order,
+    titlePaint: Paint = Paint(),
+    contentPaint: Paint = Paint(),
+    doc: PdfDocument = PdfDocument(),
+    pageInfoBuilder: PdfDocument.PageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, 1)
+        .create()
+): PdfDocument {
+    val pageCenter = (pageWidth / 2).toFloat()
     val text = 16F
-    val doc = PdfDocument()
-    val title = Paint().apply {
+    val title = titlePaint.apply {
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
         textSize = text
         color = android.graphics.Color.BLACK
         textAlign = Paint.Align.CENTER
     }
-    val content = Paint().apply {
+    val content = contentPaint.apply {
         typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
         textSize = text
         color = android.graphics.Color.BLACK
         textAlign = Paint.Align.CENTER
     }
-    val mypageInfo = PdfDocument.PageInfo.Builder(pagewidth, pageHeight, 1).create()
-    val myPage: PdfDocument.Page = doc.startPage(mypageInfo)
+    val myPage: PdfDocument.Page = doc.startPage(pageInfoBuilder)
     val canvas = myPage.canvas
 
     canvas.apply {

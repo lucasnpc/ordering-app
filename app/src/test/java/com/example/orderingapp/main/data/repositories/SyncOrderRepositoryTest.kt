@@ -5,6 +5,7 @@ import com.example.orderingapp.main.commons.TestConstants.testException
 import com.example.orderingapp.main.commons.TestConstants.testMsgException
 import com.example.orderingapp.main.commons.TestData
 import com.example.orderingapp.main.data.dao.OrderingAppDao
+import com.example.orderingapp.main.data.repositories.utils.FirestoreCollections
 import com.example.orderingapp.main.data.utils.FakeOrderingDao
 import com.example.orderingapp.main.domain.usecase.SyncOrderUseCase
 import com.google.common.truth.Truth.assertThat
@@ -35,7 +36,7 @@ class SyncOrderRepositoryTest {
 
     @Test
     fun syncOrderRemote() = runTest {
-        every { firestore.collection("orders") } returns mockk {
+        every { firestore.collection(FirestoreCollections.orders) } returns mockk {
             every { document(any()) } returns documentReference
         }
         every { documentReference.set(any()) } returns mockk {
@@ -59,7 +60,7 @@ class SyncOrderRepositoryTest {
 
     @Test
     fun syncOrderRemoteException() = runTest {
-        every { firestore.collection("orders") } returns mockk {
+        every { firestore.collection(FirestoreCollections.orders) } returns mockk {
             every { document(any()) } throws  testException
         }
         syncOrderUseCase.syncOrderRemote(listOrder).collect { result ->
