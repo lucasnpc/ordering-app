@@ -22,7 +22,6 @@ fun ChangeItemQuantityButtons(itemCompose: ItemCompose) {
                 onClick = {
                     if (itemCompose.quantity.value > 0) {
                         itemCompose.quantity.value--
-                        itemCompose.item.finalQuantity = itemCompose.quantity.value
                     }
                 },
                 modifier = Modifier.width(40.dp),
@@ -46,7 +45,6 @@ fun ChangeItemQuantityButtons(itemCompose: ItemCompose) {
             OutlinedButton(
                 onClick = {
                     itemCompose.quantity.value++
-                    itemCompose.item.finalQuantity = itemCompose.quantity.value
                 },
                 modifier = Modifier.width(40.dp),
                 colors = ButtonDefaults.buttonColors(

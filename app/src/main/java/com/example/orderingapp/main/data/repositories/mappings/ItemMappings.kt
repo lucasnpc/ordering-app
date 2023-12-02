@@ -6,7 +6,6 @@ import com.example.orderingapp.main.domain.model.ItemCompose
 
 fun Item.toItemDTO(): ItemDTO {
     return ItemDTO(
-        id = id,
         description = description,
         currentValue = currentValue,
         minimumStock = minimumStock,
@@ -14,17 +13,15 @@ fun Item.toItemDTO(): ItemDTO {
     )
 }
 
-
-fun List<ItemDTO>.fromDTOToListItemCompose(): List<ItemCompose> {
-    return this.map { itemDTO ->
+fun List<ItemDTO>.fromDTOToListItemCompose(): Map<String, ItemCompose> {
+    return this.associateBy({ it.id }, {
         ItemCompose(
             Item(
-                id = itemDTO.id,
-                description = itemDTO.description,
-                currentValue = itemDTO.currentValue,
-                minimumStock = itemDTO.minimumStock,
-                currentStock = itemDTO.currentStock,
+                description = it.description,
+                currentValue = it.currentValue,
+                minimumStock = it.minimumStock,
+                currentStock = it.currentStock,
             )
         )
-    }
+    })
 }

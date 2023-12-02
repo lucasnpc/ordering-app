@@ -4,7 +4,7 @@ import java.util.UUID
 
 data class Order(
     val id: String = UUID.randomUUID().toString(),
-    val items: List<Item> = listOf(),
+    val items: Map<String, Item> = mapOf(),
     val date: String,
     val hour: String,
     val orderValue: Double,

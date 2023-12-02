@@ -7,5 +7,5 @@ import com.example.orderingapp.main.domain.model.Order
 import kotlinx.coroutines.flow.Flow
 
 interface InsertOrderUseCase {
-    fun insertOrderLocal(order: Order, _items: List<ItemCompose>): Flow<ApiResult<List<Order>>>
+    fun insertOrderLocal(order: Order, _items: Map<String, ItemCompose>): Flow<ApiResult<List<Order>>>
 }

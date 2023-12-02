@@ -14,24 +14,24 @@ import com.example.orderingapp.commons.extensions.currencyFormat
 import com.example.orderingapp.main.domain.model.Item
 
 @Composable
-fun OrderInfo(it: Item) {
+fun OrderInfo(item: Map.Entry<String, Item>) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = it.description,
+            text = item.value.description,
             fontSize = 16.sp,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.width(150.dp),
             maxLines = 1
         )
         Text(
-            text = "Qtd.${it.finalQuantity}",
+            text = "Qtd.${item.value.finalQuantity}",
             fontSize = 16.sp
         )
         Text(
-            text = (it.currentValue * it.finalQuantity).currencyFormat(),
+            text = (item.value.currentValue * item.value.finalQuantity).currencyFormat(),
             fontSize = 16.sp,
         )
     }

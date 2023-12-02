@@ -5,11 +5,11 @@ import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 
-fun List<OrderDTO>.fromOrderDTOToOrder(_items: List<Item>): List<Order> {
+fun List<OrderDTO>.fromOrderDTOToOrder(_items: Map<String, ItemCompose>): List<Order> {
     return this.map { orderDTO ->
         Order(
             id = orderDTO.id,
-            items = orderDTO.items.toListItem(_items),
+            items = orderDTO.items.mapToOrderItem(_items),
             date = orderDTO.date,
             hour = orderDTO.hour,
             orderValue = orderDTO.orderValue,
@@ -18,27 +18,24 @@ fun List<OrderDTO>.fromOrderDTOToOrder(_items: List<Item>): List<Order> {
     }
 }
 
-private fun Map<String, Int>.toListItem(_items: List<Item>): List<Item> {
-    val list = this.map {
-        _items.find { item -> item.id == it.key }?.let { find ->
+private fun Map<String, Int>.mapToOrderItem(_items: Map<String, ItemCompose>): Map<String, Item> {
+    return this.mapValues { entry ->
+        _items[entry.key]?.let {
             Item(
-                id = it.key,
-                description = find.description,
-                currentValue = find.currentValue,
-                minimumStock = find.minimumStock,
-                currentStock = find.currentStock,
-                finalQuantity = it.value,
+                description = it.item.description,
+                currentValue = it.item.currentValue,
+                minimumStock = it.item.minimumStock,
+                currentStock = it.item.currentStock,
+                finalQuantity = entry.value
             )
         } ?: Item()
     }
-
-    return list.filter { it.finalQuantity > 0 }
 }
 
 fun Order.toOrderDTO(): OrderDTO {
     return OrderDTO(
         id = id,
-        items = items.associate { it.id to it.finalQuantity },
+        items = items.mapValues { it.value.finalQuantity },
         date = date,
         hour = hour,
         orderValue = orderValue,

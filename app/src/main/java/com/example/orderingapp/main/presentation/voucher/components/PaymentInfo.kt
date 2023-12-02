@@ -25,7 +25,7 @@ fun PaymentInfo(order: Order) {
     ) {
         Text(text = "${order.date}, ${order.hour}", fontSize = 20.sp)
         Text(text = order.paymentWay.uppercase(), fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        Text(text = order.items.sumOf { it.finalQuantity * it.currentValue }
+        Text(text = order.items.values.sumOf { it.finalQuantity * it.currentValue }
             .currencyFormat(), fontSize = 20.sp)
     }
 }

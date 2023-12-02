@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MenuScreen(
-    items: List<ItemCompose>,
+    items: Map<String, ItemCompose>,
     menuViewModel: MenuViewModel = hiltViewModel(),
     unsyncedOrdersCallback: (List<Order>) -> Unit
 ) {
@@ -39,7 +39,7 @@ fun MenuScreen(
         drawerContent = {
             PaymentOptions(
                 items = items,
-                addedItems = items.filter { it.quantity.value > 0 },
+                addedItems = items.filter { it.value.quantity.value > 0 },
                 menuViewModel = menuViewModel,
                 unsyncedOrdersCallback = {
                     scope.launch {
@@ -49,7 +49,7 @@ fun MenuScreen(
                 })
         }) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            ItemsList(list = items)
+            ItemsList(map = items)
             OutlinedButton(
                 onClick = {
                     scope.launch {
@@ -60,7 +60,7 @@ fun MenuScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 36.dp)
                     .align(Alignment.BottomCenter),
-                enabled = items.any { it.quantity.value > 0 }
+                enabled = items.any { it.value.quantity.value > 0 }
             ) {
                 Text(text = stringResource(R.string.place_order))
             }

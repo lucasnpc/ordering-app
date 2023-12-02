@@ -19,16 +19,17 @@ import com.example.orderingapp.commons.extensions.roundDouble
 import com.example.orderingapp.commons.extensions.toDateFormat
 import com.example.orderingapp.commons.extensions.toHourFormat
 import com.example.orderingapp.commons.mappings.composeToListItem
+import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.presentation.menu.MenuViewModel
 
 @Composable
 fun PaymentOptions(
-    addedItems: List<ItemCompose>,
+    addedItems: Map<String, ItemCompose>,
     menuViewModel: MenuViewModel,
     unsyncedOrdersCallback: (List<Order>) -> Unit,
-    items: List<ItemCompose>
+    items: Map<String, ItemCompose>
 ) {
     val radioOptions = listOf("Crédito", "Débito", "Dinheiro", "Pix")
     val (selectedOption, onOptionSelect) = remember {
@@ -37,7 +38,7 @@ fun PaymentOptions(
     var changeValue by remember {
         mutableStateOf(0.0)
     }
-    val total = addedItems.sumOf { it.item.currentValue * it.quantity.value }
+    val total = addedItems.values.sumOf { it.item.currentValue * it.quantity.value }
 
     Column {
         radioOptions.forEach {
@@ -58,8 +59,7 @@ fun PaymentOptions(
                         items = addedItems.composeToListItem(),
                         hour = System.currentTimeMillis().toHourFormat(),
                         date = System.currentTimeMillis().toDateFormat(),
-                        orderValue = addedItems.sumOf { it.item.currentValue * it.quantity.value }
-                            .roundDouble(),
+                        orderValue = total.roundDouble(),
                         paymentWay = selectedOption
                     ),
                     _items = items,

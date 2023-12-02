@@ -47,7 +47,7 @@ class GetItemsRepositoryTest {
 
     private val list = TestData().itemsCompose
     private val listDTO = TestData().itemsDTO
-    private val item = TestData().itemsCompose.first().item
+    private val item = TestData().itemsCompose.first().items
     private val itemModified = ItemCompose(
         Item(
             id = item.id,
@@ -124,11 +124,11 @@ class GetItemsRepositoryTest {
         getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
             assertSuccess(result)
         }
-        every { document["description"] } returns itemModified.item.description
+        every { document["description"] } returns itemModified.items.description
         getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
             result as ApiResult.Success
-            assertThat(result.data.first().item).isEqualTo(itemModified.item)
+            assertThat(result.data.first().items).isEqualTo(itemModified.items)
             assertThat(result.data.first().quantity.value).isEqualTo(itemModified.quantity.value)
         }
     }
@@ -174,12 +174,12 @@ class GetItemsRepositoryTest {
         assertThat(result).isInstanceOf(ApiResult.Success::class.java)
         result as ApiResult.Success
         for (i in result.data.indices) {
-            result.data[i].item.run {
-                assertThat(id).isEqualTo(list[i].item.id)
-                assertThat(description).isEqualTo(list[i].item.description)
-                assertThat(currentValue).isEqualTo(list[i].item.currentValue)
-                assertThat(currentStock).isEqualTo(list[i].item.currentStock)
-                assertThat(minimumStock).isEqualTo(list[i].item.minimumStock)
+            result.data[i].items.run {
+                assertThat(id).isEqualTo(list[i].items.id)
+                assertThat(description).isEqualTo(list[i].items.description)
+                assertThat(currentValue).isEqualTo(list[i].items.currentValue)
+                assertThat(currentStock).isEqualTo(list[i].items.currentStock)
+                assertThat(minimumStock).isEqualTo(list[i].items.minimumStock)
                 assertThat(finalQuantity).isEqualTo(0)
             }
         }

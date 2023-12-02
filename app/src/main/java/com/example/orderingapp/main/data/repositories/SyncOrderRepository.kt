@@ -27,7 +27,7 @@ class SyncOrderRepository(
 
     override fun syncOrderLocal(orders: List<Order>): Flow<ApiResult<Unit>> = flow {
         val result = safeRequestSuspend {
-            orders.forEach {order ->
+            orders.forEach { order ->
                 dao.updateOrderSync(order.id)
             }
         }

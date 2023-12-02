@@ -1,10 +1,12 @@
 package com.example.orderingapp.main.presentation
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.orderingapp.commons.request.ApiResult
+import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.MainUseCases
@@ -19,8 +21,8 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
     private val _unsyncedOrders = mutableStateListOf<Order>()
     val unsyncedOrders: List<Order> = _unsyncedOrders
 
-    private val _items = mutableStateListOf<ItemCompose>()
-    val items: List<ItemCompose> = _items
+    private var _items = mutableStateMapOf<String, ItemCompose>()
+    val items: Map<String, ItemCompose> = _items
 
     private var hasCalledGetUnsyncedOrders = false
 
@@ -36,7 +38,7 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
             when (result) {
                 is ApiResult.Success -> {
                     _items.clear()
-                    _items.addAll(result.data)
+                    _items.putAll(result.data)
                     if (!hasCalledGetUnsyncedOrders) {
                         getUnsyncedOrders()
                         hasCalledGetUnsyncedOrders = !hasCalledGetUnsyncedOrders
@@ -48,7 +50,7 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
     }
 
     private suspend fun getUnsyncedOrders() {
-        mainUseCases.getOrdersUseCase.getUnsyncedOrders(_items).firstOrNull { result ->
+        mainUseCases.getOrdersUseCase.getUnsyncedOrders(_items.toMap()).firstOrNull { result ->
             when (result) {
                 is ApiResult.Success -> {
                     _unsyncedOrders.clear()

@@ -6,7 +6,7 @@ import com.example.orderingapp.main.domain.model.ItemCompose
 import kotlinx.coroutines.flow.Flow
 
 interface GetItemsUseCase {
-    fun getItemsFromRemote(): Flow<ApiResult<List<ItemCompose>>>
+    fun getItemsFromRemote(): Flow<ApiResult<Map<String, ItemCompose>>>
 
-    fun getItemsFromLocal(): Flow<ApiResult<List<ItemCompose>>>
+    fun getItemsFromLocal(): Flow<ApiResult<Map<String, ItemCompose>>>
 }

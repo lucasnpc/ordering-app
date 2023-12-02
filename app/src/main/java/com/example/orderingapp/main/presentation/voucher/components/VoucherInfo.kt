@@ -35,15 +35,22 @@ fun VoucherInfo(order: Order) {
         }
         item {
             Spacer(modifier = Modifier.height(32.dp))
-            Text(text = stringResource(R.string.order_label), fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(
+                text = stringResource(R.string.order_label),
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
         }
-        items(order.items) { item ->
+        items(order.items.values.toList()) { item ->
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = item.description, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text(text =  stringResource(id = R.string.quantity_label, item.finalQuantity), fontSize = 18.sp)
+                Text(
+                    text = stringResource(id = R.string.quantity_label, item.finalQuantity),
+                    fontSize = 18.sp
+                )
             }
         }
         item {
@@ -52,8 +59,12 @@ fun VoucherInfo(order: Order) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = stringResource(R.string.value_label), fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text(text = order.items.sumOf { it.finalQuantity * it.currentValue }
+                Text(
+                    text = stringResource(R.string.value_label),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+                Text(text = order.items.values.sumOf { it.finalQuantity * it.currentValue }
                     .currencyFormat(), fontSize = 18.sp)
             }
         }
@@ -63,7 +74,11 @@ fun VoucherInfo(order: Order) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = stringResource(R.string.payment_label), fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(
+                    text = stringResource(R.string.payment_label),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
                 Text(text = order.paymentWay, fontSize = 18.sp)
             }
         }

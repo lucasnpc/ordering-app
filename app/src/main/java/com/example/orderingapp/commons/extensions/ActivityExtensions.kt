@@ -54,7 +54,7 @@ fun Activity.createPDFDocument(
         drawText("${order.date}, ${order.hour}", pageCenter, height, content)
         height += 40
         drawText(getString(R.string.order_label), pageCenter, height, title)
-        order.items.forEach { item ->
+        order.items.values.forEach { item ->
             height += 20f
             this.drawText(
                 getString(
@@ -72,7 +72,7 @@ fun Activity.createPDFDocument(
         drawText(
             getString(
                 R.string.document_total_info,
-                order.items.sumOf { it.finalQuantity * it.currentValue }.currencyFormat()
+                order.items.values.sumOf { it.finalQuantity * it.currentValue }.currencyFormat()
             ),
             pageCenter,
             height,
