@@ -49,7 +49,7 @@ class ActivityExtensionsKtTest {
     fun createPDFDocument() {
         every { order.date } returns ""
         every { order.hour } returns ""
-        every { order.items } returns listOf()
+        every { order.items } returns mapOf()
         every { order.paymentWay } returns ""
         every { activity.getString(R.string.payment_voucher) } returns ""
         every { activity.getString(R.string.order_label) } returns ""

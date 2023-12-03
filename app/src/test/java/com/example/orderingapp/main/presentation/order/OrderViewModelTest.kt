@@ -4,7 +4,6 @@ import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.commons.MainCoroutineRule
 import com.example.orderingapp.main.commons.TestConstants.testException
 import com.example.orderingapp.main.commons.TestData
-import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -23,8 +22,7 @@ class OrderViewModelTest {
     private lateinit var orderViewModel: OrderViewModel
     private val mainUseCases: MainUseCases = mockk()
 
-    private val list =
-        listOf(ItemCompose(TestData().items.first()), ItemCompose(TestData().items[1]))
+    private val list = TestData().itemsCompose
     private val listOrder = TestData().orders
 
     @Before

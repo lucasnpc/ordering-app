@@ -4,7 +4,7 @@ import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.commons.request.safeRequest
 import com.example.orderingapp.commons.request.safeRequestSuspend
 import com.example.orderingapp.main.data.dao.OrderingAppDao
-import com.example.orderingapp.main.data.repositories.mappings.documentToItemDTO
+import com.example.orderingapp.main.data.repositories.mappings.documentToItemCompose
 import com.example.orderingapp.main.data.repositories.mappings.fromDTOToListItemCompose
 import com.example.orderingapp.main.data.repositories.utils.FirestoreCollections
 import com.example.orderingapp.main.domain.model.ItemCompose
@@ -36,11 +36,11 @@ class GetItemsRepository(
                         snapshot?.documentChanges?.map { doc ->
                             when (doc.type) {
                                 DocumentChange.Type.ADDED -> doc.document.let {
-                                    itemsCompose[it.id] = it.documentToItemDTO()
+                                    itemsCompose[it.id] = it.documentToItemCompose()
 
                                 }
                                 DocumentChange.Type.MODIFIED -> doc.document.let {
-                                    itemsCompose[it.id] = it.documentToItemDTO()
+                                    itemsCompose[it.id] = it.documentToItemCompose()
                                 }
                                 DocumentChange.Type.REMOVED -> doc.document.let {
                                     itemsCompose.remove(it.id)

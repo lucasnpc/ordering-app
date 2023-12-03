@@ -66,14 +66,14 @@ class MainViewModelTest {
 
     @Test
     fun getItems() {
-        for (i in mainViewModel.items.indices) {
-            mainViewModel.items[i].items.run {
-                assertThat(id).isEqualTo(list[i].items.id)
-                assertThat(description).isEqualTo(list[i].items.description)
-                assertThat(currentValue).isEqualTo(list[i].items.currentValue)
-                assertThat(currentStock).isEqualTo(list[i].items.currentStock)
-                assertThat(minimumStock).isEqualTo(list[i].items.minimumStock)
-                assertThat(finalQuantity).isEqualTo(list[i].items.finalQuantity)
+        for ((key, value) in mainViewModel.items) {
+            val expected = list[key]?.item
+            value.item.run {
+                assertThat(description).isEqualTo(expected?.description)
+                assertThat(currentValue).isEqualTo(expected?.currentValue)
+                assertThat(currentStock).isEqualTo(expected?.currentStock)
+                assertThat(minimumStock).isEqualTo(expected?.minimumStock)
+                assertThat(finalQuantity).isEqualTo(expected?.finalQuantity)
             }
         }
     }

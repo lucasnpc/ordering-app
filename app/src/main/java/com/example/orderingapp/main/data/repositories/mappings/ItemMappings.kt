@@ -4,12 +4,14 @@ import com.example.orderingapp.main.data.entities.ItemDTO
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
 
-fun Item.toItemDTO(): ItemDTO {
+
+fun Map.Entry<String, Item>.toItemDTO(): ItemDTO {
     return ItemDTO(
-        description = description,
-        currentValue = currentValue,
-        minimumStock = minimumStock,
-        currentStock = currentStock
+        id = key,
+        description = value.description,
+        currentValue = value.currentValue,
+        minimumStock = value.minimumStock,
+        currentStock = value.currentStock
     )
 }
 

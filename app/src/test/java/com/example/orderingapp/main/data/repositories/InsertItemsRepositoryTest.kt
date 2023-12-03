@@ -31,7 +31,7 @@ class InsertItemsRepositoryTest {
     fun insertItem() = runTest {
         insertItemsUseCase.insertItem(list).take(1).collect {
             assertThat(it).isInstanceOf(ApiResult.Success::class.java)
-            assertThat(dao.getItems()).isEqualTo(listDTO)
+            assertThat(dao.getItems()).isEqualTo(listDTO.values.toList())
         }
     }
 
@@ -39,7 +39,7 @@ class InsertItemsRepositoryTest {
     fun insertItemException() = runTest {
         dao = mockk()
         insertItemsUseCase = InsertItemsRepository(dao)
-        every { dao.insertItem(listDTO.first()) } throws testException
+        every { dao.insertItem(listDTO.values.first()) } throws testException
         insertItemsUseCase.insertItem(list).take(1).collect {
             assertThat(it).isInstanceOf(ApiResult.Error::class.java)
             it as ApiResult.Error

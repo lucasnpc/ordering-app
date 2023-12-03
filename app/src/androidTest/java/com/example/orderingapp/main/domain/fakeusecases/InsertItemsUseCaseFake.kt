@@ -6,7 +6,7 @@ import com.example.orderingapp.main.domain.usecase.InsertItemsUseCase
 import kotlinx.coroutines.flow.Flow
 
 class InsertItemsUseCaseFake: InsertItemsUseCase {
-    override fun insertItem(items: List<Item>): Flow<ApiResult<Unit>> {
+    override fun insertItem(items: Map<String, Item>): Flow<ApiResult<Unit>> {
         TODO("Not yet implemented")
     }
 }

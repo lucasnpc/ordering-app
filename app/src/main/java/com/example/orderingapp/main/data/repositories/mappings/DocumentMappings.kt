@@ -4,7 +4,7 @@ import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.google.firebase.firestore.QueryDocumentSnapshot
 
-fun QueryDocumentSnapshot.documentToItemDTO() = ItemCompose(
+fun QueryDocumentSnapshot.documentToItemCompose() = ItemCompose(
     Item(
         description = this["description"] as String,
         currentValue = this["currentValue"].toString().toDouble(),

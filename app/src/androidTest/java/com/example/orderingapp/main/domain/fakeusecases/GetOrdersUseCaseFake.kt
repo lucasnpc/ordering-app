@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class GetOrdersUseCaseFake : GetOrdersUseCase {
-    override fun getOrders(_items: List<ItemCompose>): Flow<ApiResult<List<Order>>> {
+    override fun getOrders(_items: Map<String, ItemCompose>): Flow<ApiResult<List<Order>>> {
         TODO("Not yet implemented")
     }
 
-    override fun getUnsyncedOrders(_items: List<ItemCompose>): Flow<ApiResult<List<Order>>> {
+    override fun getUnsyncedOrders(_items: Map<String, ItemCompose>): Flow<ApiResult<List<Order>>> {
         return flow { emit(ApiResult.Success(listOf())) }
     }
 

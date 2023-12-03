@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class InsertItemsRepository(private val dao: OrderingAppDao) : InsertItemsUseCase {
-    override fun insertItem(items: List<Item>): Flow<ApiResult<Unit>> = flow {
+    override fun insertItem(items: Map<String, Item>): Flow<ApiResult<Unit>> = flow {
         val result = safeRequestSuspend {
             items.forEach { item ->
                 dao.insertItem(item.toItemDTO())

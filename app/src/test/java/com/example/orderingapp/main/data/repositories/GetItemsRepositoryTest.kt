@@ -47,14 +47,13 @@ class GetItemsRepositoryTest {
 
     private val list = TestData().itemsCompose
     private val listDTO = TestData().itemsDTO
-    private val item = TestData().itemsCompose.first().items
+    private val mapItem = TestData().itemsCompose.entries.first()
     private val itemModified = ItemCompose(
         Item(
-            id = item.id,
-            description = "${item.description} modificado",
-            currentValue = item.currentValue,
-            minimumStock = item.minimumStock,
-            currentStock = item.currentStock,
+            description = "${mapItem.value.item.description} modificado",
+            currentValue = mapItem.value.item.currentValue,
+            minimumStock = mapItem.value.item.minimumStock,
+            currentStock = mapItem.value.item.currentStock,
             finalQuantity = 0
         )
     )
@@ -89,16 +88,16 @@ class GetItemsRepositoryTest {
 
         every { documentChange.document } returns document
 
-        every { document.id } returns item.id
-        every { document["description"] } returns item.description
-        every { document["currentValue"] } returns item.currentValue
-        every { document["minimumStock"] } returns item.minimumStock
-        every { document["currentStock"] } returns item.currentStock
+        every { document.id } returns mapItem.key
+        every { document["description"] } returns mapItem.value.item.description
+        every { document["currentValue"] } returns mapItem.value.item.currentValue
+        every { document["minimumStock"] } returns mapItem.value.item.minimumStock
+        every { document["currentStock"] } returns mapItem.value.item.currentStock
     }
 
     @Test
     fun getItemsLocal() = runTest {
-        every { dao.getItems() } returns listDTO
+        every { dao.getItems() } returns listDTO.values.toList()
         getItemsUseCase.getItemsFromLocal().collect { result ->
             assertSuccess(result)
         }
@@ -124,12 +123,12 @@ class GetItemsRepositoryTest {
         getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
             assertSuccess(result)
         }
-        every { document["description"] } returns itemModified.items.description
+        every { document["description"] } returns itemModified.item.description
         getItemsUseCase.getItemsFromRemote().take(1).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
             result as ApiResult.Success
-            assertThat(result.data.first().items).isEqualTo(itemModified.items)
-            assertThat(result.data.first().quantity.value).isEqualTo(itemModified.quantity.value)
+            assertThat(result.data.values.first().item).isEqualTo(itemModified.item)
+            assertThat(result.data.values.first().quantity.value).isEqualTo(itemModified.quantity.value)
         }
     }
 
@@ -170,23 +169,23 @@ class GetItemsRepositoryTest {
         }
     }
 
-    private fun assertSuccess(result: ApiResult<List<ItemCompose>>) {
+    private fun assertSuccess(result: ApiResult<Map<String, ItemCompose>>) {
         assertThat(result).isInstanceOf(ApiResult.Success::class.java)
         result as ApiResult.Success
-        for (i in result.data.indices) {
-            result.data[i].items.run {
-                assertThat(id).isEqualTo(list[i].items.id)
-                assertThat(description).isEqualTo(list[i].items.description)
-                assertThat(currentValue).isEqualTo(list[i].items.currentValue)
-                assertThat(currentStock).isEqualTo(list[i].items.currentStock)
-                assertThat(minimumStock).isEqualTo(list[i].items.minimumStock)
+        for ((key, value) in result.data) {
+            val expected = list[key]?.item
+            value.item.run {
+                assertThat(description).isEqualTo(expected?.description)
+                assertThat(currentValue).isEqualTo(expected?.currentValue)
+                assertThat(currentStock).isEqualTo(expected?.currentStock)
+                assertThat(minimumStock).isEqualTo(expected?.minimumStock)
                 assertThat(finalQuantity).isEqualTo(0)
             }
         }
     }
 
     private fun assertError(
-        result: ApiResult<List<ItemCompose>>,
+        result: ApiResult<Map<String, ItemCompose>>,
     ) {
         assertThat(result).isInstanceOf(ApiResult.Error::class.java)
         result as ApiResult.Error

@@ -6,7 +6,6 @@ import com.example.orderingapp.main.commons.TestConstants.testMsgException
 import com.example.orderingapp.main.commons.TestData
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.data.utils.FakeOrderingDao
-import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.usecase.InsertOrderUseCase
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -19,8 +18,7 @@ class InsertOrderRepositoryTest {
     private lateinit var insertOrderUseCase: InsertOrderUseCase
 
     private var dao: OrderingAppDao = FakeOrderingDao()
-    private val list =
-        listOf(ItemCompose(TestData().items.first()), ItemCompose(TestData().items[1]))
+    private val list = TestData().itemsCompose
     private val listOrder = TestData().orders
     private val listOrderDTO = TestData().ordersDTO
 

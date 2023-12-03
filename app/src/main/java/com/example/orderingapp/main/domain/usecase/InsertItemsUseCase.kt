@@ -5,5 +5,5 @@ import com.example.orderingapp.main.domain.model.Item
 import kotlinx.coroutines.flow.Flow
 
 interface InsertItemsUseCase {
-    fun insertItem(items: List<Item>): Flow<ApiResult<Unit>>
+    fun insertItem(items: Map<String, Item>): Flow<ApiResult<Unit>>
 }

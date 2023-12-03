@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class GetItemsUseCaseFake: GetItemsUseCase {
-    override fun getItemsFromRemote(): Flow<ApiResult<List<ItemCompose>>> {
-        return flow { emit(ApiResult.Success(listOf())) }
+    override fun getItemsFromRemote(): Flow<ApiResult<Map<String, ItemCompose>>> {
+        return flow { emit(ApiResult.Success(mapOf())) }
     }
 
-    override fun getItemsFromLocal(): Flow<ApiResult<List<ItemCompose>>> {
+    override fun getItemsFromLocal(): Flow<ApiResult<Map<String, ItemCompose>>> {
         TODO("Not yet implemented")
     }
 

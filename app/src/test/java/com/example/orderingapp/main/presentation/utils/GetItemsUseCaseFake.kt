@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flowOf
 class GetItemsUseCaseFake(private val testException: RuntimeException? = null) : GetItemsUseCase {
     private val list = TestData().itemsCompose
 
-    override fun getItemsFromRemote(): Flow<ApiResult<List<ItemCompose>>> {
+    override fun getItemsFromRemote(): Flow<ApiResult<Map<String, ItemCompose>>>{
         val result = safeRequest {
             if (testException != null)
                 throw testException
@@ -20,7 +20,7 @@ class GetItemsUseCaseFake(private val testException: RuntimeException? = null) :
         return flowOf(result)
     }
 
-    override fun getItemsFromLocal(): Flow<ApiResult<List<ItemCompose>>> {
+    override fun getItemsFromLocal(): Flow<ApiResult<Map<String, ItemCompose>>>{
         TODO("Not yet implemented")
     }
 
