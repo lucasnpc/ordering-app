@@ -76,15 +76,9 @@ class MenuViewModelTest {
             )
         }
 
-        assertThat(list.values.first().quantity.value).isEqualTo(2)
-        assertThat(list.values.toList()[1].quantity.value).isEqualTo(2)
-
         menuViewModel.insertOrder(createdOrder, list) {
             assertThat(it).contains(expectedOrder)
         }
-
-        assertThat(list.values.first().quantity.value).isEqualTo(0)
-        assertThat(list.values.toList()[1].quantity.value).isEqualTo(0)
     }
 
     @Test
@@ -105,15 +99,8 @@ class MenuViewModelTest {
             )
         }
 
-
-        assertThat(list.values.first().quantity.value).isEqualTo(2)
-        assertThat(list.values.toList()[1].quantity.value).isEqualTo(2)
-
         menuViewModel.insertOrder(_order, list) {
             assertThat(it).isEmpty()
         }
-
-        assertThat(list.values.first().quantity.value).isEqualTo(0)
-        assertThat(list.values.toList()[1].quantity.value).isEqualTo(0)
     }
 }

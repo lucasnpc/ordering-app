@@ -21,21 +21,13 @@ class MenuViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
             mainUseCases.insertOrderUseCase.insertOrderLocal(order, _items).collect { result ->
                 when (result) {
                     is ApiResult.Success -> {
-                        cleanItems(_items)
                         unsyncedOrdersCallback(result.data)
                     }
                     is ApiResult.Error -> {
-                        cleanItems(_items)
                         unsyncedOrdersCallback(listOf())
                     }
                 }
             }
-        }
-    }
-
-    private fun cleanItems(_items: Map<String, ItemCompose>) {
-        _items.filter { it.value.quantity.value > 0 }.forEach {
-            it.value.quantity.value = 0
         }
     }
 }

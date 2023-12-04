@@ -47,10 +47,9 @@ fun PaymentOptions(
             }
         }
         if (selectedOption == stringResource(R.string.money_label))
-            if (total > 0)
-                MoneyField(total = total) { change ->
-                    changeValue = change
-                }
+            MoneyField(total = total) { change ->
+                changeValue = change
+            }
         Spacer(modifier = Modifier.height(5.dp))
         Button(
             onClick = {

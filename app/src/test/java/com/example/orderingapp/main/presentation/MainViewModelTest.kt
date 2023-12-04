@@ -1,16 +1,20 @@
 package com.example.orderingapp.main.presentation
 
 import com.example.orderingapp.commons.mappings.composeToListItem
+import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.commons.MainCoroutineRule
 import com.example.orderingapp.main.commons.TestConstants.testException
 import com.example.orderingapp.main.commons.TestData
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import com.example.orderingapp.main.presentation.utils.GetItemsUseCaseFake
 import com.example.orderingapp.main.presentation.utils.GetOrdersUseCaseFake
 import com.example.orderingapp.main.presentation.utils.SyncOrderUseCaseFake
 import com.google.common.truth.Truth.assertThat
+import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -79,7 +83,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun getItemsException() {
+    fun getItemsException() = runTest {
         mainUseCases = MainUseCases(
             getItemsUseCase = GetItemsUseCaseFake(testException),
             insertItemsUseCase = mockk(),
@@ -102,14 +106,14 @@ class MainViewModelTest {
     }
 
     @Test
-    fun startSyncing() {
+    fun startSyncing() = runTest {
         mainViewModel.startSyncing()
         assertThat(mainViewModel.unsyncedOrders).isEmpty()
         assertThat(mainViewModel.isSyncing.value).isEqualTo(false)
     }
 
     @Test
-    fun startSyncingExceptionAtRemote() {
+    fun startSyncingExceptionAtRemote() = runTest {
         mainUseCases = MainUseCases(
             getItemsUseCase = GetItemsUseCaseFake(),
             insertItemsUseCase = mockk(),
@@ -138,5 +142,26 @@ class MainViewModelTest {
         mainViewModel.startSyncing()
         assertThat(mainViewModel.unsyncedOrders).isNotEmpty()
         assertThat(mainViewModel.isSyncing.value).isEqualTo(false)
+    }
+
+    @Test
+    fun clearAddedItems() = runTest {
+        val getItemsUseCase: GetItemsUseCase = mockk()
+        every { getItemsUseCase.getItemsFromRemote() } returns flow { emit(ApiResult.Success(list)) }
+        mainUseCases = MainUseCases(
+            getItemsUseCase = getItemsUseCase,
+            insertItemsUseCase = mockk(),
+            getOrdersUseCase = GetOrdersUseCaseFake(),
+            insertOrderUseCase = mockk(),
+            syncOrderUseCase = SyncOrderUseCaseFake(null, testException)
+        )
+        mainViewModel = MainViewModel(mainUseCases)
+        assertThat(list.values.first().quantity.value).isEqualTo(2)
+        assertThat(list.values.toList()[1].quantity.value).isEqualTo(2)
+
+        mainViewModel.clearAddedItems()
+
+        assertThat(list.values.first().quantity.value).isEqualTo(0)
+        assertThat(list.values.toList()[1].quantity.value).isEqualTo(0)
     }
 }

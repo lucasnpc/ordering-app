@@ -97,4 +97,10 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
             }
         }
     }
+
+    fun clearAddedItems() {
+        viewModelScope.launch {
+            _items.filter { it.value.quantity.value > 0 }.forEach { it.value.quantity.value = 0 }
+        }
+    }
 }

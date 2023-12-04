@@ -19,6 +19,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,9 +34,9 @@ import com.example.orderingapp.main.presentation.components.OrderingAppTopBar
 import com.example.orderingapp.main.presentation.menu.MenuScreen
 import com.example.orderingapp.main.presentation.order.OrderScreen
 import com.example.orderingapp.main.presentation.stock.StockScreen
+import com.example.orderingapp.main.presentation.utils.ScreenList
 import com.example.orderingapp.main.presentation.voucher.VoucherScreen
 import com.example.orderingapp.main.theme.OrderingAppTheme
-import com.example.orderingapp.main.presentation.utils.ScreenList
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -78,13 +79,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(route = ScreenList.MenuScreen.route) {
                             MenuScreen(mainViewModel.items) { list ->
-                                mainViewModel.setUnsyncedOrders(list)
-                                val order = list.last()
-                                if (checkPermissionsEnabled())
-                                    generatePDF(order)
-                                navController.navigate(
-                                    ScreenList.VoucherScreen.route + "/${Gson().toJson(order)}"
-                                )
+                                finishOrderCallback(list, navController)
                             }
                         }
                         composable(route = ScreenList.OrderScreen.route) {
@@ -107,6 +102,23 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun finishOrderCallback(
+        list: List<Order>,
+        navController: NavHostController
+    ) {
+        list.lastOrNull()?.let {
+            if (checkPermissionsEnabled())
+                generatePDF(it)
+            navController.navigate(
+                ScreenList.VoucherScreen.route + "/${Gson().toJson(it)}"
+            )
+        }
+        mainViewModel.run {
+            setUnsyncedOrders(list)
+            clearAddedItems()
         }
     }
 
