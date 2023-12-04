@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.orderingapp.R
-import com.example.orderingapp.commons.extensions.currencyFormat
+import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
 import com.example.orderingapp.main.domain.model.Order
 
 @Composable
@@ -65,7 +65,7 @@ fun VoucherInfo(order: Order) {
                     fontSize = 18.sp
                 )
                 Text(text = order.items.values.sumOf { it.finalQuantity * it.currentValue }
-                    .currencyFormat(), fontSize = 18.sp)
+                    .brazilianCurrencyFormat(), fontSize = 18.sp)
             }
         }
         item {

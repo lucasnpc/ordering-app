@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.orderingapp.commons.extensions.currencyFormat
+import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
 import com.example.orderingapp.main.domain.model.Item
 
 @Composable
@@ -31,7 +31,7 @@ fun OrderInfo(item: Map.Entry<String, Item>) {
             fontSize = 16.sp
         )
         Text(
-            text = (item.value.currentValue * item.value.finalQuantity).currencyFormat(),
+            text = (item.value.currentValue * item.value.finalQuantity).brazilianCurrencyFormat(),
             fontSize = 16.sp,
         )
     }

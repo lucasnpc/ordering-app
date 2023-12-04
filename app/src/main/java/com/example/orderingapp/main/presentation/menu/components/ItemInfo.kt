@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.orderingapp.commons.extensions.currencyFormat
+import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
 import com.example.orderingapp.main.domain.model.ItemCompose
 
 @Composable
@@ -21,6 +21,6 @@ fun ItemInfo(itemCompose: ItemCompose) {
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
-        Text(text = itemCompose.item.currentValue.currencyFormat(), fontSize = 18.sp)
+        Text(text = itemCompose.item.currentValue.brazilianCurrencyFormat(), fontSize = 18.sp)
     }
 }

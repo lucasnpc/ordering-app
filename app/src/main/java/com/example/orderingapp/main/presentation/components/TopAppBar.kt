@@ -31,10 +31,11 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.orderingapp.R
+import com.example.orderingapp.commons.extensions.finishSession
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.presentation.MainViewModel
-import com.example.orderingapp.main.theme.redPrimary
 import com.example.orderingapp.main.presentation.utils.ScreenList
+import com.example.orderingapp.main.theme.redPrimary
 
 @Composable
 fun OrderingAppTopBar(
@@ -78,7 +79,9 @@ fun OrderingAppTopBar(
             }
         }
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = {
+                context?.finishSession()
+            },
         ) {
             Icon(
                 imageVector = Icons.Filled.Logout,
@@ -89,13 +92,14 @@ fun OrderingAppTopBar(
     }, navigationIcon = {
         IconButton(onClick = {
             if (!navController.popBackStack()) {
-                context?.finish()
+                context?.finishSession()
             }
         }) {
             Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
         }
     },
-    backgroundColor = redPrimary)
+        backgroundColor = redPrimary
+    )
 }
 
 @Composable

@@ -19,7 +19,6 @@ import com.example.orderingapp.commons.extensions.roundDouble
 import com.example.orderingapp.commons.extensions.toDateFormat
 import com.example.orderingapp.commons.extensions.toHourFormat
 import com.example.orderingapp.commons.mappings.composeToListItem
-import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.presentation.menu.MenuViewModel
@@ -48,9 +47,10 @@ fun PaymentOptions(
             }
         }
         if (selectedOption == stringResource(R.string.money_label))
-            MoneyField(total = total) { change ->
-                changeValue = change
-            }
+            if (total > 0)
+                MoneyField(total = total) { change ->
+                    changeValue = change
+                }
         Spacer(modifier = Modifier.height(5.dp))
         Button(
             onClick = {

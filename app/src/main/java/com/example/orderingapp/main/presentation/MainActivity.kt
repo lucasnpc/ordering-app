@@ -43,18 +43,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels()
-    private val multiplePermissionNameList = if (Build.VERSION.SDK_INT >= 33) {
-        arrayListOf(
-            Manifest.permission.READ_MEDIA_AUDIO,
-            Manifest.permission.READ_MEDIA_VIDEO,
-            Manifest.permission.READ_MEDIA_IMAGES
-        )
-    } else {
-        arrayListOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        )
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,13 +95,13 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = ScreenList.VoucherScreen.route + "/{order}",
                             arguments = listOf(
-                                navArgument("order") {
+                                navArgument(getString(R.string.order_argument)) {
                                     type = NavType.StringType
                                     defaultValue = ""
                                 }
                             )) { backStackEntry ->
                             backStackEntry.arguments?.run {
-                                VoucherScreen(getString("order").orEmpty())
+                                VoucherScreen(getString(getString(R.string.order_argument)).orEmpty())
                             }
                         }
                     }
@@ -169,5 +157,17 @@ class MainActivity : ComponentActivity() {
 
     private companion object {
         const val REQUEST_CODE = 123
+        val multiplePermissionNameList = if (Build.VERSION.SDK_INT >= 33) {
+            arrayListOf(
+                Manifest.permission.READ_MEDIA_AUDIO,
+                Manifest.permission.READ_MEDIA_VIDEO,
+                Manifest.permission.READ_MEDIA_IMAGES
+            )
+        } else {
+            arrayListOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            )
+        }
     }
 }

@@ -9,7 +9,7 @@ class CurrencyExtensionsKtTest {
     @Test
     fun currencyFormat() {
         val double = 125.0
-        val doubleCurrency = "R$ 125,00"
-        assertThat(double.currencyFormat()).isEqualTo(doubleCurrency)
+        val doubleCurrency = "R\$ 125,00"
+        assertThat(double.brazilianCurrencyFormat()).isEqualTo(doubleCurrency)
     }
 }

@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.orderingapp.commons.request.ApiResult
-import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.MainUseCases
@@ -29,7 +28,6 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
     init {
         viewModelScope.launch {
             observeMenuItems()
-            getUnsyncedOrders()
         }
     }
 

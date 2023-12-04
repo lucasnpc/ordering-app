@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.orderingapp.commons.extensions.currencyFormat
+import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
 import com.example.orderingapp.main.domain.model.Order
 
 @Composable
@@ -26,6 +26,6 @@ fun PaymentInfo(order: Order) {
         Text(text = "${order.date}, ${order.hour}", fontSize = 20.sp)
         Text(text = order.paymentWay.uppercase(), fontWeight = FontWeight.Bold, fontSize = 20.sp)
         Text(text = order.items.values.sumOf { it.finalQuantity * it.currentValue }
-            .currencyFormat(), fontSize = 20.sp)
+            .brazilianCurrencyFormat(), fontSize = 20.sp)
     }
 }

@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.orderingapp.commons.extensions.currencyFormat
+import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
 import com.example.orderingapp.main.domain.model.Order
 
 @Composable
@@ -46,7 +46,7 @@ fun CardOrder(order: Order) {
             }
             Spacer(modifier = Modifier.height(5.dp))
             Text(
-                text = "Total: ${order.orderValue.currencyFormat()}",
+                text = "Total: ${order.orderValue.brazilianCurrencyFormat()}",
                 fontSize = 17.sp
             )
         }

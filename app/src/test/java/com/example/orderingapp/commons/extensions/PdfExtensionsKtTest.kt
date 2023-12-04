@@ -11,7 +11,6 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
-import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
 import java.io.File
@@ -20,7 +19,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class ActivityExtensionsKtTest {
+class PdfExtensionsKtTest {
 
     private lateinit var activity: Activity
     private lateinit var order: Order
@@ -55,7 +54,7 @@ class ActivityExtensionsKtTest {
         every { activity.getString(R.string.order_label) } returns ""
         every { activity.getString(R.string.document_item_info) } returns ""
         every { activity.getString(R.string.document_payment_info, order.paymentWay) } returns ""
-        every { activity.getString(R.string.document_total_info, "R$ 0,00") } returns ""
+        every { activity.getString(R.string.document_total_info, "R\$ 0,00") } returns ""
         val document = activity.createPDFDocument(
             order,
             mockTitlePaint,
@@ -74,9 +73,5 @@ class ActivityExtensionsKtTest {
         every { order.id } returns ""
         every { activity.getString(R.string.documents_path, "") } returns ""
         activity.writeDocument(mockPdfDocument, order)
-    }
-
-    @Test
-    fun openPDF() {
     }
 }

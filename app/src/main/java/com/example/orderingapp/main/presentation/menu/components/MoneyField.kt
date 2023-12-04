@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.orderingapp.commons.extensions.currencyFormat
+import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -50,7 +50,7 @@ fun MoneyField(total: Double, disableButton: (Double) -> Unit) {
         )
         Spacer(modifier = Modifier.width(5.dp))
         Text(
-            text = "Troco ${if (sum > 0) sum.currencyFormat() else 0.0}",
+            text = "Troco ${if (sum > 0) sum.brazilianCurrencyFormat() else 0.0}",
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.align(Alignment.CenterVertically)
         )

@@ -1,5 +1,8 @@
 package com.example.orderingapp.commons.extensions
 
-fun Double.currencyFormat(): String {
-    return "R$ ${String.format("%.2f", this).replace(".", ",")}"
+import java.text.NumberFormat
+import java.util.Locale
+
+fun Double.brazilianCurrencyFormat(): String {
+    return NumberFormat.getCurrencyInstance(Locale("pt", "BR")).format(this)
 }
