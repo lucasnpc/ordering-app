@@ -7,12 +7,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.orderingapp.main.domain.model.ItemCompose
 
 @Composable
 fun CardItem(itemCompose: ItemCompose) {
-    Card(elevation = 8.dp) {
+    Card(elevation = 8.dp, backgroundColor = Color.White) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
