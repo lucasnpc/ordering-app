@@ -31,4 +31,4 @@ It's main features are:
 * [Hilt](https://dagger.dev/hilt/) - Hilt provides a standard way to incorporate Dagger dependency injection into an Android application.
 * [Jetpack Compose](https://developer.android.com/jetpack/compose) - Jetpack Compose is Android’s recommended modern toolkit for building native UI.
 * [Github Actions](https://docs.github.com/en/actions) - GitHub Actions is a feature of GitHub that allows you to automate, customize, and execute your software development workflows right in your repository.
-* [Kotlin Symbol Processing (KSP)]() - Kotlin Symbol Processing (KSP) is an API that you can use to develop lightweight compiler plugins. Compared to kapt, annotation processors that use KSP can run up to two times faster.
+* [Kotlin Symbol Processing (KSP)](https://kotlinlang.org/docs/ksp-overview.html) - Kotlin Symbol Processing (KSP) is an API that you can use to develop lightweight compiler plugins. Compared to kapt, annotation processors that use KSP can run up to two times faster.
