@@ -1,45 +1,26 @@
 package com.example.orderingapp.main.presentation
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.orderingapp.R
-import com.example.orderingapp.commons.extensions.createPDFDocument
-import com.example.orderingapp.commons.extensions.writeDocument
+import com.example.orderingapp.commons.pdf.PdfUtil.generatePDF
+import com.example.orderingapp.commons.permissions.PermissionsUtil.checkPermissionsEnabled
+import com.example.orderingapp.commons.permissions.PermissionsUtil.checkPermissionsRationale
+import com.example.orderingapp.commons.permissions.PermissionsUtil.requestStoragePermission
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.presentation.components.MainNavHost
 import com.example.orderingapp.main.presentation.components.OrderingAppBottomBar
 import com.example.orderingapp.main.presentation.components.OrderingAppTopBar
-import com.example.orderingapp.main.presentation.menu.MenuScreen
-import com.example.orderingapp.main.presentation.order.OrderScreen
-import com.example.orderingapp.main.presentation.stock.StockScreen
 import com.example.orderingapp.main.presentation.utils.ScreenList
-import com.example.orderingapp.main.presentation.voucher.VoucherScreen
 import com.example.orderingapp.main.theme.OrderingAppTheme
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -61,44 +42,13 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         OrderingAppBottomBar(navController)
                     }
-                ) {
-                    NavHost(
+                ) { paddingValues ->
+                    MainNavHost(
                         navController = navController,
-                        startDestination = ScreenList.MenuScreen.route,
-                        modifier = Modifier
-                            .padding(it)
-                            .fillMaxSize()
-                            .background(
-                                Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color.White,
-                                        colorResource(id = R.color.gray_gradient)
-                                    )
-                                )
-                            )
-                    ) {
-                        composable(route = ScreenList.MenuScreen.route) {
-                            MenuScreen(mainViewModel.items) { list ->
-                                finishOrderCallback(list, navController)
-                            }
-                        }
-                        composable(route = ScreenList.OrderScreen.route) {
-                            OrderScreen(mainViewModel.items)
-                        }
-                        composable(route = ScreenList.StockScreen.route) {
-                            StockScreen()
-                        }
-                        composable(route = ScreenList.VoucherScreen.route + "/{order}",
-                            arguments = listOf(
-                                navArgument(getString(R.string.order_argument)) {
-                                    type = NavType.StringType
-                                    defaultValue = ""
-                                }
-                            )) { backStackEntry ->
-                            backStackEntry.arguments?.run {
-                                VoucherScreen(getString(getString(R.string.order_argument)).orEmpty())
-                            }
-                        }
+                        paddingValues = paddingValues,
+                        items = mainViewModel.items
+                    ) { list ->
+                        finishOrderCallback(list, navController)
                     }
                 }
             }
@@ -138,48 +88,6 @@ class MainActivity : ComponentActivity() {
             !checkPermissionsEnabled() -> {
                 requestStoragePermission()
             }
-        }
-    }
-
-    private fun requestStoragePermission() {
-        requestPermissions(
-            multiplePermissionNameList.toTypedArray(), REQUEST_CODE
-        )
-    }
-
-    private fun generatePDF(
-        order: Order
-    ) {
-        lifecycleScope.launch {
-            writeDocument(createPDFDocument(order), order)
-        }
-    }
-
-    private fun checkPermissionsEnabled(): Boolean {
-        return multiplePermissionNameList.any {
-            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-        }
-    }
-
-    private fun checkPermissionsRationale(): Boolean {
-        return multiplePermissionNameList.any {
-            ActivityCompat.shouldShowRequestPermissionRationale(this, it)
-        }
-    }
-
-    private companion object {
-        const val REQUEST_CODE = 123
-        val multiplePermissionNameList = if (Build.VERSION.SDK_INT >= 33) {
-            arrayListOf(
-                Manifest.permission.READ_MEDIA_AUDIO,
-                Manifest.permission.READ_MEDIA_VIDEO,
-                Manifest.permission.READ_MEDIA_IMAGES
-            )
-        } else {
-            arrayListOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            )
         }
     }
 }

@@ -33,8 +33,8 @@ fun MenuScreen(
 ) {
     val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
     BottomDrawer(
+        gesturesEnabled = !drawerState.isClosed,
         drawerState = drawerState,
         drawerContent = {
             PaymentOptions(

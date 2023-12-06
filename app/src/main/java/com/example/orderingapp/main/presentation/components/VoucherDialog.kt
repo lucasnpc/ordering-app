@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.orderingapp.R
-import com.example.orderingapp.commons.extensions.openPDF
+import com.example.orderingapp.commons.pdf.PdfUtil.openPDF
 import com.example.orderingapp.main.domain.model.Order
 
 @Composable

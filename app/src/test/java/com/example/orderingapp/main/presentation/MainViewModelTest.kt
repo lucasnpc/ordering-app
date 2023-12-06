@@ -1,6 +1,6 @@
 package com.example.orderingapp.main.presentation
 
-import com.example.orderingapp.commons.mappings.composeToListItem
+import com.example.orderingapp.commons.mappings.composeToItem
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.commons.MainCoroutineRule
 import com.example.orderingapp.main.commons.TestConstants.testException
@@ -38,7 +38,7 @@ class MainViewModelTest {
     private val listOrders = TestData().orders
     private val addedOrder =
         Order(
-            items = list.composeToListItem(),
+            items = list.composeToItem(),
             date = "21 Dec 2022",
             hour = "12:00",
             orderValue = 10.0,

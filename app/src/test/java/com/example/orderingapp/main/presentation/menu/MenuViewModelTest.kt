@@ -2,7 +2,7 @@ package com.example.orderingapp.main.presentation.menu
 
 import com.example.orderingapp.commons.extensions.toDateFormat
 import com.example.orderingapp.commons.extensions.toHourFormat
-import com.example.orderingapp.commons.mappings.composeToListItem
+import com.example.orderingapp.commons.mappings.composeToItem
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.commons.MainCoroutineRule
 import com.example.orderingapp.main.commons.TestData
@@ -39,7 +39,7 @@ class MenuViewModelTest {
         val paymentWay = "Pix"
         val addedItems = list.filter { it.value.quantity.value > 0 }
         val createdOrder = Order(
-            items = addedItems.composeToListItem(),
+            items = addedItems.composeToItem(),
             hour = System.currentTimeMillis().toHourFormat(),
             date = System.currentTimeMillis().toDateFormat(),
             orderValue = addedItems.values.sumOf { it.item.currentValue * it.item.finalQuantity },
@@ -87,7 +87,7 @@ class MenuViewModelTest {
         val paymentWay = "Pix"
         val addedItems = list.filter { it.value.quantity.value > 0 }
         val _order = Order(
-            items = addedItems.composeToListItem(),
+            items = addedItems.composeToItem(),
             hour = System.currentTimeMillis().toHourFormat(),
             date = System.currentTimeMillis().toDateFormat(),
             orderValue = addedItems.values.sumOf { it.item.currentValue * it.item.finalQuantity },
