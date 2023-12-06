@@ -1,4 +1,4 @@
-package com.example.orderingapp.commons.extensions
+package com.example.orderingapp.commons.pdf
 
 import android.app.Activity
 import android.graphics.Paint
@@ -6,6 +6,8 @@ import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import android.os.Environment
 import com.example.orderingapp.R
+import com.example.orderingapp.commons.pdf.PdfUtil.createPDFDocument
+import com.example.orderingapp.commons.pdf.PdfUtil.writeDocument
 import com.example.orderingapp.main.domain.model.Order
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -19,8 +21,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class PdfExtensionsKtTest {
-
+class PdfUtilTest {
     private lateinit var activity: Activity
     private lateinit var order: Order
     private val mockTitlePaint = mockk<Paint>(relaxed = true)

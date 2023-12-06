@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun VoucherScreen(orderJson: String = "") {
+fun VoucherScreen(orderJson: String) {
     orderJson.jsonToOrder()?.let { order ->
         val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
         val scope = rememberCoroutineScope()

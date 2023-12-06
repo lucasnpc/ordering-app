@@ -6,10 +6,13 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import org.jetbrains.annotations.VisibleForTesting
 
 object PermissionsUtil {
-    private const val STORAGE_REQUEST_CODE = 123
-    private val storagePermissionNameList = if (Build.VERSION.SDK_INT >= 33) {
+    @VisibleForTesting
+    const val STORAGE_REQUEST_CODE = 123
+    @VisibleForTesting
+    val storagePermissionNameList = if (Build.VERSION.SDK_INT >= 33) {
         arrayListOf(
             Manifest.permission.READ_MEDIA_AUDIO,
             Manifest.permission.READ_MEDIA_VIDEO,

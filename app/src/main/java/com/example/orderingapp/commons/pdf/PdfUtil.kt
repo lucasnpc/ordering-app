@@ -21,6 +21,7 @@ import java.io.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.annotations.VisibleForTesting
 
 object PdfUtil {
 
@@ -33,7 +34,8 @@ object PdfUtil {
         order: Order
     ) {
         lifecycleScope.launch {
-            writeDocument(createPDFDocument(order), order)
+            val doc = createPDFDocument(order)
+            writeDocument(doc, order)
         }
     }
 
@@ -69,7 +71,9 @@ object PdfUtil {
         }
     }
 
-    private fun Activity.createPDFDocument(
+
+    @VisibleForTesting
+    fun Activity.createPDFDocument(
         order: Order,
         titlePaint: Paint = Paint(),
         contentPaint: Paint = Paint(),
@@ -139,7 +143,8 @@ object PdfUtil {
         return doc
     }
 
-    private suspend fun Activity.writeDocument(pdfDocument: PdfDocument, order: Order) {
+    @VisibleForTesting
+    suspend fun Activity.writeDocument(pdfDocument: PdfDocument, order: Order) {
         try {
             withContext(Dispatchers.IO) {
                 pdfDocument.writeTo(
