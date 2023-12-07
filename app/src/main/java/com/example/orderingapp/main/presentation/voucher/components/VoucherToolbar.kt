@@ -23,7 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.orderingapp.R
-import com.example.orderingapp.commons.extensions.openPDF
+import com.example.orderingapp.commons.pdf.PdfUtil.openPDF
 import com.example.orderingapp.main.domain.model.Order
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

@@ -3,7 +3,7 @@ package com.example.orderingapp.commons.mappings
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
 
-fun Map<String, ItemCompose>.composeToListItem(): Map<String, Item> {
+fun Map<String, ItemCompose>.composeToItem(): Map<String, Item> {
     return this.mapValues { entry ->
         Item(
             description = entry.value.item.description,

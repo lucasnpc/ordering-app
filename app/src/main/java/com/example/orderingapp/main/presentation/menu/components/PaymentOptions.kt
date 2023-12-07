@@ -18,7 +18,7 @@ import com.example.orderingapp.R
 import com.example.orderingapp.commons.extensions.roundDouble
 import com.example.orderingapp.commons.extensions.toDateFormat
 import com.example.orderingapp.commons.extensions.toHourFormat
-import com.example.orderingapp.commons.mappings.composeToListItem
+import com.example.orderingapp.commons.mappings.composeToItem
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.presentation.menu.MenuViewModel
@@ -55,7 +55,7 @@ fun PaymentOptions(
             onClick = {
                 menuViewModel.insertOrder(
                     order = Order(
-                        items = addedItems.composeToListItem(),
+                        items = addedItems.composeToItem(),
                         hour = System.currentTimeMillis().toHourFormat(),
                         date = System.currentTimeMillis().toDateFormat(),
                         orderValue = total.roundDouble(),
