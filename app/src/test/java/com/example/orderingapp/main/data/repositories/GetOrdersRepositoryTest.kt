@@ -59,13 +59,13 @@ class GetOrdersRepositoryTest {
         }
     }
 
-    private fun assertSuccess(result: ApiResult<List<Order>>) {
+    private fun assertSuccess(result: ApiResult<Map<String, Order>>) {
         assertThat(result).isInstanceOf(ApiResult.Success::class.java)
         result as ApiResult.Success
         assertThat(result.data).isEqualTo(listOrders)
     }
 
-    private fun assertError(result: ApiResult<List<Order>>) {
+    private fun assertError(result: ApiResult<Map<String, Order>>) {
         assertThat(result).isInstanceOf(ApiResult.Error::class.java)
         result as ApiResult.Error
         assertThat(result.exception.message).contains(testMsgException)

@@ -24,13 +24,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.orderingapp.R
 import com.example.orderingapp.commons.pdf.PdfUtil.openPDF
-import com.example.orderingapp.main.domain.model.Order
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun VoucherToolbar(drawerState: BottomDrawerState, scope: CoroutineScope, order: Order) {
+fun VoucherToolbar(drawerState: BottomDrawerState, scope: CoroutineScope, key: String) {
     val activity = LocalContext.current as? Activity
     Row(
         modifier = Modifier
@@ -60,7 +59,7 @@ fun VoucherToolbar(drawerState: BottomDrawerState, scope: CoroutineScope, order:
         )
         IconButton(onClick = {
             activity?.run {
-                openPDF(order)
+                openPDF(key)
             }
         }) {
             Icon(

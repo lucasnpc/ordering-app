@@ -14,6 +14,7 @@ import com.example.orderingapp.BuildConfig
 import com.example.orderingapp.R
 import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -31,21 +32,21 @@ object PdfUtil {
     private const val appType = "application/pdf"
 
     fun ComponentActivity.generatePDF(
-        order: Order
+        orderEntry: OrderEntry
     ) {
         lifecycleScope.launch {
-            val doc = createPDFDocument(order)
-            writeDocument(doc, order)
+            val doc = createPDFDocument(orderEntry.value)
+            writeDocument(doc, orderEntry.key)
         }
     }
 
-    fun Activity.openPDF(order: Order) {
+    fun Activity.openPDF(orderKey: String) {
         try {
             val file = File(
                 Environment.getExternalStorageDirectory().path,
                 getString(
                     R.string.documents_path,
-                    order.id
+                    orderKey
                 )
             )
             if (!file.exists()) {
@@ -144,7 +145,7 @@ object PdfUtil {
     }
 
     @VisibleForTesting
-    suspend fun Activity.writeDocument(pdfDocument: PdfDocument, order: Order) {
+    suspend fun Activity.writeDocument(pdfDocument: PdfDocument, key: String) {
         try {
             withContext(Dispatchers.IO) {
                 pdfDocument.writeTo(
@@ -153,7 +154,7 @@ object PdfUtil {
                             Environment.getExternalStorageDirectory().path,
                             getString(
                                 R.string.documents_path,
-                                order.id
+                                key
                             )
                         )
                     )

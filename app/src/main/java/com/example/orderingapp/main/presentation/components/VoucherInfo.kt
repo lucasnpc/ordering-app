@@ -35,7 +35,11 @@ fun VoucherInfo(order: Order) {
         }
         item {
             Spacer(modifier = Modifier.height(32.dp))
-            Text(text = "${order.date}, ${order.hour}", fontSize = 18.sp, color = Color.Black)
+            Text(
+                text = "${order.date}, ${order.hour}",
+                fontSize = 18.sp,
+                color = Color.Black
+            )
         }
         item {
             Spacer(modifier = Modifier.height(32.dp))

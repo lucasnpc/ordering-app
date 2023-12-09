@@ -1,6 +1,8 @@
 package com.example.orderingapp.commons.extensions
 
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 fun Long.toDateFormat(): String {
@@ -9,4 +11,8 @@ fun Long.toDateFormat(): String {
 
 fun Long.toHourFormat(): String {
     return SimpleDateFormat("HH:mm", Locale.getDefault()).format(this).toString()
+}
+
+fun String.toLocalDateTime(): LocalDateTime {
+    return LocalDateTime.parse(this, DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm"))
 }

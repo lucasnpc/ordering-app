@@ -6,10 +6,10 @@ import com.example.orderingapp.commons.mappings.composeToItem
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.commons.MainCoroutineRule
 import com.example.orderingapp.main.commons.TestData
-import com.example.orderingapp.main.data.repositories.mappings.fromOrderDTOToOrder
 import com.example.orderingapp.main.data.repositories.mappings.toOrderDTO
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -46,7 +46,6 @@ class MenuViewModelTest {
             paymentWay = paymentWay
         )
         val expectedOrder = Order(
-            id = createdOrder.id,
             items = mapOf(
                 "1" to Item(
                     description = "item 1",
@@ -64,20 +63,17 @@ class MenuViewModelTest {
             paymentWay = createdOrder.paymentWay
         )
         every {
-            mainUseCases.insertOrderUseCase.insertOrderLocal(
-                createdOrder,
-                list
-            )
+            mainUseCases.insertOrderUseCase.insertOrderLocal(createdOrder)
         } returns flow {
             emit(
                 ApiResult.Success(
-                    listOf(createdOrder.toOrderDTO()).fromOrderDTOToOrder(addedItems)
+                    OrderEntry(createdOrder.toOrderDTO().id, createdOrder)
                 )
             )
         }
 
-        menuViewModel.insertOrder(createdOrder, list) {
-            assertThat(it).contains(expectedOrder)
+        menuViewModel.insertOrder(createdOrder) {
+            assertThat(it.value).isEqualTo(expectedOrder)
         }
     }
 
@@ -93,14 +89,14 @@ class MenuViewModelTest {
             orderValue = addedItems.values.sumOf { it.item.currentValue * it.item.finalQuantity },
             paymentWay = paymentWay
         )
-        every { mainUseCases.insertOrderUseCase.insertOrderLocal(_order, any()) } returns flow {
+        every { mainUseCases.insertOrderUseCase.insertOrderLocal(_order) } returns flow {
             emit(
                 ApiResult.Error(RuntimeException())
             )
         }
 
-        menuViewModel.insertOrder(_order, list) {
-            assertThat(it).isEmpty()
+        menuViewModel.insertOrder(_order) {
+            assertThat(it).isNull()
         }
     }
 }

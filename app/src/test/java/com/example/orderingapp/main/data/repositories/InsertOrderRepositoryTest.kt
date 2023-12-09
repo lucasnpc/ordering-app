@@ -18,9 +18,7 @@ class InsertOrderRepositoryTest {
     private lateinit var insertOrderUseCase: InsertOrderUseCase
 
     private var dao: OrderingAppDao = FakeOrderingDao()
-    private val list = TestData().itemsCompose
     private val listOrder = TestData().orders
-    private val listOrderDTO = TestData().ordersDTO
 
     @Before
     fun setup() {
@@ -30,10 +28,10 @@ class InsertOrderRepositoryTest {
     @Test
     fun insertOrderLocal() = runTest {
         listOrder.forEach { order ->
-            insertOrderUseCase.insertOrderLocal(order, list).collect { result ->
+            insertOrderUseCase.insertOrderLocal(order.value).collect { result ->
                 assertThat(result).isInstanceOf(ApiResult.Success::class.java)
                 result as ApiResult.Success
-                assertThat(result.data).contains(order)
+                assertThat(result.data.value).isEqualTo(order.value)
             }
         }
     }
@@ -42,8 +40,8 @@ class InsertOrderRepositoryTest {
     fun insertOrderLocalException() = runTest {
         dao = mockk()
         insertOrderUseCase = InsertOrderRepository(dao)
-        every { dao.insertOrder(listOrderDTO.first()) } throws testException
-        insertOrderUseCase.insertOrderLocal(listOrder.first(), list).collect { result ->
+        every { dao.insertOrder(any()) } throws testException
+        insertOrderUseCase.insertOrderLocal(listOrder.values.first()).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Error::class.java)
             result as ApiResult.Error
             assertThat(result.exception.message).isEqualTo(testMsgException)

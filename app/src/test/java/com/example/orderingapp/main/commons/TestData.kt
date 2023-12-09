@@ -6,6 +6,7 @@ import com.example.orderingapp.main.data.entities.OrderDTO
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 
 data class TestData(
     private val item1: Pair<String, Item> =
@@ -34,15 +35,17 @@ data class TestData(
         minimumStock = 0,
         currentStock = 0,
     ),
-    private val order1: Order = Order(
-        id = "1",
-        items = mapOf(item1),
-        date = "21 Dec 2021", hour = "12:00:00", paymentWay = "Pix", orderValue = 10.0,
+    private val order1: OrderEntry = OrderEntry(
+        key = "1", value = Order(
+            items = mapOf(item1),
+            date = "21 Dec 2021", hour = "12:00:00", paymentWay = "Pix", orderValue = 10.0,
+        )
     ),
-    private val order2: Order = Order(
-        id = "2",
-        items = mapOf(item1, item2),
-        date = "21 Dec 2021", hour = "12:00:00", paymentWay = "Pix", orderValue = 10.0,
+    private val order2: OrderEntry = OrderEntry(
+        key = "2", value = Order(
+            items = mapOf(item1, item2),
+            date = "21 Dec 2021", hour = "12:00:00", paymentWay = "Pix", orderValue = 10.0,
+        )
     ),
     private val orderDTO1: OrderDTO = OrderDTO(
         id = "1",
@@ -75,5 +78,5 @@ data class TestData(
         )
     ),
     val ordersDTO: List<OrderDTO> = listOf(orderDTO1, orderDTO2),
-    val orders: List<Order> = listOf(order1, order2)
+    val orders: Map<String, Order> = mapOf(order1.key to order1.value, order2.key to order2.value)
 )

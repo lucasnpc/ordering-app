@@ -21,14 +21,11 @@ import com.example.orderingapp.commons.extensions.toHourFormat
 import com.example.orderingapp.commons.mappings.composeToItem
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
-import com.example.orderingapp.main.presentation.menu.MenuViewModel
 
 @Composable
 fun PaymentOptions(
     addedItems: Map<String, ItemCompose>,
-    menuViewModel: MenuViewModel,
-    unsyncedOrdersCallback: (List<Order>) -> Unit,
-    items: Map<String, ItemCompose>
+    addedOrderCallback: (Order) -> Unit,
 ) {
     val radioOptions = listOf("Crédito", "Débito", "Dinheiro", "Pix")
     val (selectedOption, onOptionSelect) = remember {
@@ -40,8 +37,8 @@ fun PaymentOptions(
     val total = addedItems.values.sumOf { it.item.currentValue * it.quantity.value }
 
     Column {
-        radioOptions.forEach {
-            RadioButtonPaymentOpt(it, selectedOption) { opt ->
+        radioOptions.forEach { radioOpt ->
+            RadioButtonPaymentOpt(radioOpt, selectedOption) { opt ->
                 changeValue = 0.0
                 onOptionSelect(opt)
             }
@@ -53,16 +50,14 @@ fun PaymentOptions(
         Spacer(modifier = Modifier.height(5.dp))
         Button(
             onClick = {
-                menuViewModel.insertOrder(
-                    order = Order(
+                addedOrderCallback(
+                    Order(
                         items = addedItems.composeToItem(),
                         hour = System.currentTimeMillis().toHourFormat(),
                         date = System.currentTimeMillis().toDateFormat(),
                         orderValue = total.roundDouble(),
                         paymentWay = selectedOption
-                    ),
-                    _items = items,
-                    unsyncedOrdersCallback = unsyncedOrdersCallback
+                    )
                 )
             },
             enabled = (changeValue >= total || selectedOption != stringResource(R.string.money_label)) && addedItems.isNotEmpty(),

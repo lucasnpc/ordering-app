@@ -13,13 +13,13 @@ import androidx.compose.ui.unit.dp
 import com.example.orderingapp.main.domain.model.ItemCompose
 
 @Composable
-fun ItemsList(map: Map<String, ItemCompose>) {
+fun ItemsList(list: List<ItemCompose>) {
     Box(modifier = Modifier.padding(PaddingValues(8.dp))) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(map.values.toList()) {
+            items(list) {
                 CardItem(it)
             }
         }

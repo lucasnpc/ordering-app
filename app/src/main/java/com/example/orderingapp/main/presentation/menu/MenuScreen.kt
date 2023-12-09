@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.orderingapp.R
 import com.example.orderingapp.main.domain.model.ItemCompose
-import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.presentation.menu.components.ItemsList
 import com.example.orderingapp.main.presentation.menu.components.PaymentOptions
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 fun MenuScreen(
     items: Map<String, ItemCompose>,
     menuViewModel: MenuViewModel = hiltViewModel(),
-    unsyncedOrdersCallback: (List<Order>) -> Unit
+    ordersCallback: (OrderEntry) -> Unit
 ) {
     val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -38,18 +38,19 @@ fun MenuScreen(
         drawerState = drawerState,
         drawerContent = {
             PaymentOptions(
-                items = items,
                 addedItems = items.filter { it.value.quantity.value > 0 },
-                menuViewModel = menuViewModel,
-                unsyncedOrdersCallback = {
-                    scope.launch {
-                        drawerState.close()
-                    }
-                    unsyncedOrdersCallback(it)
-                })
+            ) { addedOrder ->
+                scope.launch {
+                    drawerState.close()
+                }
+                menuViewModel.insertOrder(
+                    order = addedOrder,
+                    ordersCallback = ordersCallback
+                )
+            }
         }) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            ItemsList(map = items)
+            ItemsList(list = items.values.toList())
             OutlinedButton(
                 onClick = {
                     scope.launch {

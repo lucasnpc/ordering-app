@@ -19,7 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.orderingapp.commons.extensions.jsonToOrder
+import com.example.orderingapp.commons.extensions.jsonToOrderEntry
 import com.example.orderingapp.main.presentation.voucher.components.BarRealizedPayment
 import com.example.orderingapp.main.presentation.voucher.components.PaymentInfo
 import com.example.orderingapp.main.presentation.voucher.components.PaymentVoucher
@@ -29,14 +29,14 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun VoucherScreen(orderJson: String) {
-    orderJson.jsonToOrder()?.let { order ->
+    orderJson.jsonToOrderEntry()?.let { orderEntry ->
         val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
         val scope = rememberCoroutineScope()
         BottomDrawer(
             drawerState = drawerState,
             drawerContent = {
                 PaymentVoucher(
-                    order,
+                    orderEntry,
                     drawerState,
                     scope
                 )
@@ -54,7 +54,7 @@ fun VoucherScreen(orderJson: String) {
                     Column(verticalArrangement = Arrangement.SpaceBetween) {
                         BarRealizedPayment()
                         Spacer(modifier = Modifier.height(32.dp))
-                        PaymentInfo(order)
+                        PaymentInfo(orderEntry.value)
                         Spacer(modifier = Modifier.height(32.dp))
                         Divider(modifier = Modifier.height(2.dp))
                         SeeVoucherBt {

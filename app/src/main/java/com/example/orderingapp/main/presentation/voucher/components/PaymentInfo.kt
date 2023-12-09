@@ -24,7 +24,11 @@ fun PaymentInfo(order: Order) {
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = "${order.date}, ${order.hour}", fontSize = 20.sp)
-        Text(text = order.paymentWay.uppercase(), fontWeight = FontWeight.Bold, fontSize = 20.sp)
+        Text(
+            text = order.paymentWay.uppercase(),
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
         Text(text = order.items.values.sumOf { it.finalQuantity * it.currentValue }
             .brazilianCurrencyFormat(), fontSize = 20.sp)
     }

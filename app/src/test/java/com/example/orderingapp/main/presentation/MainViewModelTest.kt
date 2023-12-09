@@ -6,6 +6,7 @@ import com.example.orderingapp.main.commons.MainCoroutineRule
 import com.example.orderingapp.main.commons.TestConstants.testException
 import com.example.orderingapp.main.commons.TestData
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import com.example.orderingapp.main.presentation.utils.GetItemsUseCaseFake
@@ -97,9 +98,9 @@ class MainViewModelTest {
 
     @Test
     fun setUnsyncedOrders() = runTest {
-        val listAdded = listOrders.toMutableList()
-        listAdded.add(addedOrder)
-        mainViewModel.setUnsyncedOrders(listAdded)
+        val listAdded = listOrders.toMutableMap()
+        listAdded["3"] = addedOrder
+        mainViewModel.setUnsyncedOrder(OrderEntry("3", addedOrder))
 
         assertThat(mainViewModel.unsyncedOrders).isNotEqualTo(listOrders)
         assertThat(mainViewModel.unsyncedOrders).isEqualTo(listAdded)

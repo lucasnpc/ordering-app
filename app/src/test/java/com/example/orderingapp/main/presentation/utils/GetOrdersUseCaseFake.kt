@@ -12,11 +12,11 @@ import kotlinx.coroutines.flow.flowOf
 class GetOrdersUseCaseFake(private val testException: RuntimeException? = null) : GetOrdersUseCase {
     private val listOrders = TestData().orders
 
-    override fun getOrders(_items: Map<String, ItemCompose>): Flow<ApiResult<List<Order>>> {
+    override fun getOrders(_items: Map<String, ItemCompose>): Flow<ApiResult<Map<String, Order>>> {
         TODO("Not yet implemented")
     }
 
-    override fun getUnsyncedOrders(_items: Map<String, ItemCompose>): Flow<ApiResult<List<Order>>> {
+    override fun getUnsyncedOrders(_items: Map<String, ItemCompose>): Flow<ApiResult<Map<String, Order>>> {
         val result = safeRequest {
             if (testException != null)
                 throw testException

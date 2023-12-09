@@ -37,7 +37,7 @@ class OrderViewModelTest {
         }
         orderViewModel.getOrders(list)
 
-        assertThat(orderViewModel.orders).isEqualTo(listOrder.reversed())
+        assertThat(orderViewModel.orders).isEqualTo(listOrder)
     }
 
     @Test

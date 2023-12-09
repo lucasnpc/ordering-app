@@ -20,7 +20,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.orderingapp.commons.extensions.toLocalDateTime
 import com.example.orderingapp.main.domain.model.ItemCompose
+import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.presentation.order.components.CardOrder
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -45,8 +47,10 @@ fun OrderScreen(list: Map<String, ItemCompose>, orderViewModel: OrderViewModel =
                     color = Color.White
                 )
             }
-            items(orderViewModel.orders) { order ->
-                CardOrder(order)
+            items(orderViewModel.orders.entries.sortedByDescending {
+                "${it.value.date} ${it.value.hour}".toLocalDateTime()
+            }) { orderEntry ->
+                CardOrder(OrderEntry(orderEntry.key, orderEntry.value))
             }
         }
     }
