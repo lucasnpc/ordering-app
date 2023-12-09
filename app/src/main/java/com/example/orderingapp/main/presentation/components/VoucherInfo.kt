@@ -20,10 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.orderingapp.R
 import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
-import com.example.orderingapp.main.domain.model.OrderEntry
+import com.example.orderingapp.main.domain.model.Order
 
 @Composable
-fun VoucherInfo(order: OrderEntry) {
+fun VoucherInfo(order: Order) {
     LazyColumn(modifier = Modifier.padding(16.dp)) {
         item {
             Text(
@@ -36,7 +36,7 @@ fun VoucherInfo(order: OrderEntry) {
         item {
             Spacer(modifier = Modifier.height(32.dp))
             Text(
-                text = "${order.value.date}, ${order.value.hour}",
+                text = "${order.date}, ${order.hour}",
                 fontSize = 18.sp,
                 color = Color.Black
             )
@@ -50,7 +50,7 @@ fun VoucherInfo(order: OrderEntry) {
                 color = Color.Black
             )
         }
-        items(order.value.items.values.toList()) { item ->
+        items(order.items.values.toList()) { item ->
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
@@ -83,7 +83,7 @@ fun VoucherInfo(order: OrderEntry) {
                     fontSize = 18.sp,
                     color = Color.Black
                 )
-                Text(text = order.value.items.values.sumOf { it.finalQuantity * it.currentValue }
+                Text(text = order.items.values.sumOf { it.finalQuantity * it.currentValue }
                     .brazilianCurrencyFormat(), fontSize = 17.sp, color = Color.Black)
             }
         }
@@ -99,7 +99,7 @@ fun VoucherInfo(order: OrderEntry) {
                     fontSize = 18.sp,
                     color = Color.Black
                 )
-                Text(text = order.value.paymentWay, fontSize = 17.sp, color = Color.Black)
+                Text(text = order.paymentWay, fontSize = 17.sp, color = Color.Black)
             }
         }
     }

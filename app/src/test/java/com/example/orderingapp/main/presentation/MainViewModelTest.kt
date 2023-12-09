@@ -100,7 +100,7 @@ class MainViewModelTest {
     fun setUnsyncedOrders() = runTest {
         val listAdded = listOrders.toMutableMap()
         listAdded["3"] = addedOrder
-        mainViewModel.setUnsyncedOrders(OrderEntry("3", addedOrder))
+        mainViewModel.setUnsyncedOrder(OrderEntry("3", addedOrder))
 
         assertThat(mainViewModel.unsyncedOrders).isNotEqualTo(listOrders)
         assertThat(mainViewModel.unsyncedOrders).isEqualTo(listAdded)

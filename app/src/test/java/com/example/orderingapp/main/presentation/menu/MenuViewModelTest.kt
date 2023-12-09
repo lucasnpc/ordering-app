@@ -63,10 +63,7 @@ class MenuViewModelTest {
             paymentWay = createdOrder.paymentWay
         )
         every {
-            mainUseCases.insertOrderUseCase.insertOrderLocal(
-                createdOrder,
-                list
-            )
+            mainUseCases.insertOrderUseCase.insertOrderLocal(createdOrder)
         } returns flow {
             emit(
                 ApiResult.Success(
@@ -75,7 +72,7 @@ class MenuViewModelTest {
             )
         }
 
-        menuViewModel.insertOrder(createdOrder, list) {
+        menuViewModel.insertOrder(createdOrder) {
             assertThat(it.value).isEqualTo(expectedOrder)
         }
     }
@@ -92,13 +89,13 @@ class MenuViewModelTest {
             orderValue = addedItems.values.sumOf { it.item.currentValue * it.item.finalQuantity },
             paymentWay = paymentWay
         )
-        every { mainUseCases.insertOrderUseCase.insertOrderLocal(_order, any()) } returns flow {
+        every { mainUseCases.insertOrderUseCase.insertOrderLocal(_order) } returns flow {
             emit(
                 ApiResult.Error(RuntimeException())
             )
         }
 
-        menuViewModel.insertOrder(_order, list) {
+        menuViewModel.insertOrder(_order) {
             assertThat(it).isNull()
         }
     }

@@ -17,7 +17,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.orderingapp.R
 import com.example.orderingapp.main.domain.model.ItemCompose
-import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.presentation.menu.MenuScreen
 import com.example.orderingapp.main.presentation.order.OrderScreen
@@ -49,8 +48,8 @@ fun MainNavHost(
             )
     ) {
         composable(route = ScreenList.MenuScreen.route) {
-            MenuScreen(items) { map ->
-                finishOrderCallback(map)
+            MenuScreen(items) { orderEntry ->
+                finishOrderCallback(orderEntry)
             }
         }
         composable(route = ScreenList.OrderScreen.route) {

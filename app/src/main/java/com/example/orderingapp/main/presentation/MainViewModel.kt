@@ -63,7 +63,7 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
         }
     }
 
-    fun setUnsyncedOrders(entry: OrderEntry) {
+    fun setUnsyncedOrder(entry: OrderEntry) {
         _unsyncedOrders[entry.key] = entry.value
     }
 

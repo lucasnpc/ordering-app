@@ -9,10 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 class InsertOrderUseCaseFake : InsertOrderUseCase {
 
-    override fun insertOrderLocal(
-        order: Order,
-        _items: Map<String, ItemCompose>
-    ): Flow<ApiResult<OrderEntry>> {
+    override fun insertOrderLocal(order: Order): Flow<ApiResult<OrderEntry>> {
         TODO("Not yet implemented")
     }
 

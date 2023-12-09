@@ -8,20 +8,20 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.orderingapp.main.domain.model.ItemCompose
 
 @Composable
-fun ChangeItemQuantityButtons(itemCompose: ItemCompose) {
+fun ChangeItemQuantityButtons(quantity: MutableState<Int>) {
     Column {
         Row {
             OutlinedButton(
                 onClick = {
-                    if (itemCompose.quantity.value > 0) {
-                        itemCompose.quantity.value--
+                    if (quantity.value > 0) {
+                        quantity.value--
                     }
                 },
                 modifier = Modifier.width(40.dp),
@@ -40,11 +40,11 @@ fun ChangeItemQuantityButtons(itemCompose: ItemCompose) {
                     contentColor = Color.White
                 )
             ) {
-                Text(text = itemCompose.quantity.value.toString(), fontSize = 13.sp)
+                Text(text = quantity.value.toString(), fontSize = 13.sp)
             }
             OutlinedButton(
                 onClick = {
-                    itemCompose.quantity.value++
+                    quantity.value++
                 },
                 modifier = Modifier.width(40.dp),
                 colors = ButtonDefaults.buttonColors(

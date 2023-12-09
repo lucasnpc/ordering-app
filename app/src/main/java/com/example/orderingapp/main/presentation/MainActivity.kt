@@ -47,8 +47,8 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         paddingValues = paddingValues,
                         items = mainViewModel.items
-                    ) { map ->
-                        finishOrderCallback(map, navController)
+                    ) { orderEntry ->
+                        finishOrderCallback(orderEntry, navController)
                     }
                 }
             }
@@ -56,16 +56,16 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun finishOrderCallback(
-        map: OrderEntry,
+        orderEntry: OrderEntry,
         navController: NavHostController
     ) {
         if (checkPermissionsEnabled())
-            generatePDF(map)
+            generatePDF(orderEntry)
         navController.navigate(
-            ScreenList.VoucherScreen.route + "/${Gson().toJson(OrderEntry(map.key, map.value))}"
+            ScreenList.VoucherScreen.route + "/${Gson().toJson(OrderEntry(orderEntry.key, orderEntry.value))}"
         )
         mainViewModel.run {
-            setUnsyncedOrders(map)
+            setUnsyncedOrder(orderEntry)
             clearAddedItems()
         }
     }

@@ -32,7 +32,7 @@ fun VoucherDialog(
         },
         text = {
             Column {
-                VoucherInfo(order = order)
+                VoucherInfo(order = order.value)
                 Divider(modifier = Modifier.height(2.dp))
             }
         },

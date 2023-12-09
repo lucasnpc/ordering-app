@@ -9,18 +9,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
-import com.example.orderingapp.main.domain.model.ItemCompose
+import com.example.orderingapp.main.domain.model.Item
 
 @Composable
-fun ItemInfo(itemCompose: ItemCompose) {
+fun ItemInfo(item: Item) {
     Column {
         Text(
-            text = itemCompose.item.description,
+            text = item.description,
             fontSize = 18.sp,
             modifier = Modifier.width(180.dp),
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
-        Text(text = itemCompose.item.currentValue.brazilianCurrencyFormat(), fontSize = 18.sp)
+        Text(text = item.currentValue.brazilianCurrencyFormat(), fontSize = 18.sp)
     }
 }

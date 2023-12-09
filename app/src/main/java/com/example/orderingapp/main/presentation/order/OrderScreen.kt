@@ -49,8 +49,8 @@ fun OrderScreen(list: Map<String, ItemCompose>, orderViewModel: OrderViewModel =
             }
             items(orderViewModel.orders.entries.sortedByDescending {
                 "${it.value.date} ${it.value.hour}".toLocalDateTime()
-            }) { map ->
-                CardOrder(OrderEntry(map.key, map.value))
+            }) { orderEntry ->
+                CardOrder(OrderEntry(orderEntry.key, orderEntry.value))
             }
         }
     }

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun RadioButtonPaymentOpt(
-    it: String,
+    radioOpt: String,
     selectedOption: String,
     onOptionSelect: (String) -> Unit
 ) {
@@ -30,16 +30,16 @@ fun RadioButtonPaymentOpt(
         modifier = Modifier
             .fillMaxWidth()
             .selectable(
-                selected = (it == selectedOption),
+                selected = (radioOpt == selectedOption),
                 onClick = {
-                    onOptionSelect(it)
+                    onOptionSelect(radioOpt)
                 },
                 role = Role.RadioButton
             ),
         horizontalArrangement = Arrangement.Center
     ) {
         RadioButton(
-            selected = it == selectedOption,
+            selected = radioOpt == selectedOption,
             onClick = null,
             colors = RadioButtonDefaults.colors(
                 unselectedColor = MaterialTheme.colors.onBackground,
@@ -47,7 +47,7 @@ fun RadioButtonPaymentOpt(
             )
         )
         Text(
-            text = it,
+            text = radioOpt,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .width(70.dp),
