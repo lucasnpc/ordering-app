@@ -6,11 +6,12 @@ import com.example.orderingapp.main.domain.usecase.SyncOrderUseCase
 import kotlinx.coroutines.flow.Flow
 
 class SyncOrderUseCaseFake: SyncOrderUseCase {
-    override fun syncOrderRemote(orders: List<Order>): Flow<ApiResult<Unit>> {
+
+    override fun syncOrderRemote(orders: Map<String, Order>): Flow<ApiResult<Unit>> {
         TODO("Not yet implemented")
     }
 
-    override fun syncOrderLocal(orders: List<Order>): Flow<ApiResult<Unit>> {
+    override fun syncOrderLocal(orders: Map<String, Order>): Flow<ApiResult<Unit>> {
         TODO("Not yet implemented")
     }
 

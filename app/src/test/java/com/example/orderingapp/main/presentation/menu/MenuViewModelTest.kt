@@ -6,10 +6,10 @@ import com.example.orderingapp.commons.mappings.composeToItem
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.commons.MainCoroutineRule
 import com.example.orderingapp.main.commons.TestData
-import com.example.orderingapp.main.data.repositories.mappings.fromOrderDTOListToOrderMap
 import com.example.orderingapp.main.data.repositories.mappings.toOrderDTO
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -46,7 +46,6 @@ class MenuViewModelTest {
             paymentWay = paymentWay
         )
         val expectedOrder = Order(
-            id = createdOrder.id,
             items = mapOf(
                 "1" to Item(
                     description = "item 1",
@@ -71,13 +70,13 @@ class MenuViewModelTest {
         } returns flow {
             emit(
                 ApiResult.Success(
-                    listOf(createdOrder.toOrderDTO()).fromOrderDTOListToOrderMap(addedItems)
+                    OrderEntry(createdOrder.toOrderDTO().id, createdOrder)
                 )
             )
         }
 
         menuViewModel.insertOrder(createdOrder, list) {
-            assertThat(it).contains(expectedOrder)
+            assertThat(it.value).isEqualTo(expectedOrder)
         }
     }
 
@@ -100,7 +99,7 @@ class MenuViewModelTest {
         }
 
         menuViewModel.insertOrder(_order, list) {
-            assertThat(it).isEmpty()
+            assertThat(it).isNull()
         }
     }
 }

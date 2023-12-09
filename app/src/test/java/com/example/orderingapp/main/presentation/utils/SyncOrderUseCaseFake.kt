@@ -12,7 +12,7 @@ class SyncOrderUseCaseFake(
     private val localException: RuntimeException? = null
 ) : SyncOrderUseCase {
 
-    override fun syncOrderRemote(orders: List<Order>): Flow<ApiResult<Unit>> {
+    override fun syncOrderRemote(orders: Map<String, Order>): Flow<ApiResult<Unit>> {
         val result = safeRequest {
             if (remoteException != null)
                 throw remoteException
@@ -21,7 +21,7 @@ class SyncOrderUseCaseFake(
         return flowOf(result)
     }
 
-    override fun syncOrderLocal(orders: List<Order>): Flow<ApiResult<Unit>> {
+    override fun syncOrderLocal(orders: Map<String, Order>): Flow<ApiResult<Unit>> {
         val result = safeRequest {
             if (localException != null)
                 throw localException

@@ -8,8 +8,6 @@ import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 
@@ -30,10 +28,5 @@ class OrderViewModel @Inject constructor(private val mainUseCases: MainUseCases)
                 }
             }
         }
-    }
-
-    fun toLocalDateTime(date: String, hour: String): LocalDateTime {
-        val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm")
-        return LocalDateTime.parse("$date $hour", formatter)
     }
 }

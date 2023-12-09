@@ -12,7 +12,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
-import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.model.OrderEntry
 
 @Composable

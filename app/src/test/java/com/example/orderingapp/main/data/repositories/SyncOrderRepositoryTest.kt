@@ -93,7 +93,7 @@ class SyncOrderRepositoryTest {
     fun syncOrderLocalException() = runTest {
         dao = mockk()
         syncOrderUseCase = SyncOrderRepository(firestore, dao)
-        every { dao.updateOrderSync(listOrder.first().id) } throws testException
+        every { dao.updateOrderSync(listOrder.entries.first().key) } throws testException
         syncOrderUseCase.syncOrderLocal(listOrder).collect { result ->
             assertError(result)
         }

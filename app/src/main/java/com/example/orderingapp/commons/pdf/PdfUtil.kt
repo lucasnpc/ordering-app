@@ -32,11 +32,11 @@ object PdfUtil {
     private const val appType = "application/pdf"
 
     fun ComponentActivity.generatePDF(
-        order: OrderEntry
+        orderEntry: OrderEntry
     ) {
         lifecycleScope.launch {
-            val doc = createPDFDocument(order)
-            writeDocument(doc, order)
+            val doc = createPDFDocument(orderEntry.value)
+            writeDocument(doc, orderEntry.key)
         }
     }
 
@@ -75,7 +75,7 @@ object PdfUtil {
 
     @VisibleForTesting
     fun Activity.createPDFDocument(
-        entry: OrderEntry,
+        order: Order,
         titlePaint: Paint = Paint(),
         contentPaint: Paint = Paint(),
         doc: PdfDocument = PdfDocument(),
@@ -102,10 +102,10 @@ object PdfUtil {
             var height = 80F
             drawText(getString(R.string.payment_voucher), pageCenter, height, title)
             height += 40
-            drawText("${entry.value.date}, ${entry.value.hour}", pageCenter, height, content)
+            drawText("${order.date}, ${order.hour}", pageCenter, height, content)
             height += 40
             drawText(getString(R.string.order_label), pageCenter, height, title)
-            entry.value.items.values.forEach { item ->
+            order.items.values.forEach { item ->
                 height += 20f
                 this.drawText(
                     getString(
@@ -123,7 +123,7 @@ object PdfUtil {
             drawText(
                 getString(
                     R.string.document_total_info,
-                    entry.value.items.values.sumOf { it.finalQuantity * it.currentValue }
+                    order.items.values.sumOf { it.finalQuantity * it.currentValue }
                         .brazilianCurrencyFormat()
                 ),
                 pageCenter,
@@ -132,7 +132,7 @@ object PdfUtil {
             )
             height += 20
             drawText(
-                getString(R.string.document_payment_info, entry.value.paymentWay.uppercase()),
+                getString(R.string.document_payment_info, order.paymentWay.uppercase()),
                 pageCenter,
                 height,
                 title
@@ -145,7 +145,7 @@ object PdfUtil {
     }
 
     @VisibleForTesting
-    suspend fun Activity.writeDocument(pdfDocument: PdfDocument, entry: OrderEntry) {
+    suspend fun Activity.writeDocument(pdfDocument: PdfDocument, key: String) {
         try {
             withContext(Dispatchers.IO) {
                 pdfDocument.writeTo(
@@ -154,7 +154,7 @@ object PdfUtil {
                             Environment.getExternalStorageDirectory().path,
                             getString(
                                 R.string.documents_path,
-                                entry.key
+                                key
                             )
                         )
                     )

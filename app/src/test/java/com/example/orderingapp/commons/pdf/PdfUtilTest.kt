@@ -8,7 +8,7 @@ import android.os.Environment
 import com.example.orderingapp.R
 import com.example.orderingapp.commons.pdf.PdfUtil.createPDFDocument
 import com.example.orderingapp.commons.pdf.PdfUtil.writeDocument
-import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
@@ -23,7 +23,7 @@ import org.junit.Test
 
 class PdfUtilTest {
     private lateinit var activity: Activity
-    private lateinit var order: Order
+    private lateinit var order: OrderEntry
     private val mockTitlePaint = mockk<Paint>(relaxed = true)
     private val mockContentPaint = mockk<Paint>(relaxed = true)
     private val mockPdfDocument = mockk<PdfDocument>(relaxed = true)
@@ -47,17 +47,18 @@ class PdfUtilTest {
 
     @Test
     fun createPDFDocument() {
-        every { order.date } returns ""
-        every { order.hour } returns ""
-        every { order.items } returns mapOf()
-        every { order.paymentWay } returns ""
+        every { order.key } returns ""
+        every { order.value.date } returns ""
+        every { order.value.hour } returns ""
+        every { order.value.items } returns mapOf()
+        every { order.value.paymentWay } returns ""
         every { activity.getString(R.string.payment_voucher) } returns ""
         every { activity.getString(R.string.order_label) } returns ""
         every { activity.getString(R.string.document_item_info) } returns ""
-        every { activity.getString(R.string.document_payment_info, order.paymentWay) } returns ""
+        every { activity.getString(R.string.document_payment_info, order.value.paymentWay) } returns ""
         every { activity.getString(R.string.document_total_info, "R\$ 0,00") } returns ""
         val document = activity.createPDFDocument(
-            order,
+            order.value,
             mockTitlePaint,
             mockContentPaint,
             mockPdfDocument,
@@ -71,8 +72,8 @@ class PdfUtilTest {
     fun writeDocument() = runTest {
         mockkStatic(Environment::class)
         every { Environment.getExternalStorageDirectory() } returns File("/mock/path")
-        every { order.id } returns ""
+        every { order.key } returns ""
         every { activity.getString(R.string.documents_path, "") } returns ""
-        activity.writeDocument(mockPdfDocument, order)
+        activity.writeDocument(mockPdfDocument, order.key)
     }
 }
