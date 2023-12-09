@@ -32,7 +32,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.orderingapp.R
 import com.example.orderingapp.commons.extensions.finishSession
-import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.presentation.MainViewModel
 import com.example.orderingapp.main.presentation.utils.ScreenList
 import com.example.orderingapp.main.theme.redPrimary
@@ -40,7 +39,7 @@ import com.example.orderingapp.main.theme.redPrimary
 @Composable
 fun OrderingAppTopBar(
     navController: NavHostController,
-    unsyncedOrders: List<Order>,
+    unsyncedOrdersSize: Int,
     mainViewModel: MainViewModel
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -55,10 +54,10 @@ fun OrderingAppTopBar(
         Text(text = getCurrentPage(navBackStackEntry), fontSize = 20.sp)
     }, actions = {
         Box {
-            if (unsyncedOrders.isNotEmpty())
+            if (unsyncedOrdersSize > 0)
                 Badge(backgroundColor = Color.Black) {
                     Text(
-                        text = unsyncedOrders.size.toString(),
+                        text = unsyncedOrdersSize.toString(),
                         modifier = Modifier
                             .align(Alignment.Bottom)
                             .background(Color.Black),

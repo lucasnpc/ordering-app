@@ -21,13 +21,14 @@ import com.example.orderingapp.commons.extensions.toHourFormat
 import com.example.orderingapp.commons.mappings.composeToItem
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.presentation.menu.MenuViewModel
 
 @Composable
 fun PaymentOptions(
     addedItems: Map<String, ItemCompose>,
     menuViewModel: MenuViewModel,
-    unsyncedOrdersCallback: (List<Order>) -> Unit,
+    unsyncedOrdersCallback: (OrderEntry) -> Unit,
     items: Map<String, ItemCompose>
 ) {
     val radioOptions = listOf("Crédito", "Débito", "Dinheiro", "Pix")

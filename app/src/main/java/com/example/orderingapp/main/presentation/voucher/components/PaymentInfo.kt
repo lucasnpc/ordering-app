@@ -13,9 +13,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 
 @Composable
-fun PaymentInfo(order: Order) {
+fun PaymentInfo(order: OrderEntry) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -23,9 +24,13 @@ fun PaymentInfo(order: Order) {
             .height(260.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "${order.date}, ${order.hour}", fontSize = 20.sp)
-        Text(text = order.paymentWay.uppercase(), fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        Text(text = order.items.values.sumOf { it.finalQuantity * it.currentValue }
+        Text(text = "${order.value.date}, ${order.value.hour}", fontSize = 20.sp)
+        Text(
+            text = order.value.paymentWay.uppercase(),
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
+        Text(text = order.value.items.values.sumOf { it.finalQuantity * it.currentValue }
             .brazilianCurrencyFormat(), fontSize = 20.sp)
     }
 }

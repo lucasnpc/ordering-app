@@ -13,7 +13,7 @@ import com.example.orderingapp.commons.pdf.PdfUtil.generatePDF
 import com.example.orderingapp.commons.permissions.PermissionsUtil.checkPermissionsEnabled
 import com.example.orderingapp.commons.permissions.PermissionsUtil.checkPermissionsRationale
 import com.example.orderingapp.commons.permissions.PermissionsUtil.requestStoragePermission
-import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.presentation.components.MainNavHost
 import com.example.orderingapp.main.presentation.components.OrderingAppBottomBar
 import com.example.orderingapp.main.presentation.components.OrderingAppTopBar
@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         OrderingAppTopBar(
                             navController,
-                            mainViewModel.unsyncedOrders,
+                            mainViewModel.unsyncedOrders.size,
                             mainViewModel
                         )
                     },
@@ -47,8 +47,8 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         paddingValues = paddingValues,
                         items = mainViewModel.items
-                    ) { list ->
-                        finishOrderCallback(list, navController)
+                    ) { map ->
+                        finishOrderCallback(map, navController)
                     }
                 }
             }
@@ -56,18 +56,16 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun finishOrderCallback(
-        list: List<Order>,
+        map: OrderEntry,
         navController: NavHostController
     ) {
-        list.lastOrNull()?.let {
-            if (checkPermissionsEnabled())
-                generatePDF(it)
-            navController.navigate(
-                ScreenList.VoucherScreen.route + "/${Gson().toJson(it)}"
-            )
-        }
+        if (checkPermissionsEnabled())
+            generatePDF(map)
+        navController.navigate(
+            ScreenList.VoucherScreen.route + "/${Gson().toJson(OrderEntry(map.key, map.value))}"
+        )
         mainViewModel.run {
-            setUnsyncedOrders(list)
+            setUnsyncedOrders(map)
             clearAddedItems()
         }
     }

@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.orderingapp.R
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.presentation.menu.components.ItemsList
 import com.example.orderingapp.main.presentation.menu.components.PaymentOptions
 import kotlinx.coroutines.launch
@@ -29,7 +30,7 @@ import kotlinx.coroutines.launch
 fun MenuScreen(
     items: Map<String, ItemCompose>,
     menuViewModel: MenuViewModel = hiltViewModel(),
-    unsyncedOrdersCallback: (List<Order>) -> Unit
+    unsyncedOrdersCallback: (OrderEntry) -> Unit
 ) {
     val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
     val scope = rememberCoroutineScope()

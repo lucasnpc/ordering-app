@@ -18,12 +18,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.orderingapp.R
 import com.example.orderingapp.commons.pdf.PdfUtil.openPDF
-import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 
 @Composable
 fun VoucherDialog(
     openDialog: MutableState<Boolean>,
-    order: Order,
+    order: OrderEntry,
     activity: Activity?
 ) {
     AlertDialog(
@@ -44,7 +44,7 @@ fun VoucherDialog(
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
-                        activity?.openPDF(order)
+                        activity?.openPDF(order.key)
                         openDialog.value = false
                     }
                 ) {

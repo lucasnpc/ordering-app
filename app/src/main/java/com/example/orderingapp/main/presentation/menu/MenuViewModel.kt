@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -15,7 +16,7 @@ class MenuViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
     fun insertOrder(
         order: Order,
         _items: Map<String, ItemCompose>,
-        unsyncedOrdersCallback: (List<Order>) -> Unit
+        unsyncedOrdersCallback: (OrderEntry) -> Unit
     ) {
         viewModelScope.launch {
             mainUseCases.insertOrderUseCase.insertOrderLocal(order, _items).collect { result ->
@@ -23,9 +24,7 @@ class MenuViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
                     is ApiResult.Success -> {
                         unsyncedOrdersCallback(result.data)
                     }
-                    is ApiResult.Error -> {
-                        unsyncedOrdersCallback(listOf())
-                    }
+                    is ApiResult.Error -> Unit
                 }
             }
         }

@@ -18,6 +18,7 @@ import androidx.navigation.navArgument
 import com.example.orderingapp.R
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.presentation.menu.MenuScreen
 import com.example.orderingapp.main.presentation.order.OrderScreen
 import com.example.orderingapp.main.presentation.stock.StockScreen
@@ -29,7 +30,7 @@ fun MainNavHost(
     navController: NavHostController,
     paddingValues: PaddingValues,
     items: Map<String, ItemCompose>,
-    finishOrderCallback: (List<Order>) -> Unit
+    finishOrderCallback: (OrderEntry) -> Unit
 ) {
     val context = LocalContext.current
     NavHost(
@@ -48,8 +49,8 @@ fun MainNavHost(
             )
     ) {
         composable(route = ScreenList.MenuScreen.route) {
-            MenuScreen(items) { list ->
-                finishOrderCallback(list)
+            MenuScreen(items) { map ->
+                finishOrderCallback(map)
             }
         }
         composable(route = ScreenList.OrderScreen.route) {

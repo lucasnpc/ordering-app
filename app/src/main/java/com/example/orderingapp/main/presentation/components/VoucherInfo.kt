@@ -20,10 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.orderingapp.R
 import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
-import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 
 @Composable
-fun VoucherInfo(order: Order) {
+fun VoucherInfo(order: OrderEntry) {
     LazyColumn(modifier = Modifier.padding(16.dp)) {
         item {
             Text(
@@ -35,7 +35,11 @@ fun VoucherInfo(order: Order) {
         }
         item {
             Spacer(modifier = Modifier.height(32.dp))
-            Text(text = "${order.date}, ${order.hour}", fontSize = 18.sp, color = Color.Black)
+            Text(
+                text = "${order.value.date}, ${order.value.hour}",
+                fontSize = 18.sp,
+                color = Color.Black
+            )
         }
         item {
             Spacer(modifier = Modifier.height(32.dp))
@@ -46,7 +50,7 @@ fun VoucherInfo(order: Order) {
                 color = Color.Black
             )
         }
-        items(order.items.values.toList()) { item ->
+        items(order.value.items.values.toList()) { item ->
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
@@ -79,7 +83,7 @@ fun VoucherInfo(order: Order) {
                     fontSize = 18.sp,
                     color = Color.Black
                 )
-                Text(text = order.items.values.sumOf { it.finalQuantity * it.currentValue }
+                Text(text = order.value.items.values.sumOf { it.finalQuantity * it.currentValue }
                     .brazilianCurrencyFormat(), fontSize = 17.sp, color = Color.Black)
             }
         }
@@ -95,7 +99,7 @@ fun VoucherInfo(order: Order) {
                     fontSize = 18.sp,
                     color = Color.Black
                 )
-                Text(text = order.paymentWay, fontSize = 17.sp, color = Color.Black)
+                Text(text = order.value.paymentWay, fontSize = 17.sp, color = Color.Black)
             }
         }
     }

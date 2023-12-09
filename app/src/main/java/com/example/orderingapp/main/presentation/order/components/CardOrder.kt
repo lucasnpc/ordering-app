@@ -21,12 +21,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.presentation.components.VoucherDialog
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-fun CardOrder(order: Order) {
+fun CardOrder(order: OrderEntry) {
     val activity = LocalContext.current as? Activity
     val openDialog = remember { mutableStateOf(false) }
     if (openDialog.value) {
@@ -45,7 +45,7 @@ fun CardOrder(order: Order) {
             )
         ) {
             Text(
-                text = "Pedido concluído em ${order.date} às ${order.hour}",
+                text = "Pedido concluído em ${order.value.date} às ${order.value.hour}",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center

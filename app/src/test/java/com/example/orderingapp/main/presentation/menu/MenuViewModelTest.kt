@@ -6,7 +6,7 @@ import com.example.orderingapp.commons.mappings.composeToItem
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.commons.MainCoroutineRule
 import com.example.orderingapp.main.commons.TestData
-import com.example.orderingapp.main.data.repositories.mappings.fromOrderDTOToOrder
+import com.example.orderingapp.main.data.repositories.mappings.fromOrderDTOListToOrderMap
 import com.example.orderingapp.main.data.repositories.mappings.toOrderDTO
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.Order
@@ -71,7 +71,7 @@ class MenuViewModelTest {
         } returns flow {
             emit(
                 ApiResult.Success(
-                    listOf(createdOrder.toOrderDTO()).fromOrderDTOToOrder(addedItems)
+                    listOf(createdOrder.toOrderDTO()).fromOrderDTOListToOrderMap(addedItems)
                 )
             )
         }

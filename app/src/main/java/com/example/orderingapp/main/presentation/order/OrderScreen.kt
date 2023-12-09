@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.orderingapp.main.domain.model.ItemCompose
+import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.presentation.order.components.CardOrder
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -45,8 +46,13 @@ fun OrderScreen(list: Map<String, ItemCompose>, orderViewModel: OrderViewModel =
                     color = Color.White
                 )
             }
-            items(orderViewModel.orders) { order ->
-                CardOrder(order)
+            items(orderViewModel.orders.entries.sortedByDescending {
+                orderViewModel.toLocalDateTime(
+                    it.value.date,
+                    it.value.hour
+                )
+            }) { map ->
+                CardOrder(OrderEntry(map.key, map.value))
             }
         }
     }

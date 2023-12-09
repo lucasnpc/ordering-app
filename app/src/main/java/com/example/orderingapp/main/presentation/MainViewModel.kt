@@ -1,6 +1,5 @@
 package com.example.orderingapp.main.presentation
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -8,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -17,8 +17,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) : ViewModel() {
     val isSyncing = mutableStateOf(false)
-    private val _unsyncedOrders = mutableStateListOf<Order>()
-    val unsyncedOrders: List<Order> = _unsyncedOrders
+    private val _unsyncedOrders = mutableStateMapOf<String, Order>()
+    val unsyncedOrders: Map<String, Order> = _unsyncedOrders
 
     private var _items = mutableStateMapOf<String, ItemCompose>()
     val items: Map<String, ItemCompose> = _items
@@ -52,7 +52,7 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
             when (result) {
                 is ApiResult.Success -> {
                     _unsyncedOrders.clear()
-                    _unsyncedOrders.addAll(result.data)
+                    _unsyncedOrders.putAll(result.data)
                     true
                 }
                 is ApiResult.Error -> {
@@ -63,9 +63,8 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
         }
     }
 
-    fun setUnsyncedOrders(orders: List<Order>) {
-        _unsyncedOrders.clear()
-        _unsyncedOrders.addAll(orders)
+    fun setUnsyncedOrders(entry: OrderEntry) {
+        _unsyncedOrders[entry.key] = entry.value
     }
 
     fun startSyncing() {

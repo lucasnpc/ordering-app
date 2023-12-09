@@ -14,6 +14,7 @@ import com.example.orderingapp.BuildConfig
 import com.example.orderingapp.R
 import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
 import com.example.orderingapp.main.domain.model.Order
+import com.example.orderingapp.main.domain.model.OrderEntry
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -31,7 +32,7 @@ object PdfUtil {
     private const val appType = "application/pdf"
 
     fun ComponentActivity.generatePDF(
-        order: Order
+        order: OrderEntry
     ) {
         lifecycleScope.launch {
             val doc = createPDFDocument(order)
@@ -39,13 +40,13 @@ object PdfUtil {
         }
     }
 
-    fun Activity.openPDF(order: Order) {
+    fun Activity.openPDF(orderKey: String) {
         try {
             val file = File(
                 Environment.getExternalStorageDirectory().path,
                 getString(
                     R.string.documents_path,
-                    order.id
+                    orderKey
                 )
             )
             if (!file.exists()) {
@@ -74,7 +75,7 @@ object PdfUtil {
 
     @VisibleForTesting
     fun Activity.createPDFDocument(
-        order: Order,
+        entry: OrderEntry,
         titlePaint: Paint = Paint(),
         contentPaint: Paint = Paint(),
         doc: PdfDocument = PdfDocument(),
@@ -101,10 +102,10 @@ object PdfUtil {
             var height = 80F
             drawText(getString(R.string.payment_voucher), pageCenter, height, title)
             height += 40
-            drawText("${order.date}, ${order.hour}", pageCenter, height, content)
+            drawText("${entry.value.date}, ${entry.value.hour}", pageCenter, height, content)
             height += 40
             drawText(getString(R.string.order_label), pageCenter, height, title)
-            order.items.values.forEach { item ->
+            entry.value.items.values.forEach { item ->
                 height += 20f
                 this.drawText(
                     getString(
@@ -122,7 +123,7 @@ object PdfUtil {
             drawText(
                 getString(
                     R.string.document_total_info,
-                    order.items.values.sumOf { it.finalQuantity * it.currentValue }
+                    entry.value.items.values.sumOf { it.finalQuantity * it.currentValue }
                         .brazilianCurrencyFormat()
                 ),
                 pageCenter,
@@ -131,7 +132,7 @@ object PdfUtil {
             )
             height += 20
             drawText(
-                getString(R.string.document_payment_info, order.paymentWay.uppercase()),
+                getString(R.string.document_payment_info, entry.value.paymentWay.uppercase()),
                 pageCenter,
                 height,
                 title
@@ -144,7 +145,7 @@ object PdfUtil {
     }
 
     @VisibleForTesting
-    suspend fun Activity.writeDocument(pdfDocument: PdfDocument, order: Order) {
+    suspend fun Activity.writeDocument(pdfDocument: PdfDocument, entry: OrderEntry) {
         try {
             withContext(Dispatchers.IO) {
                 pdfDocument.writeTo(
@@ -153,7 +154,7 @@ object PdfUtil {
                             Environment.getExternalStorageDirectory().path,
                             getString(
                                 R.string.documents_path,
-                                order.id
+                                entry.key
                             )
                         )
                     )
