@@ -8,21 +8,27 @@ import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class GetItemsUseCaseFake(private val testException: RuntimeException? = null) : GetItemsUseCase {
+class GetItemsUseCaseFake(
+    private val remoteTestException: RuntimeException? = null,
+    private val localTestException: RuntimeException? = null
+) : GetItemsUseCase {
     private val list = TestData().itemsCompose
 
-    override fun getItemsFromRemote(): Flow<ApiResult<Map<String, ItemCompose>>>{
+    override fun getItemsFromRemote(): Flow<ApiResult<Map<String, ItemCompose>>> {
         val result = safeRequest {
-            if (testException != null)
-                throw testException
+            if (remoteTestException != null)
+                throw remoteTestException
             list
         }
         return flowOf(result)
     }
 
-    override fun getItemsFromLocal(): Flow<ApiResult<Map<String, ItemCompose>>>{
-        TODO("Not yet implemented")
+    override fun getItemsFromLocal(): Flow<ApiResult<Map<String, ItemCompose>>> {
+        val result = safeRequest {
+            if (localTestException != null)
+                throw localTestException
+            list
+        }
+        return flowOf(result)
     }
-
-
 }

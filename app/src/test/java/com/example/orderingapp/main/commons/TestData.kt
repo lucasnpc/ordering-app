@@ -65,7 +65,6 @@ data class TestData(
         paymentWay = "Pix",
         synced = false
     ),
-    val items: Map<String, Item> = mapOf(item1, item2),
     val itemsDTO: Map<String, ItemDTO> = mapOf("1" to itemDTO1, "2" to itemDTO2),
     val itemsCompose: Map<String, ItemCompose> = mapOf(
         item1.first to ItemCompose(

@@ -11,6 +11,7 @@ import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import com.example.orderingapp.main.presentation.utils.GetItemsUseCaseFake
 import com.example.orderingapp.main.presentation.utils.GetOrdersUseCaseFake
+import com.example.orderingapp.main.presentation.utils.InsertItemsUseCaseFake
 import com.example.orderingapp.main.presentation.utils.SyncOrderUseCaseFake
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -29,7 +30,7 @@ class MainViewModelTest {
     private lateinit var mainViewModel: MainViewModel
     private var mainUseCases: MainUseCases = MainUseCases(
         getItemsUseCase = GetItemsUseCaseFake(),
-        insertItemsUseCase = mockk(),
+        insertItemsUseCase = InsertItemsUseCaseFake(),
         getOrdersUseCase = GetOrdersUseCaseFake(),
         insertOrderUseCase = mockk(),
         syncOrderUseCase = SyncOrderUseCaseFake()
@@ -60,7 +61,7 @@ class MainViewModelTest {
     fun getUnsyncedOrdersException() = runTest {
         mainUseCases = MainUseCases(
             getItemsUseCase = GetItemsUseCaseFake(),
-            insertItemsUseCase = mockk(),
+            insertItemsUseCase = InsertItemsUseCaseFake(),
             getOrdersUseCase = GetOrdersUseCaseFake(testException),
             insertOrderUseCase = mockk(),
             syncOrderUseCase = SyncOrderUseCaseFake()
@@ -71,22 +72,27 @@ class MainViewModelTest {
 
     @Test
     fun getItems() {
-        for ((key, value) in mainViewModel.items) {
-            val expected = list[key]?.item
-            value.item.run {
-                assertThat(description).isEqualTo(expected?.description)
-                assertThat(currentValue).isEqualTo(expected?.currentValue)
-                assertThat(currentStock).isEqualTo(expected?.currentStock)
-                assertThat(minimumStock).isEqualTo(expected?.minimumStock)
-                assertThat(finalQuantity).isEqualTo(expected?.finalQuantity)
-            }
-        }
+        assertItemsEqualTo()
     }
 
     @Test
-    fun getItemsException() = runTest {
+    fun getItemLocalForRemoteException() {
         mainUseCases = MainUseCases(
-            getItemsUseCase = GetItemsUseCaseFake(testException),
+            getItemsUseCase = GetItemsUseCaseFake(testException, null),
+            insertItemsUseCase = mockk(),
+            getOrdersUseCase = GetOrdersUseCaseFake(),
+            insertOrderUseCase = mockk(),
+            syncOrderUseCase = SyncOrderUseCaseFake()
+        )
+        mainViewModel = MainViewModel(mainUseCases)
+
+        assertItemsEqualTo()
+    }
+
+    @Test
+    fun getItemsLocalException() = runTest {
+        mainUseCases = MainUseCases(
+            getItemsUseCase = GetItemsUseCaseFake(testException, testException),
             insertItemsUseCase = mockk(),
             getOrdersUseCase = GetOrdersUseCaseFake(),
             insertOrderUseCase = mockk(),
@@ -117,11 +123,12 @@ class MainViewModelTest {
     fun startSyncingExceptionAtRemote() = runTest {
         mainUseCases = MainUseCases(
             getItemsUseCase = GetItemsUseCaseFake(),
-            insertItemsUseCase = mockk(),
+            insertItemsUseCase = InsertItemsUseCaseFake(),
             getOrdersUseCase = GetOrdersUseCaseFake(),
             insertOrderUseCase = mockk(),
             syncOrderUseCase = SyncOrderUseCaseFake(testException, null)
         )
+
         mainViewModel = MainViewModel(mainUseCases)
 
         mainViewModel.startSyncing()
@@ -133,7 +140,7 @@ class MainViewModelTest {
     fun startSyncingExceptionAtLocal() {
         mainUseCases = MainUseCases(
             getItemsUseCase = GetItemsUseCaseFake(),
-            insertItemsUseCase = mockk(),
+            insertItemsUseCase = InsertItemsUseCaseFake(),
             getOrdersUseCase = GetOrdersUseCaseFake(),
             insertOrderUseCase = mockk(),
             syncOrderUseCase = SyncOrderUseCaseFake(null, testException)
@@ -151,7 +158,7 @@ class MainViewModelTest {
         every { getItemsUseCase.getItemsFromRemote() } returns flow { emit(ApiResult.Success(list)) }
         mainUseCases = MainUseCases(
             getItemsUseCase = getItemsUseCase,
-            insertItemsUseCase = mockk(),
+            insertItemsUseCase = InsertItemsUseCaseFake(),
             getOrdersUseCase = GetOrdersUseCaseFake(),
             insertOrderUseCase = mockk(),
             syncOrderUseCase = SyncOrderUseCaseFake(null, testException)
@@ -164,5 +171,18 @@ class MainViewModelTest {
 
         assertThat(list.values.first().quantity.value).isEqualTo(0)
         assertThat(list.values.toList()[1].quantity.value).isEqualTo(0)
+    }
+
+    private fun assertItemsEqualTo() {
+        for ((key, value) in mainViewModel.items) {
+            val expected = list[key]?.item
+            value.item.run {
+                assertThat(description).isEqualTo(expected?.description)
+                assertThat(currentValue).isEqualTo(expected?.currentValue)
+                assertThat(currentStock).isEqualTo(expected?.currentStock)
+                assertThat(minimumStock).isEqualTo(expected?.minimumStock)
+                assertThat(finalQuantity).isEqualTo(expected?.finalQuantity)
+            }
+        }
     }
 }
