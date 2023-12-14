@@ -10,9 +10,9 @@ import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) : ViewModel() {
@@ -35,15 +35,18 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
         mainUseCases.getItemsUseCase.getItemsFromRemote().collect { result ->
             when (result) {
                 is ApiResult.Success -> {
-                    _items.clear()
-                    _items.putAll(result.data)
-                    if (!hasCalledGetUnsyncedOrders) {
-                        getUnsyncedOrders()
-                        hasCalledGetUnsyncedOrders = !hasCalledGetUnsyncedOrders
-                    }
+                    insertItems(result)
+                    putItems(result.data)
                 }
-                is ApiResult.Error -> _items.clear()
+
+                is ApiResult.Error -> getItemsFromLocal()
             }
+        }
+    }
+
+    private fun insertItems(result: ApiResult.Success<Map<String, ItemCompose>>) {
+        viewModelScope.launch {
+            mainUseCases.insertItemsUseCase.insertItem(result.data).firstOrNull()
         }
     }
 
@@ -55,11 +58,35 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
                     _unsyncedOrders.putAll(result.data)
                     true
                 }
+
                 is ApiResult.Error -> {
                     _unsyncedOrders.clear()
                     false
                 }
             }
+        }
+    }
+
+    private suspend fun getItemsFromLocal() {
+        mainUseCases.getItemsUseCase.getItemsFromLocal().collect { result ->
+            when (result) {
+                is ApiResult.Success -> {
+                    putItems(result.data)
+                }
+
+                is ApiResult.Error -> {
+                    _items.clear()
+                }
+            }
+        }
+    }
+
+    private suspend fun putItems(data: Map<String, ItemCompose>) {
+        _items.clear()
+        _items.putAll(data)
+        if (!hasCalledGetUnsyncedOrders) {
+            getUnsyncedOrders()
+            hasCalledGetUnsyncedOrders = !hasCalledGetUnsyncedOrders
         }
     }
 
@@ -75,6 +102,7 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
                     is ApiResult.Success -> {
                         updateOrdersLocal()
                     }
+
                     is ApiResult.Error -> {
                         isSyncing.value = false
                     }
@@ -90,6 +118,7 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
                     _unsyncedOrders.clear()
                     isSyncing.value = false
                 }
+
                 is ApiResult.Error -> {
                     isSyncing.value = false
                 }

@@ -11,21 +11,21 @@ sealed class BottomNavItem(
     val contentDescription: String,
     val route: String
 ) {
-    object MenuItem :
+    data object MenuItem :
         BottomNavItem(
             icon = Icons.Filled.RestaurantMenu,
             contentDescription = "Menu Icon",
             route = ScreenList.MenuScreen.route
         )
 
-    object OrdersItem :
+    data object OrdersItem :
         BottomNavItem(
             icon = Icons.Filled.MenuBook,
             contentDescription = "Orders Icon",
             route = ScreenList.OrderScreen.route
         )
 
-    object CartItem :
+    data object CartItem :
         BottomNavItem(
             icon = Icons.Filled.ShoppingCart,
             contentDescription = "Cart Icon",

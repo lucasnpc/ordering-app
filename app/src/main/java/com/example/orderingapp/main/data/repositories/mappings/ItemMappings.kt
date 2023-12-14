@@ -5,13 +5,13 @@ import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
 
 
-fun Map.Entry<String, Item>.toItemDTO(): ItemDTO {
+fun Map.Entry<String, ItemCompose>.toItemDTO(): ItemDTO {
     return ItemDTO(
         id = key,
-        description = value.description,
-        currentValue = value.currentValue,
-        minimumStock = value.minimumStock,
-        currentStock = value.currentStock
+        description = value.item.description,
+        currentValue = value.item.currentValue,
+        minimumStock = value.item.minimumStock,
+        currentStock = value.item.currentStock
     )
 }
 

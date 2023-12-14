@@ -62,7 +62,14 @@ class MainActivity : ComponentActivity() {
         if (checkPermissionsEnabled())
             generatePDF(orderEntry)
         navController.navigate(
-            ScreenList.VoucherScreen.route + "/${Gson().toJson(OrderEntry(orderEntry.key, orderEntry.value))}"
+            ScreenList.VoucherScreen.route + "/${
+                Gson().toJson(
+                    OrderEntry(
+                        orderEntry.key,
+                        orderEntry.value
+                    )
+                )
+            }"
         )
         mainViewModel.run {
             setUnsyncedOrder(orderEntry)
@@ -83,6 +90,7 @@ class MainActivity : ComponentActivity() {
                     .setNegativeButton(getString(R.string.cancel)) { dialog, _ -> dialog.dismiss() }
                     .create().show()
             }
+
             !checkPermissionsEnabled() -> {
                 requestStoragePermission()
             }

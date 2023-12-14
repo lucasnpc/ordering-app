@@ -18,7 +18,7 @@ import org.junit.Test
 class InsertItemsRepositoryTest {
     private lateinit var insertItemsUseCase: InsertItemsUseCase
     private lateinit var dao: OrderingAppDao
-    private val list = TestData().items
+    private val list = TestData().itemsCompose
     private val listDTO = TestData().itemsDTO
 
     @Before
