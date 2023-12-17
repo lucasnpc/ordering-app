@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.orderingapp.main.data.entities.ItemDTO
 import com.example.orderingapp.main.data.entities.OrderDTO
+import com.example.orderingapp.main.data.entities.PurchaseDTO
 
 @Dao
 interface OrderingAppDao {
@@ -15,6 +16,9 @@ interface OrderingAppDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertItem(vararg itemDTO: ItemDTO)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertPurchase(vararg purchaseDTO: PurchaseDTO)
 
     @Query("SELECT * FROM OrderDTO")
     fun getOrders(): List<OrderDTO>

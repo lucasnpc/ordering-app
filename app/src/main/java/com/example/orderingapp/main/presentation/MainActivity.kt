@@ -1,6 +1,7 @@
 package com.example.orderingapp.main.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -48,7 +49,13 @@ class MainActivity : ComponentActivity() {
                         paddingValues = paddingValues,
                         items = mainViewModel.items
                     ) { orderEntry ->
-                        finishOrderCallback(orderEntry, navController)
+                        orderEntry?.let {
+                            finishOrderCallback(orderEntry, navController)
+                        } ?: Toast.makeText(
+                            this,
+                            getString(R.string.something_went_wrong),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }

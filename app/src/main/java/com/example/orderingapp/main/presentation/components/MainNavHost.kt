@@ -29,7 +29,7 @@ fun MainNavHost(
     navController: NavHostController,
     paddingValues: PaddingValues,
     items: Map<String, ItemCompose>,
-    finishOrderCallback: (OrderEntry) -> Unit
+    finishOrderCallback: (OrderEntry?) -> Unit
 ) {
     val context = LocalContext.current
     NavHost(

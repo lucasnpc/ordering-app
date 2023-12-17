@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class MenuViewModel @Inject constructor(private val mainUseCases: MainUseCases) : ViewModel() {
     fun insertOrder(
         order: Order,
-        ordersCallback: (OrderEntry) -> Unit
+        ordersCallback: (OrderEntry?) -> Unit
     ) {
         viewModelScope.launch {
             mainUseCases.insertOrderUseCase.insertOrderLocal(order).collect { result ->
@@ -22,7 +22,7 @@ class MenuViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
                     is ApiResult.Success -> {
                         ordersCallback(result.data)
                     }
-                    is ApiResult.Error -> Unit
+                    is ApiResult.Error -> ordersCallback(null)
                 }
             }
         }

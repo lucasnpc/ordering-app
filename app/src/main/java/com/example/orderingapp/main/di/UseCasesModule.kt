@@ -5,6 +5,7 @@ import com.example.orderingapp.main.data.repositories.GetItemsRepository
 import com.example.orderingapp.main.data.repositories.GetOrdersRepository
 import com.example.orderingapp.main.data.repositories.InsertItemsRepository
 import com.example.orderingapp.main.data.repositories.InsertOrderRepository
+import com.example.orderingapp.main.data.repositories.InsertPurchaseRepository
 import com.example.orderingapp.main.data.repositories.SyncOrderRepository
 import com.example.orderingapp.main.data.repositories.UpdateItemsStockRepository
 import com.example.orderingapp.main.domain.usecase.MainUseCases
@@ -33,6 +34,7 @@ object UseCasesModule {
                 firestore = firestore,
                 dao = orderingAppDatabase.orderingAppDao
             ),
-            updateItemsStockUseCase = UpdateItemsStockRepository(firestore = firestore)
+            updateItemsStockUseCase = UpdateItemsStockRepository(firestore = firestore),
+            insertPurchaseUseCase = InsertPurchaseRepository(orderingAppDao = orderingAppDatabase.orderingAppDao)
         )
 }

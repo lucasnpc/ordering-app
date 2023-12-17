@@ -73,7 +73,7 @@ class MenuViewModelTest {
         }
 
         menuViewModel.insertOrder(createdOrder) {
-            assertThat(it.value).isEqualTo(expectedOrder)
+            assertThat(it?.value).isEqualTo(expectedOrder)
         }
     }
 

@@ -34,7 +34,8 @@ class MainViewModelTest {
         getOrdersUseCase = GetOrdersUseCaseFake(),
         insertOrderUseCase = mockk(),
         syncOrderUseCase = SyncOrderUseCaseFake(),
-        updateItemsStockUseCase = mockk()
+        updateItemsStockUseCase = mockk(),
+        insertPurchaseUseCase = mockk()
     )
 
     private val list = TestData().itemsCompose
@@ -66,7 +67,8 @@ class MainViewModelTest {
             getOrdersUseCase = GetOrdersUseCaseFake(testException),
             insertOrderUseCase = mockk(),
             syncOrderUseCase = SyncOrderUseCaseFake(),
-            updateItemsStockUseCase = mockk()
+            updateItemsStockUseCase = mockk(),
+            insertPurchaseUseCase = mockk()
         )
         mainViewModel = MainViewModel(mainUseCases)
         assertThat(mainViewModel.unsyncedOrders).isEmpty()
@@ -85,7 +87,8 @@ class MainViewModelTest {
             getOrdersUseCase = GetOrdersUseCaseFake(),
             insertOrderUseCase = mockk(),
             syncOrderUseCase = SyncOrderUseCaseFake(),
-            updateItemsStockUseCase = mockk()
+            updateItemsStockUseCase = mockk(),
+            insertPurchaseUseCase = mockk()
         )
         mainViewModel = MainViewModel(mainUseCases)
 
@@ -100,7 +103,8 @@ class MainViewModelTest {
             getOrdersUseCase = GetOrdersUseCaseFake(),
             insertOrderUseCase = mockk(),
             syncOrderUseCase = SyncOrderUseCaseFake(),
-            updateItemsStockUseCase = mockk()
+            updateItemsStockUseCase = mockk(),
+            insertPurchaseUseCase = mockk()
         )
         mainViewModel = MainViewModel(mainUseCases)
         assertThat(mainViewModel.items).isEmpty()
@@ -131,7 +135,8 @@ class MainViewModelTest {
             getOrdersUseCase = GetOrdersUseCaseFake(),
             insertOrderUseCase = mockk(),
             syncOrderUseCase = SyncOrderUseCaseFake(testException, null),
-            updateItemsStockUseCase = mockk()
+            updateItemsStockUseCase = mockk(),
+            insertPurchaseUseCase = mockk()
         )
 
         mainViewModel = MainViewModel(mainUseCases)
@@ -149,7 +154,8 @@ class MainViewModelTest {
             getOrdersUseCase = GetOrdersUseCaseFake(),
             insertOrderUseCase = mockk(),
             syncOrderUseCase = SyncOrderUseCaseFake(null, testException),
-            updateItemsStockUseCase = mockk()
+            updateItemsStockUseCase = mockk(),
+            insertPurchaseUseCase = mockk()
         )
         mainViewModel = MainViewModel(mainUseCases)
 
@@ -168,7 +174,8 @@ class MainViewModelTest {
             getOrdersUseCase = GetOrdersUseCaseFake(),
             insertOrderUseCase = mockk(),
             syncOrderUseCase = SyncOrderUseCaseFake(null, testException),
-            updateItemsStockUseCase = mockk()
+            updateItemsStockUseCase = mockk(),
+            insertPurchaseUseCase = mockk()
         )
         mainViewModel = MainViewModel(mainUseCases)
         assertThat(list.values.first().quantity.value).isEqualTo(2)
