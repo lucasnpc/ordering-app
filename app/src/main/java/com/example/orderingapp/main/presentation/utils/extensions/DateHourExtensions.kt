@@ -1,4 +1,4 @@
-package com.example.orderingapp.commons.extensions
+package com.example.orderingapp.main.presentation.utils.extensions
 
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime

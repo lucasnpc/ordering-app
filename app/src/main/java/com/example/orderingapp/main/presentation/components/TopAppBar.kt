@@ -31,7 +31,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.orderingapp.R
-import com.example.orderingapp.commons.extensions.finishSession
+import com.example.orderingapp.main.presentation.utils.extensions.finishSession
 import com.example.orderingapp.main.presentation.MainViewModel
 import com.example.orderingapp.main.presentation.utils.ScreenList
 import com.example.orderingapp.main.theme.redPrimary

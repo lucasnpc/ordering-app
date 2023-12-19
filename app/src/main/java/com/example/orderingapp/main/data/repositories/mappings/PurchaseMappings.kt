@@ -5,7 +5,7 @@ import com.example.orderingapp.main.domain.model.Purchase
 
 fun Purchase.toPurchaseDTO(): PurchaseDTO {
     return PurchaseDTO(
-        items = items.mapValues { it.value.finalQuantity },
+        items = items,
         date = date,
         hour = hour,
         purchaseValue = purchaseValue,

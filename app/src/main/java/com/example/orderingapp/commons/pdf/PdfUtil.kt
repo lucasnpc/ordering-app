@@ -12,7 +12,7 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.orderingapp.BuildConfig
 import com.example.orderingapp.R
-import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
+import com.example.orderingapp.main.presentation.utils.extensions.brazilianCurrencyFormat
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.model.OrderEntry
 import java.io.File

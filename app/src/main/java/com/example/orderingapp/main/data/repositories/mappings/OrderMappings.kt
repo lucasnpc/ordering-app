@@ -5,10 +5,10 @@ import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 
-fun List<OrderDTO>.fromOrderDTOListToOrderMap(_items: Map<String, ItemCompose>): Map<String, Order> {
+fun List<OrderDTO>.fromOrderDTOListToOrderMap(): Map<String, Order> {
     return this.associateBy({ it.id }, {
         Order(
-            items = it.items.mapToOrderItem(_items),
+            items = it.items,
             date = it.date,
             hour = it.hour,
             orderValue = it.orderValue,
@@ -17,23 +17,9 @@ fun List<OrderDTO>.fromOrderDTOListToOrderMap(_items: Map<String, ItemCompose>):
     })
 }
 
-private fun Map<String, Int>.mapToOrderItem(_items: Map<String, ItemCompose>): Map<String, Item> {
-    return this.mapValues { entry ->
-        _items[entry.key]?.let {
-            Item(
-                description = it.item.description,
-                currentValue = it.item.currentValue,
-                minimumStock = it.item.minimumStock,
-                currentStock = it.item.currentStock,
-                finalQuantity = entry.value
-            )
-        } ?: Item()
-    }
-}
-
 fun Order.toOrderDTO(): OrderDTO {
     return OrderDTO(
-        items = items.mapValues { it.value.finalQuantity },
+        items = items,
         date = date,
         hour = hour,
         orderValue = orderValue,

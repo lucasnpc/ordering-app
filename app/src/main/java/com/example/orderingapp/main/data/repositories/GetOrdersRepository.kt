@@ -15,14 +15,14 @@ import kotlinx.coroutines.flow.flowOn
 class GetOrdersRepository(private val dao: OrderingAppDao) : GetOrdersUseCase {
     override fun getOrders(_items: Map<String, ItemCompose>): Flow<ApiResult<Map<String, Order>>> = flow {
         val result = safeRequestSuspend {
-            dao.getOrders().fromOrderDTOListToOrderMap(_items)
+            dao.getOrders().fromOrderDTOListToOrderMap()
         }
         emit(result)
     }.flowOn(Dispatchers.IO)
 
     override fun getUnsyncedOrders(_items: Map<String, ItemCompose>): Flow<ApiResult<Map<String, Order>>> = flow {
         val result = safeRequestSuspend {
-            dao.getUnsyncedOrders().fromOrderDTOListToOrderMap(_items)
+            dao.getUnsyncedOrders().fromOrderDTOListToOrderMap()
         }
         emit(result)
     }.flowOn(Dispatchers.IO)

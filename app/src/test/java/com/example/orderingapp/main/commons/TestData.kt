@@ -51,7 +51,7 @@ data class TestData(
     ),
     private val orderDTO1: OrderDTO = OrderDTO(
         id = "1",
-        items = mapOf("1" to 2),
+        items = mapOf("1" to item1.second),
         date = "21 Dec 2021",
         hour = "12:00:00",
         orderValue = 10.0,
@@ -60,7 +60,7 @@ data class TestData(
     ),
     private val orderDTO2: OrderDTO = OrderDTO(
         id = "2",
-        items = mapOf("1" to 2, "2" to 2),
+        items = mapOf("1" to item1.second, "2" to item2.second),
         date = "21 Dec 2021",
         hour = "12:00:00",
         orderValue = 10.0,

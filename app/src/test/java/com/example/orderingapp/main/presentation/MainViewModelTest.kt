@@ -1,12 +1,14 @@
 package com.example.orderingapp.main.presentation
 
-import com.example.orderingapp.commons.mappings.composeToItem
+import com.example.orderingapp.main.presentation.utils.mappings.composeToItem
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.commons.MainCoroutineRule
 import com.example.orderingapp.main.commons.TestConstants.testException
 import com.example.orderingapp.main.commons.TestData
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.model.OrderEntry
+import com.example.orderingapp.main.domain.model.Purchase
+import com.example.orderingapp.main.domain.model.PurchaseEntry
 import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import com.example.orderingapp.main.presentation.utils.GetItemsUseCaseFake
@@ -40,12 +42,21 @@ class MainViewModelTest {
 
     private val list = TestData().itemsCompose
     private val listOrders = TestData().orders
+    private val listPurchases = TestData().purchases
     private val addedOrder =
         Order(
             items = list.composeToItem(),
             date = "21 Dec 2022",
             hour = "12:00",
             orderValue = 10.0,
+            paymentWay = "Crédito"
+        )
+    private val addedPurchase =
+        Purchase(
+            items = list.composeToItem(),
+            date = "21 Dec 2022",
+            hour = "12:00",
+            purchaseValue = 10.0,
             paymentWay = "Crédito"
         )
 
@@ -118,6 +129,16 @@ class MainViewModelTest {
 
         assertThat(mainViewModel.unsyncedOrders).isNotEqualTo(listOrders)
         assertThat(mainViewModel.unsyncedOrders).isEqualTo(listAdded)
+    }
+
+    @Test
+    fun setUnsyncedPurchases() = runTest {
+        val listAdded = listPurchases.toMutableMap()
+        listAdded["3"] = addedPurchase
+        mainViewModel.setUnsyncedPurchase(PurchaseEntry("3", addedPurchase))
+
+        assertThat(mainViewModel.unsyncedPurchases).isNotEqualTo(listPurchases)
+        assertThat(mainViewModel.unsyncedPurchases).isEqualTo(listAdded)
     }
 
     @Test

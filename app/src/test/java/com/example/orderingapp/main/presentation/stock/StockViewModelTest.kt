@@ -1,12 +1,12 @@
-package com.example.orderingapp.main.presentation.menu
+package com.example.orderingapp.main.presentation.stock
 
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.commons.MainCoroutineRule
 import com.example.orderingapp.main.commons.TestData
-import com.example.orderingapp.main.data.repositories.mappings.toOrderDTO
+import com.example.orderingapp.main.data.repositories.mappings.toPurchaseDTO
 import com.example.orderingapp.main.domain.model.Item
-import com.example.orderingapp.main.domain.model.Order
-import com.example.orderingapp.main.domain.model.OrderEntry
+import com.example.orderingapp.main.domain.model.Purchase
+import com.example.orderingapp.main.domain.model.PurchaseEntry
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import com.example.orderingapp.main.presentation.utils.extensions.toDateFormat
 import com.example.orderingapp.main.presentation.utils.extensions.toHourFormat
@@ -20,32 +20,32 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class MenuViewModelTest {
+class StockViewModelTest {
 
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var menuViewModel: MenuViewModel
-    private val mainUseCases: MainUseCases = mockk()
+    private lateinit var stockViewModel: StockViewModel
+    private val mainUseCases = mockk<MainUseCases>()
 
     @Before
     fun setUp() {
-        menuViewModel = MenuViewModel(mainUseCases)
+        stockViewModel = StockViewModel(mainUseCases)
     }
 
     @Test
-    fun insertOrder() = runTest {
+    fun insertPurchase() = runTest {
         val list = TestData().itemsCompose
         val paymentWay = "Pix"
         val addedItems = list.filter { it.value.quantity.value > 0 }
-        val createdOrder = Order(
+        val createdPurchase = Purchase(
             items = addedItems.composeToItem(),
             hour = System.currentTimeMillis().toHourFormat(),
             date = System.currentTimeMillis().toDateFormat(),
-            orderValue = addedItems.values.sumOf { it.item.currentValue * it.item.finalQuantity },
+            purchaseValue = addedItems.values.sumOf { it.item.costValue * it.item.finalQuantity },
             paymentWay = paymentWay
         )
-        val expectedOrder = Order(
+        val expectedPurchase = Purchase(
             items = mapOf(
                 "1" to Item(
                     description = "item 1",
@@ -57,45 +57,44 @@ class MenuViewModelTest {
                     finalQuantity = 2
                 )
             ),
-            hour = createdOrder.hour,
-            date = createdOrder.date,
-            orderValue = createdOrder.orderValue,
-            paymentWay = createdOrder.paymentWay
+            hour = createdPurchase.hour,
+            date = createdPurchase.date,
+            purchaseValue = createdPurchase.purchaseValue,
+            paymentWay = createdPurchase.paymentWay
         )
-        every {
-            mainUseCases.insertOrderUseCase.insertOrderLocal(createdOrder)
-        } returns flow {
+        every { mainUseCases.insertPurchaseUseCase.insertPurchaseLocal(createdPurchase) } returns flow {
             emit(
                 ApiResult.Success(
-                    OrderEntry(createdOrder.toOrderDTO().id, createdOrder)
+                    PurchaseEntry(
+                        createdPurchase.toPurchaseDTO().id,
+                        createdPurchase
+                    )
                 )
             )
         }
 
-        menuViewModel.insertOrder(createdOrder) {
-            assertThat(it?.value).isEqualTo(expectedOrder)
+        stockViewModel.insertPurchase(createdPurchase) {
+            assertThat(it?.value).isEqualTo(expectedPurchase)
         }
     }
 
     @Test
-    fun insertOrderError() = runTest {
+    fun insertPurchaseError() = runTest {
         val list = TestData().itemsCompose
         val paymentWay = "Pix"
         val addedItems = list.filter { it.value.quantity.value > 0 }
-        val createdOrder = Order(
+        val createdPurchase = Purchase(
             items = addedItems.composeToItem(),
             hour = System.currentTimeMillis().toHourFormat(),
             date = System.currentTimeMillis().toDateFormat(),
-            orderValue = addedItems.values.sumOf { it.item.currentValue * it.item.finalQuantity },
+            purchaseValue = addedItems.values.sumOf { it.item.costValue * it.item.finalQuantity },
             paymentWay = paymentWay
         )
-        every { mainUseCases.insertOrderUseCase.insertOrderLocal(createdOrder) } returns flow {
-            emit(
-                ApiResult.Error(RuntimeException())
-            )
+        every { mainUseCases.insertPurchaseUseCase.insertPurchaseLocal(createdPurchase) } returns flow {
+            emit(ApiResult.Error(RuntimeException()))
         }
 
-        menuViewModel.insertOrder(createdOrder) {
+        stockViewModel.insertPurchase(createdPurchase) {
             assertThat(it).isNull()
         }
     }
