@@ -53,7 +53,7 @@ fun MainNavHost(
             }
         }
         composable(route = ScreenList.OrderScreen.route) {
-            OrderScreen(items)
+            OrderScreen()
         }
         composable(route = ScreenList.StockScreen.route) {
             StockScreen()

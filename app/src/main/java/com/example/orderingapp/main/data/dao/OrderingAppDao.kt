@@ -1,6 +1,7 @@
 package com.example.orderingapp.main.data.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -26,9 +27,15 @@ interface OrderingAppDao {
     @Query("SELECT * FROM OrderDTO WHERE synced == 0")
     fun getUnsyncedOrders(): List<OrderDTO>
 
+    @Query("SELECT * FROM PurchaseDTO WHERE synced == 0")
+    fun getUnsyncedPurchases(): List<PurchaseDTO>
+
     @Query("UPDATE OrderDTO SET synced = 1 WHERE id = :orderId")
     fun updateOrderSync(orderId: String)
 
     @Query("SELECT * FROM ItemDTO")
     fun getItems(): List<ItemDTO>
+
+    @Delete
+    fun deleteOrder(order: OrderDTO)
 }

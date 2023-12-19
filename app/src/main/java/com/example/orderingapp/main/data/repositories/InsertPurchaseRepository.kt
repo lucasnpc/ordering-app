@@ -13,12 +13,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class InsertPurchaseRepository(
-    private val orderingAppDao: OrderingAppDao
+    private val dao: OrderingAppDao
 ) : InsertPurchaseUseCase {
     override fun insertPurchaseLocal(purchase: Purchase): Flow<ApiResult<PurchaseEntry>> = flow {
         val result = safeRequestSuspend {
             val purchaseDTO = purchase.toPurchaseDTO()
-            orderingAppDao.insertPurchase(purchaseDTO)
+            dao.insertPurchase(purchaseDTO)
             PurchaseEntry(purchaseDTO.id, purchase)
         }
         emit(result)

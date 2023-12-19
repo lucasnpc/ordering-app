@@ -18,7 +18,6 @@ class GetOrdersRepositoryTest {
 
     private lateinit var getOrdersUseCase: GetOrdersUseCase
     private val dao: OrderingAppDao = mockk()
-    private val list = TestData().itemsCompose
     private val listOrdersDTO = TestData().ordersDTO
     private val listOrders = TestData().orders
 
@@ -30,7 +29,7 @@ class GetOrdersRepositoryTest {
     @Test
     fun getOrders() = runTest {
         every { dao.getOrders() } returns listOrdersDTO
-        getOrdersUseCase.getOrders(list).collect { result ->
+        getOrdersUseCase.getOrders().collect { result ->
             assertSuccess(result)
         }
     }
@@ -38,7 +37,7 @@ class GetOrdersRepositoryTest {
     @Test
     fun getUnsyncedOrders() = runTest {
         every { dao.getUnsyncedOrders() } returns listOrdersDTO
-        getOrdersUseCase.getUnsyncedOrders(list).collect { result ->
+        getOrdersUseCase.getUnsyncedOrders().collect { result ->
             assertSuccess(result)
         }
     }
@@ -46,7 +45,7 @@ class GetOrdersRepositoryTest {
     @Test
     fun getOrdersException() = runTest {
         every { dao.getOrders() } throws testException
-        getOrdersUseCase.getOrders(list).collect { result ->
+        getOrdersUseCase.getOrders().collect { result ->
             assertError(result)
         }
     }
@@ -54,7 +53,7 @@ class GetOrdersRepositoryTest {
     @Test
     fun getUnsyncedOrdersException() = runTest {
         every { dao.getUnsyncedOrders() } throws testException
-        getOrdersUseCase.getUnsyncedOrders(list).collect { result ->
+        getOrdersUseCase.getUnsyncedOrders().collect { result ->
             assertError(result)
         }
     }

@@ -3,6 +3,7 @@ package com.example.orderingapp.main.data.entities.converters
 import androidx.room.TypeConverter
 import com.example.orderingapp.main.domain.model.Item
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 
 class MapItemIdTypeConverter {
@@ -10,8 +11,12 @@ class MapItemIdTypeConverter {
 
     @TypeConverter
     fun fromString(value: String): Map<String, Item> {
-        val mapType = object: TypeToken<Map<String, Item>>() {}.type
-        return gson.fromJson(value, mapType)
+        return try {
+            val mapType = object : TypeToken<Map<String, Item>>() {}.type
+            gson.fromJson(value, mapType)
+        } catch (ex: JsonSyntaxException) {
+            mapOf()
+        }
     }
 
     @TypeConverter

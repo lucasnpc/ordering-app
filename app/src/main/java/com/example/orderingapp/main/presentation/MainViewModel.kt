@@ -56,7 +56,7 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
     }
 
     private suspend fun getUnsyncedOrders() {
-        mainUseCases.getOrdersUseCase.getUnsyncedOrders(_items.toMap()).firstOrNull { result ->
+        mainUseCases.getOrdersUseCase.getUnsyncedOrders().firstOrNull { result ->
             when (result) {
                 is ApiResult.Success -> {
                     _unsyncedOrders.clear()
@@ -66,6 +66,23 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
 
                 is ApiResult.Error -> {
                     _unsyncedOrders.clear()
+                    false
+                }
+            }
+        }
+    }
+
+    private suspend fun getUnsyncedPurchases() {
+        mainUseCases.getPurchasesUseCase.getUnsyncedPurchases().firstOrNull { result ->
+            when (result) {
+                is ApiResult.Success -> {
+                    _unsyncedPurchases.clear()
+                    _unsyncedPurchases.putAll(result.data)
+                    true
+                }
+
+                is ApiResult.Error -> {
+                    _unsyncedPurchases.clear()
                     false
                 }
             }
@@ -91,6 +108,7 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
         _items.putAll(data)
         if (!hasCalledGetUnsyncedOrders) {
             getUnsyncedOrders()
+            getUnsyncedPurchases()
             hasCalledGetUnsyncedOrders = !hasCalledGetUnsyncedOrders
         }
     }

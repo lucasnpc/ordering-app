@@ -3,6 +3,7 @@ package com.example.orderingapp.main.di
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.orderingapp.main.domain.fakeusecases.GetItemsUseCaseFake
 import com.example.orderingapp.main.domain.fakeusecases.GetOrdersUseCaseFake
+import com.example.orderingapp.main.domain.fakeusecases.GetPurchaseUseCaseFake
 import com.example.orderingapp.main.domain.fakeusecases.InsertItemsUseCaseFake
 import com.example.orderingapp.main.domain.fakeusecases.InsertOrderUseCaseFake
 import com.example.orderingapp.main.domain.fakeusecases.InsertPurchaseUseCaseFake
@@ -35,7 +36,8 @@ class ViewModelInjectionTest {
         insertOrderUseCase = InsertOrderUseCaseFake(),
         syncOrderUseCase = SyncOrderUseCaseFake(),
         updateItemsStockUseCase = UpdateItemsStockUseCaseFake(),
-        insertPurchaseUseCase = InsertPurchaseUseCaseFake()
+        insertPurchaseUseCase = InsertPurchaseUseCaseFake(),
+        getPurchasesUseCase = GetPurchaseUseCaseFake()
     )
 
     @BindValue

@@ -3,6 +3,7 @@ package com.example.orderingapp.main.di
 import com.example.orderingapp.main.data.OrderingAppDatabase
 import com.example.orderingapp.main.data.repositories.GetItemsRepository
 import com.example.orderingapp.main.data.repositories.GetOrdersRepository
+import com.example.orderingapp.main.data.repositories.GetPurchasesRepository
 import com.example.orderingapp.main.data.repositories.InsertItemsRepository
 import com.example.orderingapp.main.data.repositories.InsertOrderRepository
 import com.example.orderingapp.main.data.repositories.InsertPurchaseRepository
@@ -29,12 +30,13 @@ object UseCasesModule {
             ),
             insertItemsUseCase = InsertItemsRepository(dao = orderingAppDatabase.orderingAppDao),
             getOrdersUseCase = GetOrdersRepository(dao = orderingAppDatabase.orderingAppDao),
-            insertOrderUseCase = InsertOrderRepository(orderingAppDao = orderingAppDatabase.orderingAppDao),
+            insertOrderUseCase = InsertOrderRepository(dao = orderingAppDatabase.orderingAppDao),
             syncOrderUseCase = SyncOrderRepository(
                 firestore = firestore,
                 dao = orderingAppDatabase.orderingAppDao
             ),
             updateItemsStockUseCase = UpdateItemsStockRepository(firestore = firestore),
-            insertPurchaseUseCase = InsertPurchaseRepository(orderingAppDao = orderingAppDatabase.orderingAppDao)
+            insertPurchaseUseCase = InsertPurchaseRepository(dao = orderingAppDatabase.orderingAppDao),
+            getPurchasesUseCase = GetPurchasesRepository(dao = orderingAppDatabase.orderingAppDao)
         )
 }

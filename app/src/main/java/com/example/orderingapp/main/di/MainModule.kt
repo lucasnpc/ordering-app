@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.example.orderingapp.main.data.OrderingAppDatabase
 import com.example.orderingapp.main.data.migrations.MIGRATION_1_2
+import com.example.orderingapp.main.data.migrations.MIGRATION_2_3
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -20,7 +21,7 @@ object MainModule {
     @Singleton
     fun provideOrderingAppDB(app: Application): OrderingAppDatabase =
         Room.databaseBuilder(app, OrderingAppDatabase::class.java, OrderingAppDatabase.DB_NAME)
-            .addMigrations(MIGRATION_1_2)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
             .build()
 
     @Provides

@@ -21,14 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.orderingapp.main.presentation.utils.extensions.toLocalDateTime
-import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.presentation.order.components.CardOrder
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun OrderScreen(list: Map<String, ItemCompose>, orderViewModel: OrderViewModel = hiltViewModel()) {
-    orderViewModel.getOrders(list)
+fun OrderScreen(orderViewModel: OrderViewModel = hiltViewModel()) {
+    orderViewModel.getOrders()
     Box(modifier = Modifier.padding(PaddingValues(8.dp))) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),

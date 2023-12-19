@@ -35,11 +35,19 @@ class FakeOrderingDao : OrderingAppDao {
         return orderDTOS.filter { !it.synced }
     }
 
+    override fun getUnsyncedPurchases(): List<PurchaseDTO> {
+        return purchaseDTOS
+    }
+
     override fun updateOrderSync(orderId: String) {
         orderDTOS.find { it.id == orderId }?.synced = true
     }
 
     override fun getItems(): List<ItemDTO> {
         return itemDTOS
+    }
+
+    override fun deleteOrder(order: OrderDTO) {
+        orderDTOS.remove(order)
     }
 }

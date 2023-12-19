@@ -6,6 +6,6 @@ import com.example.orderingapp.main.domain.model.Order
 import kotlinx.coroutines.flow.Flow
 
 interface GetOrdersUseCase {
-    fun getOrders(_items: Map<String, ItemCompose>): Flow<ApiResult<Map<String, Order>>>
-    fun getUnsyncedOrders(_items: Map<String, ItemCompose>): Flow<ApiResult<Map<String, Order>>>
+    fun getOrders(): Flow<ApiResult<Map<String, Order>>>
+    fun getUnsyncedOrders(): Flow<ApiResult<Map<String, Order>>>
 }

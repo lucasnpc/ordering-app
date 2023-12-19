@@ -7,5 +7,6 @@ data class MainUseCases(
     val insertOrderUseCase: InsertOrderUseCase,
     val syncOrderUseCase: SyncOrderUseCase,
     val updateItemsStockUseCase: UpdateItemsStockUseCase,
-    val insertPurchaseUseCase: InsertPurchaseUseCase
+    val insertPurchaseUseCase: InsertPurchaseUseCase,
+    val getPurchasesUseCase: GetPurchasesUseCase
 )
