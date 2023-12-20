@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.MainUseCases
-import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,13 +25,7 @@ class OrderViewModel @Inject constructor(private val mainUseCases: MainUseCases)
                     }
 
                     is ApiResult.Error -> {
-                        when (result.exception) {
-                            is JsonSyntaxException -> {
-
-                            }
-
-                            else -> Unit
-                        }
+                        _orders.clear()
                     }
                 }
             }

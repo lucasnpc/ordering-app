@@ -22,7 +22,6 @@ class OrderViewModelTest {
     private lateinit var orderViewModel: OrderViewModel
     private val mainUseCases: MainUseCases = mockk()
 
-    private val list = TestData().itemsCompose
     private val listOrder = TestData().orders
 
     @Before

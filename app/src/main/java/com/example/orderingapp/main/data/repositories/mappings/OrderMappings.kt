@@ -1,8 +1,6 @@
 package com.example.orderingapp.main.data.repositories.mappings
 
 import com.example.orderingapp.main.data.entities.OrderDTO
-import com.example.orderingapp.main.domain.model.Item
-import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 
 fun List<OrderDTO>.fromOrderDTOListToOrderMap(): Map<String, Order> {

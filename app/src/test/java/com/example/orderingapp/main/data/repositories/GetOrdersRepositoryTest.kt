@@ -5,6 +5,7 @@ import com.example.orderingapp.main.commons.TestConstants.testException
 import com.example.orderingapp.main.commons.TestConstants.testMsgException
 import com.example.orderingapp.main.commons.TestData
 import com.example.orderingapp.main.data.dao.OrderingAppDao
+import com.example.orderingapp.main.data.entities.OrderDTO
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.usecase.GetOrdersUseCase
 import com.google.common.truth.Truth.assertThat
@@ -18,7 +19,7 @@ class GetOrdersRepositoryTest {
 
     private lateinit var getOrdersUseCase: GetOrdersUseCase
     private val dao: OrderingAppDao = mockk()
-    private val listOrdersDTO = TestData().ordersDTO
+    private val listOrdersDTO = TestData().ordersDTO.toMutableList()
     private val listOrders = TestData().orders
 
     @Before
@@ -29,6 +30,26 @@ class GetOrdersRepositoryTest {
     @Test
     fun getOrders() = runTest {
         every { dao.getOrders() } returns listOrdersDTO
+        getOrdersUseCase.getOrders().collect { result ->
+            assertSuccess(result)
+        }
+    }
+
+    @Test
+    fun getOrdersWithEmptyItems() = runTest {
+        listOrdersDTO.add(
+            OrderDTO(
+                id = "3", items = mapOf(), date = "21 Dec 2021",
+                hour = "12:00",
+                orderValue = 10.0,
+                paymentWay = "Pix",
+                synced = false
+            )
+        )
+        every { dao.getOrders() } returns listOrdersDTO
+        every { dao.deleteOrder(listOrdersDTO.last()) } answers {
+            listOrdersDTO.removeLast()
+        }
         getOrdersUseCase.getOrders().collect { result ->
             assertSuccess(result)
         }

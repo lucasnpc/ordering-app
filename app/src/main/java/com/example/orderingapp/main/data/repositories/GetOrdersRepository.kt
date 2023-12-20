@@ -15,12 +15,10 @@ class GetOrdersRepository(private val dao: OrderingAppDao) : GetOrdersUseCase {
     override fun getOrders(): Flow<ApiResult<Map<String, Order>>> =
         flow {
             val result = safeRequestSuspend {
-                val list = dao.getOrders()
-                if (list.any { it.items.isEmpty() }) {
-                    list.filter { it.items.isEmpty() }.forEach { dao.deleteOrder(it) }
-                    list.fromOrderDTOListToOrderMap()
-                } else
-                    list.fromOrderDTOListToOrderMap()
+                dao.getOrders().also { list ->
+                    if (list.any { it.items.isEmpty() })
+                        list.filter { it.items.isEmpty() }.forEach { dao.deleteOrder(it) }
+                }.fromOrderDTOListToOrderMap().filter { it.value.items.isNotEmpty() }
             }
             emit(result)
         }.flowOn(Dispatchers.IO)
