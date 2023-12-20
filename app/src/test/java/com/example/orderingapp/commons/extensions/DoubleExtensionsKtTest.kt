@@ -1,6 +1,7 @@
 package com.example.orderingapp.commons.extensions
 
 
+import com.example.orderingapp.main.presentation.utils.extensions.roundDouble
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 

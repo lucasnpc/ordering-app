@@ -1,6 +1,7 @@
 package com.example.orderingapp.commons.extensions
 
 import android.app.Activity
+import com.example.orderingapp.main.presentation.utils.extensions.finishSession
 import com.firebase.ui.auth.AuthUI
 import io.mockk.every
 import io.mockk.mockk

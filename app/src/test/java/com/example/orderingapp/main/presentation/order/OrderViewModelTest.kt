@@ -22,7 +22,6 @@ class OrderViewModelTest {
     private lateinit var orderViewModel: OrderViewModel
     private val mainUseCases: MainUseCases = mockk()
 
-    private val list = TestData().itemsCompose
     private val listOrder = TestData().orders
 
     @Before
@@ -32,21 +31,21 @@ class OrderViewModelTest {
 
     @Test
     fun getOrders() = runTest {
-        every { mainUseCases.getOrdersUseCase.getOrders(list) } returns flow {
+        every { mainUseCases.getOrdersUseCase.getOrders() } returns flow {
             emit(ApiResult.Success(listOrder))
         }
-        orderViewModel.getOrders(list)
+        orderViewModel.getOrders()
 
         assertThat(orderViewModel.orders).isEqualTo(listOrder)
     }
 
     @Test
     fun getOrdersError() = runTest {
-        every { mainUseCases.getOrdersUseCase.getOrders(list) } returns flow {
+        every { mainUseCases.getOrdersUseCase.getOrders() } returns flow {
             emit(ApiResult.Error(testException))
         }
 
-        orderViewModel.getOrders(list)
+        orderViewModel.getOrders()
 
         assertThat(orderViewModel.orders).isEmpty()
     }

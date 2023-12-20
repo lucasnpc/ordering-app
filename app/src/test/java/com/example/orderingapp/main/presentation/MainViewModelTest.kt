@@ -1,18 +1,21 @@
 package com.example.orderingapp.main.presentation
 
-import com.example.orderingapp.commons.mappings.composeToItem
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.commons.MainCoroutineRule
 import com.example.orderingapp.main.commons.TestConstants.testException
 import com.example.orderingapp.main.commons.TestData
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.model.OrderEntry
+import com.example.orderingapp.main.domain.model.Purchase
+import com.example.orderingapp.main.domain.model.PurchaseEntry
 import com.example.orderingapp.main.domain.usecase.GetItemsUseCase
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import com.example.orderingapp.main.presentation.utils.GetItemsUseCaseFake
 import com.example.orderingapp.main.presentation.utils.GetOrdersUseCaseFake
+import com.example.orderingapp.main.presentation.utils.GetPurchaseUseCaseFake
 import com.example.orderingapp.main.presentation.utils.InsertItemsUseCaseFake
 import com.example.orderingapp.main.presentation.utils.SyncOrderUseCaseFake
+import com.example.orderingapp.main.presentation.utils.mappings.composeToItem
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
@@ -33,17 +36,29 @@ class MainViewModelTest {
         insertItemsUseCase = InsertItemsUseCaseFake(),
         getOrdersUseCase = GetOrdersUseCaseFake(),
         insertOrderUseCase = mockk(),
-        syncOrderUseCase = SyncOrderUseCaseFake()
+        syncOrderUseCase = SyncOrderUseCaseFake(),
+        updateItemsStockUseCase = mockk(),
+        insertPurchaseUseCase = mockk(),
+        getPurchasesUseCase = GetPurchaseUseCaseFake()
     )
 
     private val list = TestData().itemsCompose
     private val listOrders = TestData().orders
+    private val listPurchases = TestData().purchases
     private val addedOrder =
         Order(
             items = list.composeToItem(),
             date = "21 Dec 2022",
             hour = "12:00",
             orderValue = 10.0,
+            paymentWay = "Crédito"
+        )
+    private val addedPurchase =
+        Purchase(
+            items = list.composeToItem(),
+            date = "21 Dec 2022",
+            hour = "12:00",
+            purchaseValue = 10.0,
             paymentWay = "Crédito"
         )
 
@@ -64,7 +79,10 @@ class MainViewModelTest {
             insertItemsUseCase = InsertItemsUseCaseFake(),
             getOrdersUseCase = GetOrdersUseCaseFake(testException),
             insertOrderUseCase = mockk(),
-            syncOrderUseCase = SyncOrderUseCaseFake()
+            syncOrderUseCase = SyncOrderUseCaseFake(),
+            updateItemsStockUseCase = mockk(),
+            insertPurchaseUseCase = mockk(),
+            getPurchasesUseCase = GetPurchaseUseCaseFake()
         )
         mainViewModel = MainViewModel(mainUseCases)
         assertThat(mainViewModel.unsyncedOrders).isEmpty()
@@ -76,13 +94,16 @@ class MainViewModelTest {
     }
 
     @Test
-    fun getItemLocalForRemoteException() {
+    fun getItemLocalForRemoteException() = runTest {
         mainUseCases = MainUseCases(
             getItemsUseCase = GetItemsUseCaseFake(testException, null),
             insertItemsUseCase = mockk(),
             getOrdersUseCase = GetOrdersUseCaseFake(),
             insertOrderUseCase = mockk(),
-            syncOrderUseCase = SyncOrderUseCaseFake()
+            syncOrderUseCase = SyncOrderUseCaseFake(),
+            updateItemsStockUseCase = mockk(),
+            insertPurchaseUseCase = mockk(),
+            getPurchasesUseCase = GetPurchaseUseCaseFake()
         )
         mainViewModel = MainViewModel(mainUseCases)
 
@@ -96,7 +117,10 @@ class MainViewModelTest {
             insertItemsUseCase = mockk(),
             getOrdersUseCase = GetOrdersUseCaseFake(),
             insertOrderUseCase = mockk(),
-            syncOrderUseCase = SyncOrderUseCaseFake()
+            syncOrderUseCase = SyncOrderUseCaseFake(),
+            updateItemsStockUseCase = mockk(),
+            insertPurchaseUseCase = mockk(),
+            getPurchasesUseCase = mockk()
         )
         mainViewModel = MainViewModel(mainUseCases)
         assertThat(mainViewModel.items).isEmpty()
@@ -113,6 +137,16 @@ class MainViewModelTest {
     }
 
     @Test
+    fun setUnsyncedPurchases() = runTest {
+        val listAdded = listPurchases.toMutableMap()
+        listAdded["3"] = addedPurchase
+        mainViewModel.setUnsyncedPurchase(PurchaseEntry("3", addedPurchase))
+
+        assertThat(mainViewModel.unsyncedPurchases).isNotEqualTo(listPurchases)
+        assertThat(mainViewModel.unsyncedPurchases).isEqualTo(listAdded)
+    }
+
+    @Test
     fun startSyncing() = runTest {
         mainViewModel.startSyncing()
         assertThat(mainViewModel.unsyncedOrders).isEmpty()
@@ -126,7 +160,10 @@ class MainViewModelTest {
             insertItemsUseCase = InsertItemsUseCaseFake(),
             getOrdersUseCase = GetOrdersUseCaseFake(),
             insertOrderUseCase = mockk(),
-            syncOrderUseCase = SyncOrderUseCaseFake(testException, null)
+            syncOrderUseCase = SyncOrderUseCaseFake(testException, null),
+            updateItemsStockUseCase = mockk(),
+            insertPurchaseUseCase = mockk(),
+            getPurchasesUseCase = GetPurchaseUseCaseFake()
         )
 
         mainViewModel = MainViewModel(mainUseCases)
@@ -137,13 +174,16 @@ class MainViewModelTest {
     }
 
     @Test
-    fun startSyncingExceptionAtLocal() {
+    fun startSyncingExceptionAtLocal() = runTest {
         mainUseCases = MainUseCases(
             getItemsUseCase = GetItemsUseCaseFake(),
             insertItemsUseCase = InsertItemsUseCaseFake(),
             getOrdersUseCase = GetOrdersUseCaseFake(),
             insertOrderUseCase = mockk(),
-            syncOrderUseCase = SyncOrderUseCaseFake(null, testException)
+            syncOrderUseCase = SyncOrderUseCaseFake(null, testException),
+            updateItemsStockUseCase = mockk(),
+            insertPurchaseUseCase = mockk(),
+            getPurchasesUseCase = GetPurchaseUseCaseFake()
         )
         mainViewModel = MainViewModel(mainUseCases)
 
@@ -161,7 +201,10 @@ class MainViewModelTest {
             insertItemsUseCase = InsertItemsUseCaseFake(),
             getOrdersUseCase = GetOrdersUseCaseFake(),
             insertOrderUseCase = mockk(),
-            syncOrderUseCase = SyncOrderUseCaseFake(null, testException)
+            syncOrderUseCase = SyncOrderUseCaseFake(null, testException),
+            updateItemsStockUseCase = mockk(),
+            insertPurchaseUseCase = mockk(),
+            getPurchasesUseCase = GetPurchaseUseCaseFake()
         )
         mainViewModel = MainViewModel(mainUseCases)
         assertThat(list.values.first().quantity.value).isEqualTo(2)

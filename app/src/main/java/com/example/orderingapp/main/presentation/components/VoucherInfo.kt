@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.orderingapp.R
-import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
+import com.example.orderingapp.main.presentation.utils.extensions.brazilianCurrencyFormat
 import com.example.orderingapp.main.domain.model.Order
 
 @Composable

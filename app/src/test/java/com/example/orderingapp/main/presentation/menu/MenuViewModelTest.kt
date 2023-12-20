@@ -1,8 +1,5 @@
 package com.example.orderingapp.main.presentation.menu
 
-import com.example.orderingapp.commons.extensions.toDateFormat
-import com.example.orderingapp.commons.extensions.toHourFormat
-import com.example.orderingapp.commons.mappings.composeToItem
 import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.commons.MainCoroutineRule
 import com.example.orderingapp.main.commons.TestData
@@ -11,6 +8,9 @@ import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.domain.usecase.MainUseCases
+import com.example.orderingapp.main.presentation.utils.extensions.toDateFormat
+import com.example.orderingapp.main.presentation.utils.extensions.toHourFormat
+import com.example.orderingapp.main.presentation.utils.mappings.composeToItem
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
@@ -73,7 +73,7 @@ class MenuViewModelTest {
         }
 
         menuViewModel.insertOrder(createdOrder) {
-            assertThat(it.value).isEqualTo(expectedOrder)
+            assertThat(it?.value).isEqualTo(expectedOrder)
         }
     }
 
@@ -82,20 +82,20 @@ class MenuViewModelTest {
         val list = TestData().itemsCompose
         val paymentWay = "Pix"
         val addedItems = list.filter { it.value.quantity.value > 0 }
-        val _order = Order(
+        val createdOrder = Order(
             items = addedItems.composeToItem(),
             hour = System.currentTimeMillis().toHourFormat(),
             date = System.currentTimeMillis().toDateFormat(),
             orderValue = addedItems.values.sumOf { it.item.currentValue * it.item.finalQuantity },
             paymentWay = paymentWay
         )
-        every { mainUseCases.insertOrderUseCase.insertOrderLocal(_order) } returns flow {
+        every { mainUseCases.insertOrderUseCase.insertOrderLocal(createdOrder) } returns flow {
             emit(
                 ApiResult.Error(RuntimeException())
             )
         }
 
-        menuViewModel.insertOrder(_order) {
+        menuViewModel.insertOrder(createdOrder) {
             assertThat(it).isNull()
         }
     }

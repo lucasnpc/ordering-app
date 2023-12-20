@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.data.entities.ItemDTO
 import com.example.orderingapp.main.data.entities.OrderDTO
+import com.example.orderingapp.main.domain.model.Item
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before
@@ -65,7 +66,7 @@ internal class OrderingAppDatabaseTest {
             minimumStock = 1
         )
         val orderDTO = OrderDTO(
-            items = mapOf(itemDTO.id to 10),
+            items = mapOf(itemDTO.id to Item()),
             date = "21/12/2021",
             hour = "12:00",
             paymentWay = "pix",

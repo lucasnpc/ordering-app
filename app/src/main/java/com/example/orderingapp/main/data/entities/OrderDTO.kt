@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.example.orderingapp.main.data.entities.converters.MapItemIdTypeConverter
+import com.example.orderingapp.main.domain.model.Item
 import java.util.UUID
 
 @Entity
@@ -11,7 +12,7 @@ import java.util.UUID
 data class OrderDTO(
     @PrimaryKey
     val id: String = UUID.randomUUID().toString(),
-    val items: Map<String, Int> = mapOf(),
+    val items: Map<String, Item> = mapOf(),
     val date: String,
     val hour: String,
     val orderValue: Double,

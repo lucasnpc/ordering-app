@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.orderingapp.commons.extensions.brazilianCurrencyFormat
+import com.example.orderingapp.main.presentation.utils.extensions.brazilianCurrencyFormat
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

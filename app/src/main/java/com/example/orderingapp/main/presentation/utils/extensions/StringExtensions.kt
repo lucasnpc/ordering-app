@@ -1,4 +1,4 @@
-package com.example.orderingapp.commons.extensions
+package com.example.orderingapp.main.presentation.utils.extensions
 
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.model.OrderEntry

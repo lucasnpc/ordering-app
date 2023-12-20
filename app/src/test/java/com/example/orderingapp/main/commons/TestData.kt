@@ -3,10 +3,13 @@ package com.example.orderingapp.main.commons
 import androidx.compose.runtime.mutableStateOf
 import com.example.orderingapp.main.data.entities.ItemDTO
 import com.example.orderingapp.main.data.entities.OrderDTO
+import com.example.orderingapp.main.data.entities.PurchaseDTO
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.model.OrderEntry
+import com.example.orderingapp.main.domain.model.Purchase
+import com.example.orderingapp.main.domain.model.PurchaseEntry
 
 data class TestData(
     private val item1: Pair<String, Item> =
@@ -38,32 +41,60 @@ data class TestData(
     private val order1: OrderEntry = OrderEntry(
         key = "1", value = Order(
             items = mapOf(item1),
-            date = "21 Dec 2021", hour = "12:00:00", paymentWay = "Pix", orderValue = 10.0,
+            date = "21 Dec 2021", hour = "12:00", paymentWay = "Pix", orderValue = 10.0,
         )
     ),
     private val order2: OrderEntry = OrderEntry(
         key = "2", value = Order(
             items = mapOf(item1, item2),
-            date = "21 Dec 2021", hour = "12:00:00", paymentWay = "Pix", orderValue = 10.0,
+            date = "21 Dec 2021", hour = "12:00", paymentWay = "Pix", orderValue = 10.0,
         )
     ),
     private val orderDTO1: OrderDTO = OrderDTO(
         id = "1",
-        items = mapOf("1" to 2),
+        items = mapOf("1" to item1.second),
         date = "21 Dec 2021",
-        hour = "12:00:00",
+        hour = "12:00",
         orderValue = 10.0,
         paymentWay = "Pix",
         synced = false
     ),
     private val orderDTO2: OrderDTO = OrderDTO(
         id = "2",
-        items = mapOf("1" to 2, "2" to 2),
+        items = mapOf("1" to item1.second, "2" to item2.second),
         date = "21 Dec 2021",
-        hour = "12:00:00",
+        hour = "12:00",
         orderValue = 10.0,
         paymentWay = "Pix",
         synced = false
+    ),
+    private val purchase1: PurchaseEntry = PurchaseEntry(
+        "1", Purchase(
+            items = mapOf(item1, item2),
+            date = "21 Dec 2021", hour = "12:00", paymentWay = "Pix", purchaseValue = 10.0,
+        )
+    ),
+    private val purchase2: PurchaseEntry = PurchaseEntry(
+        "2", Purchase(
+            items = mapOf(item1, item2),
+            date = "21 Dec 2021", hour = "12:00", paymentWay = "Pix", purchaseValue = 10.0,
+        )
+    ),
+    private val purchaseDTO1: PurchaseDTO = PurchaseDTO(
+        id = "1",
+        items = mapOf(item1, item2),
+        date = "21 Dec 2021",
+        hour = "12:00",
+        purchaseValue = 10.0,
+        paymentWay = "Pix"
+    ),
+    private val purchaseDTO2: PurchaseDTO = PurchaseDTO(
+        id = "2",
+        items = mapOf(item1, item2),
+        date = "21 Dec 2021",
+        hour = "12:00",
+        purchaseValue = 10.0,
+        paymentWay = "Pix"
     ),
     val itemsDTO: Map<String, ItemDTO> = mapOf("1" to itemDTO1, "2" to itemDTO2),
     val itemsCompose: Map<String, ItemCompose> = mapOf(
@@ -77,5 +108,10 @@ data class TestData(
         )
     ),
     val ordersDTO: List<OrderDTO> = listOf(orderDTO1, orderDTO2),
-    val orders: Map<String, Order> = mapOf(order1.key to order1.value, order2.key to order2.value)
+    val orders: Map<String, Order> = mapOf(order1.key to order1.value, order2.key to order2.value),
+    val purchases: Map<String, Purchase> = mapOf(
+        purchase1.key to purchase1.value,
+        purchase2.key to purchase2.value
+    ),
+    val purchasesDTO: List<PurchaseDTO> = listOf(purchaseDTO1, purchaseDTO2)
 )

@@ -19,7 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.orderingapp.commons.extensions.jsonToOrderEntry
+import com.example.orderingapp.main.presentation.utils.extensions.jsonToOrderEntry
 import com.example.orderingapp.main.presentation.voucher.components.BarRealizedPayment
 import com.example.orderingapp.main.presentation.voucher.components.PaymentInfo
 import com.example.orderingapp.main.presentation.voucher.components.PaymentVoucher

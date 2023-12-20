@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.orderingapp.R
-import com.example.orderingapp.commons.extensions.roundDouble
-import com.example.orderingapp.commons.extensions.toDateFormat
-import com.example.orderingapp.commons.extensions.toHourFormat
-import com.example.orderingapp.commons.mappings.composeToItem
+import com.example.orderingapp.main.presentation.utils.extensions.roundDouble
+import com.example.orderingapp.main.presentation.utils.extensions.toDateFormat
+import com.example.orderingapp.main.presentation.utils.extensions.toHourFormat
+import com.example.orderingapp.main.presentation.utils.mappings.composeToItem
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 

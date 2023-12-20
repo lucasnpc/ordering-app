@@ -1,5 +1,6 @@
 package com.example.orderingapp.commons.extensions
 
+import com.example.orderingapp.main.presentation.utils.extensions.jsonToOrderEntry
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.model.OrderEntry

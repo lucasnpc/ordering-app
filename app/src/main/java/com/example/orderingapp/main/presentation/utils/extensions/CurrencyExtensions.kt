@@ -1,4 +1,4 @@
-package com.example.orderingapp.commons.extensions
+package com.example.orderingapp.main.presentation.utils.extensions
 
 import java.text.NumberFormat
 import java.util.Locale

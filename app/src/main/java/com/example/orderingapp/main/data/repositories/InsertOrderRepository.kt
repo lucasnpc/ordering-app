@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class InsertOrderRepository(
-    private val orderingAppDao: OrderingAppDao
+    private val dao: OrderingAppDao
 ) : InsertOrderUseCase {
 
     override fun insertOrderLocal(
@@ -22,7 +22,7 @@ class InsertOrderRepository(
         flow {
             val result = safeRequestSuspend {
                 val orderDTO = order.toOrderDTO()
-                orderingAppDao.insertOrder(orderDTO)
+                dao.insertOrder(orderDTO)
                 OrderEntry(orderDTO.id, order)
             }
             emit(result)

@@ -8,6 +8,8 @@ import com.example.orderingapp.commons.request.ApiResult
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.model.OrderEntry
+import com.example.orderingapp.main.domain.model.Purchase
+import com.example.orderingapp.main.domain.model.PurchaseEntry
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.firstOrNull
@@ -19,6 +21,9 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
     val isSyncing = mutableStateOf(false)
     private val _unsyncedOrders = mutableStateMapOf<String, Order>()
     val unsyncedOrders: Map<String, Order> = _unsyncedOrders
+
+    private val _unsyncedPurchases = mutableStateMapOf<String, Purchase>()
+    val unsyncedPurchases: Map<String, Purchase> = _unsyncedPurchases
 
     private var _items = mutableStateMapOf<String, ItemCompose>()
     val items: Map<String, ItemCompose> = _items
@@ -51,7 +56,7 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
     }
 
     private suspend fun getUnsyncedOrders() {
-        mainUseCases.getOrdersUseCase.getUnsyncedOrders(_items.toMap()).firstOrNull { result ->
+        mainUseCases.getOrdersUseCase.getUnsyncedOrders().firstOrNull { result ->
             when (result) {
                 is ApiResult.Success -> {
                     _unsyncedOrders.clear()
@@ -61,6 +66,23 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
 
                 is ApiResult.Error -> {
                     _unsyncedOrders.clear()
+                    false
+                }
+            }
+        }
+    }
+
+    private suspend fun getUnsyncedPurchases() {
+        mainUseCases.getPurchasesUseCase.getUnsyncedPurchases().firstOrNull { result ->
+            when (result) {
+                is ApiResult.Success -> {
+                    _unsyncedPurchases.clear()
+                    _unsyncedPurchases.putAll(result.data)
+                    true
+                }
+
+                is ApiResult.Error -> {
+                    _unsyncedPurchases.clear()
                     false
                 }
             }
@@ -86,12 +108,17 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
         _items.putAll(data)
         if (!hasCalledGetUnsyncedOrders) {
             getUnsyncedOrders()
+            getUnsyncedPurchases()
             hasCalledGetUnsyncedOrders = !hasCalledGetUnsyncedOrders
         }
     }
 
     fun setUnsyncedOrder(entry: OrderEntry) {
         _unsyncedOrders[entry.key] = entry.value
+    }
+
+    fun setUnsyncedPurchase(entry: PurchaseEntry) {
+        _unsyncedPurchases[entry.key] = entry.value
     }
 
     fun startSyncing() {

@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 fun MenuScreen(
     items: Map<String, ItemCompose>,
     menuViewModel: MenuViewModel = hiltViewModel(),
-    ordersCallback: (OrderEntry) -> Unit
+    ordersCallback: (OrderEntry?) -> Unit
 ) {
     val drawerState = rememberBottomDrawerState(BottomDrawerValue.Closed)
     val scope = rememberCoroutineScope()

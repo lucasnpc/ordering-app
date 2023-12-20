@@ -1,4 +1,4 @@
-package com.example.orderingapp.commons.mappings
+package com.example.orderingapp.main.presentation.utils.mappings
 
 import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
