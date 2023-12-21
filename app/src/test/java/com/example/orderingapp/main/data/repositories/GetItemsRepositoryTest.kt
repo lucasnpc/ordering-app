@@ -81,6 +81,7 @@ class GetItemsRepositoryTest {
                     operation = if (!isRemoving) 2 else 3
                     DocumentChange.Type.ADDED
                 }
+
                 2 -> DocumentChange.Type.MODIFIED
                 else -> DocumentChange.Type.REMOVED
             }
@@ -91,6 +92,7 @@ class GetItemsRepositoryTest {
         every { document.id } returns mapItem.key
         every { document["description"] } returns mapItem.value.item.description
         every { document["currentValue"] } returns mapItem.value.item.currentValue
+        every { document["costValue"] } returns mapItem.value.item.costValue
         every { document["minimumStock"] } returns mapItem.value.item.minimumStock
         every { document["currentStock"] } returns mapItem.value.item.currentStock
     }

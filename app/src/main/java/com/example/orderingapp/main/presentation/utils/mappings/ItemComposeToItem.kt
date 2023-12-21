@@ -8,8 +8,9 @@ fun Map<String, ItemCompose>.composeToItem(): Map<String, Item> {
         Item(
             description = entry.value.item.description,
             currentValue = entry.value.item.currentValue,
+            costValue = entry.value.item.costValue,
             minimumStock = entry.value.item.minimumStock,
-            currentStock = entry.value.item.currentStock,
+            currentStock = entry.value.item.currentStock - entry.value.quantity.value,
             finalQuantity = entry.value.quantity.value
         )
     }

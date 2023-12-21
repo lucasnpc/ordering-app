@@ -6,6 +6,7 @@ import com.example.orderingapp.main.commons.TestConstants.testException
 import com.example.orderingapp.main.commons.TestData
 import com.example.orderingapp.main.data.repositories.utils.FirestoreCollections
 import com.example.orderingapp.main.domain.usecase.UpdateItemsStockUseCase
+import com.example.orderingapp.main.presentation.utils.mappings.composeToItem
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
@@ -52,7 +53,7 @@ class UpdateItemsStockRepositoryTest {
                 }
             }
         }
-        updateItemsStockUseCase.updateItemsStock(listItems).collect { result ->
+        updateItemsStockUseCase.updateItemsStock(listItems.composeToItem()).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
         }
         withContext(Dispatchers.IO) {
@@ -65,7 +66,7 @@ class UpdateItemsStockRepositoryTest {
         every { firestore.collection(FirestoreCollections.items) } returns mockk {
             every { document(any()) } throws testException
         }
-        updateItemsStockUseCase.updateItemsStock(listItems).collect { result ->
+        updateItemsStockUseCase.updateItemsStock(listItems.composeToItem()).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Error::class.java)
             result as ApiResult.Error
             assertThat(result.exception.message).isEqualTo(TestConstants.testMsgException)

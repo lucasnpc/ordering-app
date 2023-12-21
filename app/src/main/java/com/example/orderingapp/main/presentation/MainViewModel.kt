@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.orderingapp.commons.request.ApiResult
+import com.example.orderingapp.main.domain.model.Item
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.Order
 import com.example.orderingapp.main.domain.model.OrderEntry
@@ -12,6 +13,7 @@ import com.example.orderingapp.main.domain.model.Purchase
 import com.example.orderingapp.main.domain.model.PurchaseEntry
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -122,19 +124,46 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
     }
 
     fun startSyncing() {
-        viewModelScope.launch {
-            isSyncing.value = true
-            mainUseCases.syncOrderUseCase.syncOrderRemote(_unsyncedOrders).collect { result ->
-                when (result) {
-                    is ApiResult.Success -> {
-                        updateOrdersLocal()
-                    }
+        isSyncing.value = true
 
-                    is ApiResult.Error -> {
-                        isSyncing.value = false
-                    }
+        viewModelScope.launch {
+            _unsyncedOrders.forEach { updateItemsStock(it.value.items) }
+            syncOrderRemote()
+            _unsyncedPurchases.forEach { updateItemsStock(it.value.items) }
+            syncPurchaseRemote()
+
+            isSyncing.value = false
+        }
+    }
+
+    private suspend fun syncOrderRemote() {
+        mainUseCases.syncOrderUseCase.syncOrderRemote(_unsyncedOrders).collect { result ->
+            when (result) {
+                is ApiResult.Success -> {
+                    updateOrdersLocal()
+                }
+
+                is ApiResult.Error -> {
+                    isSyncing.value = false
                 }
             }
+        }
+    }
+
+    private suspend fun syncPurchaseRemote() {
+        viewModelScope.launch {
+            mainUseCases.syncPurchaseUseCase.syncPurchaseRemote(_unsyncedPurchases)
+                .collect { result ->
+                    when (result) {
+                        is ApiResult.Success -> {
+                            updatePurchasesLocal()
+                        }
+
+                        is ApiResult.Error -> {
+                            isSyncing.value = false
+                        }
+                    }
+                }
         }
     }
 
@@ -143,7 +172,6 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
             when (result) {
                 is ApiResult.Success -> {
                     _unsyncedOrders.clear()
-                    isSyncing.value = false
                 }
 
                 is ApiResult.Error -> {
@@ -151,6 +179,24 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
                 }
             }
         }
+    }
+
+    private suspend fun updatePurchasesLocal() {
+        mainUseCases.syncPurchaseUseCase.syncPurchaseLocal(_unsyncedPurchases).collect { result ->
+            when (result) {
+                is ApiResult.Success -> {
+                    _unsyncedPurchases.clear()
+                }
+
+                is ApiResult.Error -> {
+                    isSyncing.value = false
+                }
+            }
+        }
+    }
+
+    private suspend fun updateItemsStock(items: Map<String, Item>) {
+        mainUseCases.updateItemsStockUseCase.updateItemsStock(items).collect()
     }
 
     fun clearAddedItems() {

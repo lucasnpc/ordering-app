@@ -46,17 +46,7 @@ class MenuViewModelTest {
             paymentWay = paymentWay
         )
         val expectedOrder = Order(
-            items = mapOf(
-                "1" to Item(
-                    description = "item 1",
-                    currentValue = 1.0,
-                    finalQuantity = 2
-                ), "2" to Item(
-                    description = "item 2",
-                    currentValue = 1.0,
-                    finalQuantity = 2
-                )
-            ),
+            items = addedItems.composeToItem(),
             hour = createdOrder.hour,
             date = createdOrder.date,
             orderValue = createdOrder.orderValue,

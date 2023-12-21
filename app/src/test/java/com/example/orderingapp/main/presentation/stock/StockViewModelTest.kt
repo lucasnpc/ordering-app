@@ -46,17 +46,7 @@ class StockViewModelTest {
             paymentWay = paymentWay
         )
         val expectedPurchase = Purchase(
-            items = mapOf(
-                "1" to Item(
-                    description = "item 1",
-                    currentValue = 1.0,
-                    finalQuantity = 2
-                ), "2" to Item(
-                    description = "item 2",
-                    currentValue = 1.0,
-                    finalQuantity = 2
-                )
-            ),
+            items = addedItems.composeToItem(),
             hour = createdPurchase.hour,
             date = createdPurchase.date,
             purchaseValue = createdPurchase.purchaseValue,
