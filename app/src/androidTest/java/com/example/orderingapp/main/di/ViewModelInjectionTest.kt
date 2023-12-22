@@ -8,6 +8,7 @@ import com.example.orderingapp.main.domain.fakeusecases.InsertItemsUseCaseFake
 import com.example.orderingapp.main.domain.fakeusecases.InsertOrderUseCaseFake
 import com.example.orderingapp.main.domain.fakeusecases.InsertPurchaseUseCaseFake
 import com.example.orderingapp.main.domain.fakeusecases.SyncOrderUseCaseFake
+import com.example.orderingapp.main.domain.fakeusecases.SyncPurchaseUseCaseFake
 import com.example.orderingapp.main.domain.fakeusecases.UpdateItemsStockUseCaseFake
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import com.example.orderingapp.main.presentation.MainViewModel
@@ -37,7 +38,8 @@ class ViewModelInjectionTest {
         syncOrderUseCase = SyncOrderUseCaseFake(),
         updateItemsStockUseCase = UpdateItemsStockUseCaseFake(),
         insertPurchaseUseCase = InsertPurchaseUseCaseFake(),
-        getPurchasesUseCase = GetPurchaseUseCaseFake()
+        getPurchasesUseCase = GetPurchaseUseCaseFake(),
+        syncPurchaseUseCase = SyncPurchaseUseCaseFake()
     )
 
     @BindValue

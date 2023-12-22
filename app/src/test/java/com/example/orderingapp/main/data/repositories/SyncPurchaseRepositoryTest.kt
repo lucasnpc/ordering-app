@@ -1,13 +1,13 @@
 package com.example.orderingapp.main.data.repositories
 
 import com.example.orderingapp.commons.request.ApiResult
+import com.example.orderingapp.main.commons.TestConstants
 import com.example.orderingapp.main.commons.TestConstants.testException
-import com.example.orderingapp.main.commons.TestConstants.testMsgException
 import com.example.orderingapp.main.commons.TestData
 import com.example.orderingapp.main.data.dao.OrderingAppDao
 import com.example.orderingapp.main.data.repositories.utils.FirestoreCollections
 import com.example.orderingapp.main.data.utils.FakeOrderingDao
-import com.example.orderingapp.main.domain.usecase.SyncOrderUseCase
+import com.example.orderingapp.main.domain.usecase.SyncPurchaseUseCase
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
@@ -16,34 +16,34 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import io.mockk.every
 import io.mockk.mockk
-import java.util.concurrent.CompletableFuture
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import org.junit.Before
 import org.junit.Test
+import java.util.concurrent.CompletableFuture
 
-class SyncOrderRepositoryTest {
+class SyncPurchaseRepositoryTest {
 
-    private lateinit var syncOrderUseCase: SyncOrderUseCase
+    private lateinit var syncPurchaseUseCase: SyncPurchaseUseCase
 
     private val firestore: FirebaseFirestore = mockk()
     private val documentReference: DocumentReference = mockk()
 
     private var dao: OrderingAppDao = FakeOrderingDao()
 
-    private val listOrder = TestData().orders
-    private val listOrderDTO = TestData().ordersDTO
+    private val listPurchase = TestData().purchases
+    private val listPurchaseDTO = TestData().purchasesDTO
 
     @Before
     fun setUp() {
-        syncOrderUseCase = SyncOrderRepository(firestore, dao)
+        syncPurchaseUseCase = SyncPurchaseRepository(firestore, dao)
     }
 
     @Test
-    fun syncOrderRemote() = runTest {
+    fun syncPurchaseRemote() = runTest {
         val completableFuture = CompletableFuture<Unit>()
-        every { firestore.collection(FirestoreCollections.orders) } returns mockk {
+        every { firestore.collection(FirestoreCollections.purchases) } returns mockk {
             every { document(any()) } returns documentReference
         }
         every { documentReference.set(any()) } answers {
@@ -58,7 +58,7 @@ class SyncOrderRepositoryTest {
                 }
             }
         }
-        syncOrderUseCase.syncOrderRemote(listOrder).collect { result ->
+        syncPurchaseUseCase.syncPurchaseRemote(listPurchase).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
         }
         withContext(Dispatchers.IO) {
@@ -67,32 +67,32 @@ class SyncOrderRepositoryTest {
     }
 
     @Test
-    fun syncOrderLocal() = runTest {
-        dao.insertOrder(listOrderDTO.first())
-        dao.insertOrder(listOrderDTO[1])
-        assertThat(dao.getUnsyncedOrders()).isNotEmpty()
-        syncOrderUseCase.syncOrderLocal(listOrder).collect { result ->
+    fun syncPurchaseLocal() = runTest {
+        dao.insertPurchase(listPurchaseDTO.first())
+        dao.insertPurchase(listPurchaseDTO[1])
+        assertThat(dao.getUnsyncedPurchases()).isNotEmpty()
+        syncPurchaseUseCase.syncPurchaseLocal(listPurchase).collect { result ->
             assertThat(result).isInstanceOf(ApiResult.Success::class.java)
-            assertThat(dao.getUnsyncedOrders()).isEmpty()
+            assertThat(dao.getUnsyncedPurchases()).isEmpty()
         }
     }
 
     @Test
-    fun syncOrderRemoteException() = runTest {
-        every { firestore.collection(FirestoreCollections.orders) } returns mockk {
+    fun syncPurchaseRemoteException() = runTest {
+        every { firestore.collection(FirestoreCollections.purchases) } returns mockk {
             every { document(any()) } throws testException
         }
-        syncOrderUseCase.syncOrderRemote(listOrder).collect { result ->
+        syncPurchaseUseCase.syncPurchaseRemote(listPurchase).collect { result ->
             assertError(result)
         }
     }
 
     @Test
-    fun syncOrderLocalException() = runTest {
+    fun syncPurchaseLocalException() = runTest {
         dao = mockk()
-        syncOrderUseCase = SyncOrderRepository(firestore, dao)
-        every { dao.updateOrderSync(listOrder.entries.first().key) } throws testException
-        syncOrderUseCase.syncOrderLocal(listOrder).collect { result ->
+        syncPurchaseUseCase = SyncPurchaseRepository(firestore, dao)
+        every { dao.updatePurchaseSync(listPurchase.entries.first().key) } throws testException
+        syncPurchaseUseCase.syncPurchaseLocal(listPurchase).collect { result ->
             assertError(result)
         }
     }
@@ -100,6 +100,6 @@ class SyncOrderRepositoryTest {
     private fun assertError(result: ApiResult<Unit>) {
         assertThat(result).isInstanceOf(ApiResult.Error::class.java)
         result as ApiResult.Error
-        assertThat(result.exception.message).isEqualTo(testMsgException)
+        assertThat(result.exception.message).isEqualTo(TestConstants.testMsgException)
     }
 }

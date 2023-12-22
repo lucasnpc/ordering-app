@@ -3,6 +3,7 @@ package com.example.orderingapp.main.presentation
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -15,10 +16,12 @@ import com.example.orderingapp.commons.permissions.PermissionsUtil.checkPermissi
 import com.example.orderingapp.commons.permissions.PermissionsUtil.checkPermissionsRationale
 import com.example.orderingapp.commons.permissions.PermissionsUtil.requestStoragePermission
 import com.example.orderingapp.main.domain.model.OrderEntry
+import com.example.orderingapp.main.domain.model.PurchaseEntry
 import com.example.orderingapp.main.presentation.components.MainNavHost
 import com.example.orderingapp.main.presentation.components.OrderingAppBottomBar
 import com.example.orderingapp.main.presentation.components.OrderingAppTopBar
 import com.example.orderingapp.main.presentation.utils.ScreenList
+import com.example.orderingapp.main.presentation.utils.extensions.handleBackEvent
 import com.example.orderingapp.main.theme.OrderingAppTheme
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,7 +29,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -36,33 +38,44 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         OrderingAppTopBar(
                             navController,
-                            mainViewModel.unsyncedOrders.size,
+                            mainViewModel.unsyncedOrders.size + mainViewModel.unsyncedPurchases.size,
                             mainViewModel
                         )
                     },
                     bottomBar = {
-                        OrderingAppBottomBar(navController)
+                        OrderingAppBottomBar(navController) {
+                            mainViewModel.clearItemsQuantity()
+                        }
                     }
                 ) { paddingValues ->
+                    BackHandler {
+                        handleBackEvent(navController) {
+                            mainViewModel.clearItemsQuantity()
+                        }
+                    }
                     MainNavHost(
                         navController = navController,
                         paddingValues = paddingValues,
-                        items = mainViewModel.items
-                    ) { orderEntry ->
-                        orderEntry?.let {
-                            finishOrderCallback(orderEntry, navController)
-                        } ?: Toast.makeText(
-                            this,
-                            getString(R.string.something_went_wrong),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                        items = mainViewModel.items,
+                        finishOrderCallback = { entry ->
+                            entry?.let {
+                                finishOrder(entry, navController)
+                            } ?: Toast.makeText(
+                                this,
+                                getString(R.string.something_went_wrong),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        },
+                        finishPurchaseCallback = { entry ->
+                            finishPurchase(entry)
+                        }
+                    )
                 }
             }
         }
     }
 
-    private fun finishOrderCallback(
+    private fun finishOrder(
         orderEntry: OrderEntry,
         navController: NavHostController
     ) {
@@ -80,8 +93,18 @@ class MainActivity : ComponentActivity() {
         )
         mainViewModel.run {
             setUnsyncedOrder(orderEntry)
-            clearAddedItems()
         }
+    }
+
+    private fun finishPurchase(entry: PurchaseEntry?) {
+        var textToShow = getString(R.string.something_went_wrong)
+        entry?.let {
+            mainViewModel.setUnsyncedPurchase(entry)
+            mainViewModel.clearItemsQuantity()
+            textToShow = getString(R.string.purchase_saved)
+        }
+        Toast.makeText(this, textToShow, Toast.LENGTH_SHORT)
+            .show()
     }
 
     override fun onResume() {

@@ -33,6 +33,9 @@ interface OrderingAppDao {
     @Query("UPDATE OrderDTO SET synced = 1 WHERE id = :orderId")
     fun updateOrderSync(orderId: String)
 
+    @Query("UPDATE PurchaseDTO SET synced = 1 WHERE id = :purchaseId")
+    fun updatePurchaseSync(purchaseId: String)
+
     @Query("SELECT * FROM ItemDTO")
     fun getItems(): List<ItemDTO>
 

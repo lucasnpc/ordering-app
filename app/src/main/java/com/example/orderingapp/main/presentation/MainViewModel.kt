@@ -11,7 +11,9 @@ import com.example.orderingapp.main.domain.model.OrderEntry
 import com.example.orderingapp.main.domain.model.Purchase
 import com.example.orderingapp.main.domain.model.PurchaseEntry
 import com.example.orderingapp.main.domain.usecase.MainUseCases
+import com.example.orderingapp.main.presentation.utils.mappings.composeToItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -122,28 +124,39 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
     }
 
     fun startSyncing() {
-        viewModelScope.launch {
-            isSyncing.value = true
-            mainUseCases.syncOrderUseCase.syncOrderRemote(_unsyncedOrders).collect { result ->
-                when (result) {
-                    is ApiResult.Success -> {
-                        updateOrdersLocal()
-                    }
+        if (_unsyncedOrders.isEmpty() && _unsyncedPurchases.isEmpty())
+            return
+        isSyncing.value = true
 
-                    is ApiResult.Error -> {
-                        isSyncing.value = false
+        viewModelScope.launch {
+            _unsyncedOrders.forEach {
+                it.value.items.entries.forEach { entry ->
+                    _items[entry.key]?.let { itemCompose ->
+                        itemCompose.item.currentStock -= entry.value.finalQuantity
                     }
                 }
+                updateItemsStock()
             }
+            syncOrderRemote()
+        }
+        viewModelScope.launch {
+            _unsyncedPurchases.forEach {
+                it.value.items.entries.forEach { entry ->
+                    _items[entry.key]?.let { itemCompose ->
+                        itemCompose.item.currentStock += entry.value.finalQuantity
+                    }
+                }
+                updateItemsStock()
+            }
+            syncPurchaseRemote()
         }
     }
 
-    private suspend fun updateOrdersLocal() {
-        mainUseCases.syncOrderUseCase.syncOrderLocal(_unsyncedOrders).collect { result ->
+    private suspend fun syncOrderRemote() {
+        mainUseCases.syncOrderUseCase.syncOrderRemote(_unsyncedOrders).collect { result ->
             when (result) {
                 is ApiResult.Success -> {
-                    _unsyncedOrders.clear()
-                    isSyncing.value = false
+                    updateOrdersLocal()
                 }
 
                 is ApiResult.Error -> {
@@ -153,7 +166,62 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
         }
     }
 
-    fun clearAddedItems() {
+    private suspend fun syncPurchaseRemote() {
+        viewModelScope.launch {
+            mainUseCases.syncPurchaseUseCase.syncPurchaseRemote(_unsyncedPurchases)
+                .collect { result ->
+                    when (result) {
+                        is ApiResult.Success -> {
+                            updatePurchasesLocal()
+                        }
+
+                        is ApiResult.Error -> {
+                            isSyncing.value = false
+                        }
+                    }
+                }
+        }
+    }
+
+    private suspend fun updateOrdersLocal() {
+        mainUseCases.syncOrderUseCase.syncOrderLocal(_unsyncedOrders).collect { result ->
+            when (result) {
+                is ApiResult.Success -> {
+                    _unsyncedOrders.clear()
+                    checkSyncStatus()
+                }
+
+                is ApiResult.Error -> {
+                    isSyncing.value = false
+                }
+            }
+        }
+    }
+
+    private suspend fun updatePurchasesLocal() {
+        mainUseCases.syncPurchaseUseCase.syncPurchaseLocal(_unsyncedPurchases).collect { result ->
+            when (result) {
+                is ApiResult.Success -> {
+                    _unsyncedPurchases.clear()
+                    checkSyncStatus()
+                }
+
+                is ApiResult.Error -> {
+                    isSyncing.value = false
+                }
+            }
+        }
+    }
+
+    private suspend fun updateItemsStock() {
+        mainUseCases.updateItemsStockUseCase.updateItemsStock(_items.composeToItem()).collect()
+    }
+
+    private fun checkSyncStatus() {
+        isSyncing.value = _unsyncedOrders.isNotEmpty() && _unsyncedPurchases.isNotEmpty()
+    }
+
+    fun clearItemsQuantity() {
         viewModelScope.launch {
             _items.filter { it.value.quantity.value > 0 }.forEach { it.value.quantity.value = 0 }
         }

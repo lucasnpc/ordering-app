@@ -8,6 +8,7 @@ import com.example.orderingapp.main.data.repositories.InsertItemsRepository
 import com.example.orderingapp.main.data.repositories.InsertOrderRepository
 import com.example.orderingapp.main.data.repositories.InsertPurchaseRepository
 import com.example.orderingapp.main.data.repositories.SyncOrderRepository
+import com.example.orderingapp.main.data.repositories.SyncPurchaseRepository
 import com.example.orderingapp.main.data.repositories.UpdateItemsStockRepository
 import com.example.orderingapp.main.domain.usecase.MainUseCases
 import com.google.firebase.firestore.FirebaseFirestore
@@ -37,6 +38,10 @@ object UseCasesModule {
             ),
             updateItemsStockUseCase = UpdateItemsStockRepository(firestore = firestore),
             insertPurchaseUseCase = InsertPurchaseRepository(dao = orderingAppDatabase.orderingAppDao),
-            getPurchasesUseCase = GetPurchasesRepository(dao = orderingAppDatabase.orderingAppDao)
+            getPurchasesUseCase = GetPurchasesRepository(dao = orderingAppDatabase.orderingAppDao),
+            syncPurchaseUseCase = SyncPurchaseRepository(
+                firestore = firestore,
+                dao = orderingAppDatabase.orderingAppDao
+            )
         )
 }

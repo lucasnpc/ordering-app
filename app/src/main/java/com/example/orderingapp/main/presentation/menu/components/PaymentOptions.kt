@@ -7,6 +7,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,7 +33,7 @@ fun PaymentOptions(
         mutableStateOf(radioOptions[0])
     }
     var changeValue by remember {
-        mutableStateOf(0.0)
+        mutableDoubleStateOf(0.0)
     }
     val total = addedItems.values.sumOf { it.item.currentValue * it.quantity.value }
 

@@ -1,7 +1,9 @@
 package com.example.orderingapp.main.presentation.menu.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
@@ -17,7 +19,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ChangeItemQuantityButtons(quantity: MutableState<Int>) {
     Column {
-        Row {
+        Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
             OutlinedButton(
                 onClick = {
                     if (quantity.value > 0) {
