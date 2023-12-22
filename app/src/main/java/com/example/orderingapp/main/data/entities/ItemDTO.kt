@@ -10,6 +10,7 @@ data class ItemDTO(
     val id: String = UUID.randomUUID().toString(),
     val description: String,
     val currentValue: Double,
+    val costValue: Double,
     val minimumStock: Int,
     val currentStock: Int
 )

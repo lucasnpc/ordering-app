@@ -9,7 +9,7 @@ import com.example.orderingapp.main.data.entities.PurchaseDTO
 
 @Database(
     entities = [OrderDTO::class, ItemDTO::class, PurchaseDTO::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class OrderingAppDatabase : RoomDatabase() {

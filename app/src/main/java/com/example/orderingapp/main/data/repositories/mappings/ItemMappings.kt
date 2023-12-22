@@ -10,6 +10,7 @@ fun Map.Entry<String, ItemCompose>.toItemDTO(): ItemDTO {
         id = key,
         description = value.item.description,
         currentValue = value.item.currentValue,
+        costValue = value.item.costValue,
         minimumStock = value.item.minimumStock,
         currentStock = value.item.currentStock
     )
