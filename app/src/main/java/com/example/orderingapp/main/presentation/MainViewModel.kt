@@ -138,6 +138,8 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
                 updateItemsStock()
             }
             syncOrderRemote()
+        }
+        viewModelScope.launch {
             _unsyncedPurchases.forEach {
                 it.value.items.entries.forEach { entry ->
                     _items[entry.key]?.let { itemCompose ->
@@ -147,8 +149,6 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
                 updateItemsStock()
             }
             syncPurchaseRemote()
-
-            isSyncing.value = false
         }
     }
 
@@ -188,6 +188,7 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
             when (result) {
                 is ApiResult.Success -> {
                     _unsyncedOrders.clear()
+                    checkSyncStatus()
                 }
 
                 is ApiResult.Error -> {
@@ -202,6 +203,7 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
             when (result) {
                 is ApiResult.Success -> {
                     _unsyncedPurchases.clear()
+                    checkSyncStatus()
                 }
 
                 is ApiResult.Error -> {
@@ -213,6 +215,10 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
 
     private suspend fun updateItemsStock() {
         mainUseCases.updateItemsStockUseCase.updateItemsStock(_items.composeToItem()).collect()
+    }
+
+    private fun checkSyncStatus() {
+        isSyncing.value = _unsyncedOrders.isNotEmpty() && _unsyncedPurchases.isNotEmpty()
     }
 
     fun clearItemsQuantity() {

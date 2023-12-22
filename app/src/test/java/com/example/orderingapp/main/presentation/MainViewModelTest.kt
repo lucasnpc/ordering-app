@@ -184,7 +184,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun startSyncingExceptionAtRemote() = runTest {
+    fun startSyncingExceptionAtRemoteOrders() = runTest {
         mainUseCases = MainUseCases(
             getItemsUseCase = GetItemsUseCaseFake(),
             insertItemsUseCase = InsertItemsUseCaseFake(),
@@ -194,19 +194,41 @@ class MainViewModelTest {
             updateItemsStockUseCase = UpdateItemsStockUseCaseFake(),
             insertPurchaseUseCase = mockk(),
             getPurchasesUseCase = GetPurchaseUseCaseFake(),
-            syncPurchaseUseCase = SyncPurchaseUseCaseFake(testException, null)
+            syncPurchaseUseCase = SyncPurchaseUseCaseFake()
         )
 
         mainViewModel = MainViewModel(mainUseCases)
 
         mainViewModel.startSyncing()
         assertThat(mainViewModel.unsyncedOrders).isNotEmpty()
+        assertThat(mainViewModel.unsyncedPurchases).isEmpty()
+        assertThat(mainViewModel.isSyncing.value).isEqualTo(false)
+    }
+
+    @Test
+    fun startSyncingExceptionAtRemotePurchases() = runTest {
+        mainUseCases = MainUseCases(
+            getItemsUseCase = GetItemsUseCaseFake(),
+            insertItemsUseCase = InsertItemsUseCaseFake(),
+            getOrdersUseCase = GetOrdersUseCaseFake(),
+            insertOrderUseCase = mockk(),
+            syncOrderUseCase = SyncOrderUseCaseFake(),
+            updateItemsStockUseCase = UpdateItemsStockUseCaseFake(),
+            insertPurchaseUseCase = mockk(),
+            getPurchasesUseCase = GetPurchaseUseCaseFake(),
+            syncPurchaseUseCase = SyncPurchaseUseCaseFake(testException, null)
+        )
+
+        mainViewModel = MainViewModel(mainUseCases)
+
+        mainViewModel.startSyncing()
+        assertThat(mainViewModel.unsyncedOrders).isEmpty()
         assertThat(mainViewModel.unsyncedPurchases).isNotEmpty()
         assertThat(mainViewModel.isSyncing.value).isEqualTo(false)
     }
 
     @Test
-    fun startSyncingExceptionAtLocal() = runTest {
+    fun startSyncingExceptionAtLocalOrders() = runTest {
         mainUseCases = MainUseCases(
             getItemsUseCase = GetItemsUseCaseFake(),
             insertItemsUseCase = InsertItemsUseCaseFake(),
@@ -216,12 +238,33 @@ class MainViewModelTest {
             updateItemsStockUseCase = UpdateItemsStockUseCaseFake(),
             insertPurchaseUseCase = mockk(),
             getPurchasesUseCase = GetPurchaseUseCaseFake(),
-            syncPurchaseUseCase = SyncPurchaseUseCaseFake(null, testException)
+            syncPurchaseUseCase = SyncPurchaseUseCaseFake()
         )
         mainViewModel = MainViewModel(mainUseCases)
 
         mainViewModel.startSyncing()
         assertThat(mainViewModel.unsyncedOrders).isNotEmpty()
+        assertThat(mainViewModel.unsyncedPurchases).isEmpty()
+        assertThat(mainViewModel.isSyncing.value).isEqualTo(false)
+    }
+
+    @Test
+    fun startSyncingExceptionAtLocalPurchases() = runTest {
+        mainUseCases = MainUseCases(
+            getItemsUseCase = GetItemsUseCaseFake(),
+            insertItemsUseCase = InsertItemsUseCaseFake(),
+            getOrdersUseCase = GetOrdersUseCaseFake(),
+            insertOrderUseCase = mockk(),
+            syncOrderUseCase = SyncOrderUseCaseFake(),
+            updateItemsStockUseCase = UpdateItemsStockUseCaseFake(),
+            insertPurchaseUseCase = mockk(),
+            getPurchasesUseCase = GetPurchaseUseCaseFake(),
+            syncPurchaseUseCase = SyncPurchaseUseCaseFake(null, testException)
+        )
+        mainViewModel = MainViewModel(mainUseCases)
+
+        mainViewModel.startSyncing()
+        assertThat(mainViewModel.unsyncedOrders).isEmpty()
         assertThat(mainViewModel.unsyncedPurchases).isNotEmpty()
         assertThat(mainViewModel.isSyncing.value).isEqualTo(false)
     }
