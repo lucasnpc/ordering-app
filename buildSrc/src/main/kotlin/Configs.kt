@@ -8,5 +8,5 @@ object Configs {
     const val compileSdk = 34
     const val namespace = "com.example.orderingapp"
     const val kotlinCompilerExtensionVersion = "1.5.2"
-    const val jvmTarget = "11"
+    const val jvmTarget = "17"
 }
