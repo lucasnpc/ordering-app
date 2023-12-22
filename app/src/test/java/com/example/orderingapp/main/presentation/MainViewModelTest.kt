@@ -223,7 +223,7 @@ class MainViewModelTest {
         assertThat(list.values.first().quantity.value).isEqualTo(2)
         assertThat(list.values.toList()[1].quantity.value).isEqualTo(2)
 
-        mainViewModel.clearAddedItems()
+        mainViewModel.clearItemsQuantity()
 
         assertThat(list.values.first().quantity.value).isEqualTo(0)
         assertThat(list.values.toList()[1].quantity.value).isEqualTo(0)

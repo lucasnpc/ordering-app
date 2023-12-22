@@ -199,7 +199,7 @@ class MainViewModel @Inject constructor(private val mainUseCases: MainUseCases) 
         mainUseCases.updateItemsStockUseCase.updateItemsStock(items).collect()
     }
 
-    fun clearAddedItems() {
+    fun clearItemsQuantity() {
         viewModelScope.launch {
             _items.filter { it.value.quantity.value > 0 }.forEach { it.value.quantity.value = 0 }
         }

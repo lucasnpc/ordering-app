@@ -13,7 +13,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.orderingapp.main.presentation.utils.BottomNavItem
 
 @Composable
-fun OrderingAppBottomBar(navController: NavHostController) {
+fun OrderingAppBottomBar(navController: NavHostController, clearAddedItems: () -> Unit) {
     BottomNavigation(backgroundColor = MaterialTheme.colors.surface) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
@@ -32,6 +32,7 @@ fun OrderingAppBottomBar(navController: NavHostController) {
                 },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 onClick = {
+                    clearAddedItems()
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true

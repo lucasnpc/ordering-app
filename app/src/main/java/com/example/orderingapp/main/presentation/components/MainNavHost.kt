@@ -56,7 +56,7 @@ fun MainNavHost(
             OrderScreen()
         }
         composable(route = ScreenList.StockScreen.route) {
-            StockScreen()
+            StockScreen(items)
         }
         composable(route = ScreenList.VoucherScreen.route + "/{order}",
             arguments = listOf(

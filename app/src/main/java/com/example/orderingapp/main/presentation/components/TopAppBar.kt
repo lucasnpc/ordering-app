@@ -31,15 +31,16 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.orderingapp.R
-import com.example.orderingapp.main.presentation.utils.extensions.finishSession
 import com.example.orderingapp.main.presentation.MainViewModel
 import com.example.orderingapp.main.presentation.utils.ScreenList
+import com.example.orderingapp.main.presentation.utils.extensions.finishSession
+import com.example.orderingapp.main.presentation.utils.extensions.handleBackEvent
 import com.example.orderingapp.main.theme.redPrimary
 
 @Composable
 fun OrderingAppTopBar(
     navController: NavHostController,
-    unsyncedOrdersSize: Int,
+    unsyncedRegistersSize: Int,
     mainViewModel: MainViewModel
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -48,16 +49,16 @@ fun OrderingAppTopBar(
         targetValue = if (mainViewModel.isSyncing.value) 360f else 0f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 3000, easing = LinearEasing),
-        )
+        ), label = ""
     )
     TopAppBar(title = {
         Text(text = getCurrentPage(navBackStackEntry), fontSize = 20.sp)
     }, actions = {
         Box {
-            if (unsyncedOrdersSize > 0)
+            if (unsyncedRegistersSize > 0)
                 Badge(backgroundColor = Color.Black) {
                     Text(
-                        text = unsyncedOrdersSize.toString(),
+                        text = unsyncedRegistersSize.toString(),
                         modifier = Modifier
                             .align(Alignment.Bottom)
                             .background(Color.Black),
@@ -90,8 +91,8 @@ fun OrderingAppTopBar(
         }
     }, navigationIcon = {
         IconButton(onClick = {
-            if (!navController.popBackStack()) {
-                context?.finishSession()
+            context?.handleBackEvent(navController) {
+                mainViewModel.clearItemsQuantity()
             }
         }) {
             Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
