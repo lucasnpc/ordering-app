@@ -62,6 +62,7 @@ internal class OrderingAppDatabaseTest {
         val itemDTO = ItemDTO(
             description = "Item Test",
             currentStock = 10,
+            costValue = 2.0,
             currentValue = 10.0,
             minimumStock = 1
         )

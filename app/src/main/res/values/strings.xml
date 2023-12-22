@@ -12,6 +12,7 @@
     <string name="voucher_name">Comprovante</string>
     <string name="payment_voucher">Comprovante de pagamento</string>
     <string name="voucher_saved">Comprovante salvo com sucesso</string>
+    <string name="purchase_saved">Compra registrada com sucesso</string>
     <string name="documents_path">/Documents/%s.pdf</string>
     <string name="payment_finished">Pagamento Realizado</string>
     <string name="see_voucher">VER COMPROVANTE</string>
@@ -22,6 +23,7 @@
     <string name="make_payment">Efetuar pagamento</string>
     <string name="money_label">Dinheiro</string>
     <string name="place_order">Realizar pedido</string>
+    <string name="place_purchase">Realizar compra</string>
     <string name="file_not_found">Arquivo não encontrado</string>
     <string name="order_label">PEDIDO:</string>
     <string name="quantity_label">Qtd. %s</string>

@@ -5,5 +5,5 @@ data class Purchase(
     val date: String,
     val hour: String,
     val purchaseValue: Double,
-    val paymentWay: String,
+    val paymentWay: String = "Boleto",
 )

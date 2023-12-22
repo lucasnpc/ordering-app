@@ -16,6 +16,7 @@ import com.example.orderingapp.commons.permissions.PermissionsUtil.checkPermissi
 import com.example.orderingapp.commons.permissions.PermissionsUtil.checkPermissionsRationale
 import com.example.orderingapp.commons.permissions.PermissionsUtil.requestStoragePermission
 import com.example.orderingapp.main.domain.model.OrderEntry
+import com.example.orderingapp.main.domain.model.PurchaseEntry
 import com.example.orderingapp.main.presentation.components.MainNavHost
 import com.example.orderingapp.main.presentation.components.OrderingAppBottomBar
 import com.example.orderingapp.main.presentation.components.OrderingAppTopBar
@@ -55,22 +56,26 @@ class MainActivity : ComponentActivity() {
                     MainNavHost(
                         navController = navController,
                         paddingValues = paddingValues,
-                        items = mainViewModel.items
-                    ) { orderEntry ->
-                        orderEntry?.let {
-                            finishOrderCallback(orderEntry, navController)
-                        } ?: Toast.makeText(
-                            this,
-                            getString(R.string.something_went_wrong),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                        items = mainViewModel.items,
+                        finishOrderCallback = { entry ->
+                            entry?.let {
+                                finishOrder(entry, navController)
+                            } ?: Toast.makeText(
+                                this,
+                                getString(R.string.something_went_wrong),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        },
+                        finishPurchaseCallback = { entry ->
+                            finishPurchase(entry)
+                        }
+                    )
                 }
             }
         }
     }
 
-    private fun finishOrderCallback(
+    private fun finishOrder(
         orderEntry: OrderEntry,
         navController: NavHostController
     ) {
@@ -89,6 +94,17 @@ class MainActivity : ComponentActivity() {
         mainViewModel.run {
             setUnsyncedOrder(orderEntry)
         }
+    }
+
+    private fun finishPurchase(entry: PurchaseEntry?) {
+        var textToShow = getString(R.string.something_went_wrong)
+        entry?.let {
+            mainViewModel.setUnsyncedPurchase(entry)
+            mainViewModel.clearItemsQuantity()
+            textToShow = getString(R.string.purchase_saved)
+        }
+        Toast.makeText(this, textToShow, Toast.LENGTH_SHORT)
+            .show()
     }
 
     override fun onResume() {

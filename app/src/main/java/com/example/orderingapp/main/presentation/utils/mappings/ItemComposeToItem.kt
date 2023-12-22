@@ -10,7 +10,7 @@ fun Map<String, ItemCompose>.composeToItem(): Map<String, Item> {
             currentValue = entry.value.item.currentValue,
             costValue = entry.value.item.costValue,
             minimumStock = entry.value.item.minimumStock,
-            currentStock = entry.value.item.currentStock - entry.value.quantity.value,
+            currentStock = entry.value.item.currentStock,
             finalQuantity = entry.value.quantity.value
         )
     }

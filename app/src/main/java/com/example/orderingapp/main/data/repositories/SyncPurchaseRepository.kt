@@ -37,7 +37,7 @@ class SyncPurchaseRepository(
     override fun syncPurchaseLocal(purchases: Map<String, Purchase>): Flow<ApiResult<Unit>> = flow {
         val result = safeRequestSuspend {
             purchases.forEach { purchase ->
-                dao.updateOrderSync(purchase.key)
+                dao.updatePurchaseSync(purchase.key)
             }
         }
         emit(result)

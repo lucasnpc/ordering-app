@@ -5,6 +5,6 @@ data class Item(
     val currentValue: Double = 0.0,
     val costValue: Double = 0.0,
     val minimumStock: Int = 0,
-    val currentStock: Int = 0,
+    var currentStock: Int = 0,
     var finalQuantity: Int = 0,
 )

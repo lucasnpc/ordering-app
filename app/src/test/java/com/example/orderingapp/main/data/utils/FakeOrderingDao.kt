@@ -43,6 +43,10 @@ class FakeOrderingDao : OrderingAppDao {
         orderDTOS.find { it.id == orderId }?.synced = true
     }
 
+    override fun updatePurchaseSync(purchaseId: String) {
+        purchaseDTOS.find { it.id == purchaseId }?.synced = true
+    }
+
     override fun getItems(): List<ItemDTO> {
         return itemDTOS
     }

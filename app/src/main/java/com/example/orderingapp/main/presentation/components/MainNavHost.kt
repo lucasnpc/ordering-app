@@ -18,6 +18,7 @@ import androidx.navigation.navArgument
 import com.example.orderingapp.R
 import com.example.orderingapp.main.domain.model.ItemCompose
 import com.example.orderingapp.main.domain.model.OrderEntry
+import com.example.orderingapp.main.domain.model.PurchaseEntry
 import com.example.orderingapp.main.presentation.menu.MenuScreen
 import com.example.orderingapp.main.presentation.order.OrderScreen
 import com.example.orderingapp.main.presentation.stock.StockScreen
@@ -29,7 +30,8 @@ fun MainNavHost(
     navController: NavHostController,
     paddingValues: PaddingValues,
     items: Map<String, ItemCompose>,
-    finishOrderCallback: (OrderEntry?) -> Unit
+    finishOrderCallback: (OrderEntry?) -> Unit,
+    finishPurchaseCallback: (PurchaseEntry?) -> Unit
 ) {
     val context = LocalContext.current
     NavHost(
@@ -48,15 +50,17 @@ fun MainNavHost(
             )
     ) {
         composable(route = ScreenList.MenuScreen.route) {
-            MenuScreen(items) { orderEntry ->
-                finishOrderCallback(orderEntry)
+            MenuScreen(items) { entry ->
+                finishOrderCallback(entry)
             }
         }
         composable(route = ScreenList.OrderScreen.route) {
             OrderScreen()
         }
         composable(route = ScreenList.StockScreen.route) {
-            StockScreen(items)
+            StockScreen(items) { entry ->
+                finishPurchaseCallback(entry)
+            }
         }
         composable(route = ScreenList.VoucherScreen.route + "/{order}",
             arguments = listOf(
