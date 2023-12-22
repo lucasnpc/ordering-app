@@ -36,7 +36,7 @@ class FakeOrderingDao : OrderingAppDao {
     }
 
     override fun getUnsyncedPurchases(): List<PurchaseDTO> {
-        return purchaseDTOS
+        return purchaseDTOS.filter { !it.synced }
     }
 
     override fun updateOrderSync(orderId: String) {

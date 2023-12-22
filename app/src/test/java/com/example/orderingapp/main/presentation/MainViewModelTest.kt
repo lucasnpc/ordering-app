@@ -77,6 +77,11 @@ class MainViewModelTest {
     }
 
     @Test
+    fun getUnsyncedPurchases() = runTest {
+        assertThat(mainViewModel.unsyncedPurchases).isEqualTo(listPurchases)
+    }
+
+    @Test
     fun getUnsyncedOrdersException() = runTest {
         mainUseCases = MainUseCases(
             getItemsUseCase = GetItemsUseCaseFake(),
@@ -91,6 +96,23 @@ class MainViewModelTest {
         )
         mainViewModel = MainViewModel(mainUseCases)
         assertThat(mainViewModel.unsyncedOrders).isEmpty()
+    }
+
+    @Test
+    fun getUnsyncedPurchasesException() = runTest {
+        mainUseCases = MainUseCases(
+            getItemsUseCase = GetItemsUseCaseFake(),
+            insertItemsUseCase = InsertItemsUseCaseFake(),
+            getOrdersUseCase = GetOrdersUseCaseFake(),
+            insertOrderUseCase = mockk(),
+            syncOrderUseCase = SyncOrderUseCaseFake(),
+            updateItemsStockUseCase = mockk(),
+            insertPurchaseUseCase = mockk(),
+            getPurchasesUseCase = GetPurchaseUseCaseFake(testException),
+            syncPurchaseUseCase = SyncPurchaseUseCaseFake()
+        )
+        mainViewModel = MainViewModel(mainUseCases)
+        assertThat(mainViewModel.unsyncedPurchases).isEmpty()
     }
 
     @Test
